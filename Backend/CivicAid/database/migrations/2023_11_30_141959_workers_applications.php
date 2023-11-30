@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('workers_requests', function (Blueprint $table) {
-            $table->increments('requestId');
+        Schema::create('workers_applications', function (Blueprint $table) {
+            $table->increments('applicationId');
             $table->string('applicantId');
             $table->string('assignedWorker');
             $table->enum('requestState', ['active', 'inactive', 'pending', 'completed'])->default('pending');
 
-            $table->foreign('requestId')->references('requestId')->on('requests'); // Define la clave foránea
+            $table->foreign('applicationId')->references('applicationId')->on('applications'); // Define la clave foránea
             $table->foreign('applicantId')->references('citizenId')->on('users'); // Define la clave foránea
             $table->foreign('assignedWorker')->references('workerId')->on('workers'); // Define la clave foránea
     
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('workers_requests');
+        Schema::dropIfExists('workers_applications');
     }
 };
