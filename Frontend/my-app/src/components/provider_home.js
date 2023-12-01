@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { store, actions } from './store';
-import { useNavigate } from "react-router-dom";
 import { NavLink } from 'react-router-dom';
-import Swal from "sweetalert2";
 
 function Home() {
     return (
@@ -14,7 +11,7 @@ function Home() {
 
             <div className='bg-white p-8 rounded shadow-md max-w-3xl w-full'>
                 <div className='text-center'>
-                    <NavLink to="/page">
+                    <NavLink to="/loginUsuario">
                         <button
                             className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
                         >
@@ -25,6 +22,7 @@ function Home() {
                 </div>
 
                 <br />
+
                 <div className='text-center'>
                     <button
                         className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
@@ -34,10 +32,6 @@ function Home() {
                 </div>
             </div>
         </main>
-
-
-
-
     );
 }
 
