@@ -6,7 +6,8 @@ import { HashRouter as Router } from 'react-router-dom';
 import { Routes, Route } from "react-router-dom";
 import HomePage from './pages/home';
 import LoginUsuario from './pages/loginUsuario';
-import SigninUsuario from './components/provider_signinUsuario';
+//A ESTE ERROR NO HACERLE CASO
+import SigninUsuario from './pages/signinUsuario';
 
 
 

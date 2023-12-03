@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 
 function SigninForm() {
     const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [secondSurname, setSecondSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -22,7 +24,7 @@ function SigninForm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, email, password }),
+                body: JSON.stringify({ name, surname, secondSurname, email, password }),
             });
             if (!response.ok) {
                 throw new Error(response.statusText);
@@ -80,15 +82,31 @@ function SigninForm() {
 
                                                 <div className="relative z-0 w-full mb-6 group">
                                                     <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="off" type="text" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                                    <label for="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                    <label htmlFor="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                         {/* {t('signInUsername')} */}
                                                         NOMBRE MOSTRO
                                                     </label>
                                                 </div>
 
                                                 <div className="relative z-0 w-full mb-6 group">
-                                                    <input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" type="email" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                                    <label for="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                    <input value={surname} onChange={(event) => setSurname(event.target.value)} autoComplete="off" type="text" name="floating_surname" id="floating_surname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                                    <label htmlFor="floating_surname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                        {/* {t('signInUsername')} */}
+                                                        APELLIDO
+                                                    </label>
+                                                </div>
+
+                                                <div className="relative z-0 w-full mb-6 group">
+                                                    <input value={secondSurname} onChange={(event) => setSecondSurname(event.target.value)} autoComplete="off" type="text" name="floating_secondSurname" id="floating_secondSurname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                                    <label htmlFor="floating_secondSurname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                        {/* {t('signInUsername')} */}
+                                                        SEGUNDO APELLIDO
+                                                    </label>
+                                                </div>
+
+                                                <div className="relative z-0 w-full mb-6 group">
+                                                    <input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" type="email" name="floating_email" id="floating_email" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                                    <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                         {/* {t('signInEmail')} */}
                                                         EMAIL
                                                     </label>
@@ -102,8 +120,8 @@ function SigninForm() {
 
 
                                                 <div className="relative z-0 w-full mb-6 group">
-                                                    <input value={password} onChange={(event) => setPassword(event.target.value)} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autoComplete="off" type="password" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                                    <label for="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                    <input value={password} onChange={(event) => setPassword(event.target.value)} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autoComplete="off" type="password" name="floating_password" id="floating_password" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                                    <label htmlFor="floating_password" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                         {/* {t('signInPassword')} */}
                                                         CONTRASEÑA
                                                     </label>
