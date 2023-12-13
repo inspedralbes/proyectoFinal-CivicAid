@@ -31,6 +31,19 @@ function Home() {
                     </button>
                 </div>
             </div>
+
+            <div>
+            <div className='text-center'>
+                    <NavLink to="/profile">
+                        <button
+                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                        >
+                            PERFIL
+                        </button>
+                    </NavLink>
+
+                </div>
+            </div>
         </main>
     );
 }

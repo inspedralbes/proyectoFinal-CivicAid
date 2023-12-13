@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, NavLink } from "react-router-dom";
 import Swal from 'sweetalert2';
+// import logo from "../../public/logoPequeñoCivicAid.png"
 
 function SigninForm() {
     const [name, setName] = useState('');
@@ -74,8 +75,9 @@ function SigninForm() {
                                             <div className="text-center">
                                                 <img
                                                     className="mx-auto w-48"
-                                                    src="LogoBuenoSNB.png"
-                                                    alt="logo" />
+                                                    src="logoPequeñoCivicAid.png"
+                                                    alt="jiji" 
+                                                />
 
                                             </div>
                                             <form onSubmit={handleSubmit}>
@@ -114,7 +116,7 @@ function SigninForm() {
 
                                                 <a className="text-neutral-500">
                                                     {/* {t('signInEmailMustHave')} */}
-                                                    EL IMEIL DEBE CONTENER
+                                                    Tiene que tener '@' y un dominio (Ej: civicaid@gmail.com).
                                                 </a>
                                                 <br></br><br></br>
 
@@ -129,7 +131,7 @@ function SigninForm() {
 
                                                 <a className="text-neutral-500">
                                                     {/* {t('signInPasswordMustHave')} */}
-                                                    LA CONTRASEÑA DEBE CONTENER
+                                                    8 caracteres, una mayúscula, una minúscula y un número.
                                                 </a>
 
                                                 <div className="mb-12 mt-10 pb-1 pt-1 text-center">

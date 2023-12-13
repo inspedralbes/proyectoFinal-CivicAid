@@ -6,10 +6,14 @@ import { HashRouter as Router } from 'react-router-dom';
 import { Routes, Route } from "react-router-dom";
 import HomePage from './pages/home';
 import LoginUsuario from './pages/loginUsuario';
+import LoginWorker from './pages/loginWorker';
 //A ESTE ERROR NO HACERLE CASO
 import SigninUsuario from './pages/signinUsuario';
+import UserProfile from './pages/userProfile';
 
 
+
+import './App.css';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -20,7 +24,9 @@ root.render(
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/loginUsuario" element={<LoginUsuario />} />
+                    <Route path="/loginWorker" element={<LoginWorker />} />
                     <Route path="/signinUsuario" element={<SigninUsuario />} />
+                    <Route path="/profile" element={<UserProfile />} />
 
 
                     {/* <Route path="/games" element={<Games sharedValue={sharedValue} onSharedValueChange={handleSharedValueChange} sharedId={sharedId} onSharedIdChange={handleSharedIdChange} />} />

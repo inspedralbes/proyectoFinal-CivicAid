@@ -55,4 +55,20 @@ class AuthController extends Controller
             return response(['isLoggedIn' => false]);
         }
     }
+
+    public function loginWorker(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $token = $user->createToken('token')->plainTextToken;
+            return response([$token, $user, 'isLoggedIn' => true]);
+        } else {
+            return response(['isLoggedIn' => false]);
+        }
+    }
 }

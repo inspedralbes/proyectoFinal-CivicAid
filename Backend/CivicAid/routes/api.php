@@ -24,6 +24,8 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::post('/loginWorker', [AuthController::class, 'loginWorker']);
+
 Route::post('/createApplication', [ApplicationController::class, 'createApplication']);
 
 Route::post('/updateApplication/{id}', [ApplicationController::class, 'updateApplication']);

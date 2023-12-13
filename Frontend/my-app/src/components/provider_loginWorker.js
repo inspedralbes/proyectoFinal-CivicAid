@@ -23,7 +23,7 @@ const LoginForm = () => {
         setLoading(true);
 
         try {
-            const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/login', {
+            const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/loginWorker', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
