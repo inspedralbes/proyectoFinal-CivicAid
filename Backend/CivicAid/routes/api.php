@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ApplicationController;
+use App\Http\Controllers\Api\WorkerAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,9 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/loginWorker', [AuthController::class, 'loginWorker']);
+Route::post('/registerWorker', [WorkerAuthController::class, 'registerWorker']);
+
+Route::post('/loginWorker', [WorkerAuthController::class, 'loginWorker']);
 
 Route::post('/createApplication', [ApplicationController::class, 'createApplication']);
 

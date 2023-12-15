@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\Worker;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\QueryException;
 
 
-class AuthController extends Controller
+class WorkerAuthController extends Controller
 {
-    public function register(Request $request)
+
+    public function registerWorker(Request $request)
     {
         $request->validate([
             'name' => 'required',
@@ -20,17 +21,20 @@ class AuthController extends Controller
             'secondSurname' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required',
+            'sector' => 'required',
         ]);
 
-        $user = new User;
-        $user->name = $request->name;
-        $user->surname = $request->surname;
-        $user->secondSurname = $request->secondSurname;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        $worker = new Worker;
+        $worker->name = $request->name;
+        $worker->surname = $request->surname;
+        $worker->secondSurname = $request->secondSurname;
+        $worker->email = $request->email;
+        $worker->password = Hash::make($request->password);
+        $worker->email = $request->email;
+
 
         try {
-            if ($user->save()) {
+            if ($worker->save()) {
                 $message = "Registered correctly.";
                 return response()->json([$message, 200, 'isRegistered' => true]);
             }
@@ -39,23 +43,7 @@ class AuthController extends Controller
             return response()->json([$message, 500, 'isRegistered' => false]);
         }
     }
-
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('token')->plainTextToken;
-            return response([$token, $user, 'isLoggedIn' => true]);
-        } else {
-            return response(['isLoggedIn' => false]);
-        }
-    }
-
+    
     public function loginWorker(Request $request)
     {
         $credentials = $request->validate([
@@ -63,8 +51,8 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $worker = Auth::worker();
+        if (Auth::guard('worker')->attempt($credentials)) {
+            $worker = Auth::guard('worker')->user();
             $token = $worker->createToken('token')->plainTextToken;
             return response([$token, $worker, 'isLoggedIn' => true]);
         } else {

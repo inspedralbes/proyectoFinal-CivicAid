@@ -1,8 +1,25 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { store, actions } from './store';
 import { NavLink } from 'react-router-dom';
+import Swal from "sweetalert2";
 
-function Home() {
+const Home = () => {
+    const dispatch = useDispatch();
+
+    function logout() {
+
+        dispatch(actions.logout());
+        localStorage.setItem('access_token', "0");
+        Swal.fire({
+            position: "bottom-end",
+            icon: "info",
+            title: "You have successfully loged out",
+            showConfirmButton: false,
+            timer: 1500,
+        });
+    }
+
     return (
         <main className='min-h-screen bg-gray-100 items-center justify-center'>
             <div className='text-center pt-5'>
@@ -24,16 +41,29 @@ function Home() {
                 <br />
 
                 <div className='text-center'>
+                    <NavLink to="/loginWorker">
+                        <button
+                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                        >
+                            MODO PROFESIONAL
+                        </button>
+                    </NavLink>
+
+                </div>
+
+                <br />
+
+                <div className='text-center'>
                     <button
-                        className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                        onClick={() => logout()} className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
                     >
-                        MODO PROFESIONAL
+                        LOGOUT
                     </button>
                 </div>
             </div>
 
             <div>
-            <div className='text-center'>
+                <div className='text-center'>
                     <NavLink to="/profile">
                         <button
                             className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
