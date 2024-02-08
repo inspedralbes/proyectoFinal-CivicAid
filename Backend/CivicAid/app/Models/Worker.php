@@ -4,14 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 
-
-class Worker extends Model implements Authenticatable
+class Worker extends Model
 {
-    use HasFactory, AuthenticatableTrait;
-    
+    use HasFactory;
     protected $primaryKey = 'workerId';
 
     public function user()
@@ -20,3 +16,6 @@ class Worker extends Model implements Authenticatable
         return $this->belongsTo(User::class);
     }
 }
+
+
+

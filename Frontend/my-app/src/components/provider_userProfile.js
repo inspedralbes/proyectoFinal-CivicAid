@@ -7,7 +7,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 
 let imgAvatar;
 
-const UserInfo = ({ socket }) => {
+const UserInfo = () => {
     const isLoggedIn = useSelector(state => state.isLoggedIn);
     const token = localStorage.getItem('access_token');
     const [name, setName] = useState('');
@@ -236,10 +236,10 @@ const UserInfo = ({ socket }) => {
 
     const [activeTab, setActiveTab] = useState("tab1"); // initialize active tab to tab1
 
-    const 
-    handleTabClick = (tab) => {
-        setActiveTab(tab); // update active tab based on the tab clicked
-    };
+    const
+        handleTabClick = (tab) => {
+            setActiveTab(tab); // update active tab based on the tab clicked
+        };
 
     function avatar() {
         if (isLoggedIn) {
@@ -568,26 +568,20 @@ const UserInfo = ({ socket }) => {
                         </p>
                         <div className='flex justify-center uppercase'>
                             <div className='mr-2'>
-                                <NavLink to="/login">
-                                    <a href="#" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-purple-800 rounded-lg hover:bg-purple-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                                        {/* {t('logIn')} */}
-                                        INICIAR SESIÓN
-                                    </a>
+                                <NavLink to="/login" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-purple-800 rounded-lg hover:bg-purple-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                                    {/* {t('logIn')} */}
+                                    INICIAR SESIÓN
                                 </NavLink>
                             </div>
                             <div className='ml-2'>
-                                <NavLink to="/signin">
-                                    <a href="#" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-purple-800 rounded-lg hover:bg-purple-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                                        {/* {t('signIn')} */}
-                                        REGISTRARSE
-                                    </a>
+                                <NavLink to="/signin" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-purple-800 rounded-lg hover:bg-purple-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                                    {/* {t('signIn')} */}
+                                    REGISTRARSE
                                 </NavLink>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             }
         </div >
     );

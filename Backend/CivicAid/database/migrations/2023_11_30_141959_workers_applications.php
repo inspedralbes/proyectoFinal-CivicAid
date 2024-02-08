@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('workers_applications', function (Blueprint $table) {
-            $table->unsignedBigInteger('applicationId');
+            $table->bigIncrements('applicationId');
             $table->unsignedBigInteger('applicantId');
-            $table->string('assignedWorker');
+            $table->unsignedBigInteger('assignedWorker');
             $table->enum('requestState', ['active', 'inactive', 'pending', 'completed'])->default('pending');
 
-            $table->foreign('applicationId')->references('id')->on('applications'); // Define la clave foránea
+            $table->foreign('applicationId')->references('applicationId')->on('applications'); // Define la clave foránea
             $table->foreign('applicantId')->references('id')->on('users'); // Define la clave foránea
             $table->foreign('assignedWorker')->references('workerId')->on('workers'); // Define la clave foránea
     

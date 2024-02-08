@@ -30,7 +30,7 @@ class WorkerAuthController extends Controller
         $worker->secondSurname = $request->secondSurname;
         $worker->email = $request->email;
         $worker->password = Hash::make($request->password);
-        $worker->email = $request->email;
+        $worker->sector = $request->sector;
 
 
         try {

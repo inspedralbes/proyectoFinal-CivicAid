@@ -16,12 +16,14 @@ class ApplicationController extends Controller
     }
 
 
-    public function createApplication(Request $request)
+    public function makeApplication(Request $request)
     {
         $application = new Application();
         $application->applicationId = $request->applicationId;
         $application->title = $request->title;
         $application->description = $request->description;
+        $application->sector = $request->sector;
+        $application->subsector = $request->subsector;
         $application->date = $request->date;
 
         $application->save();

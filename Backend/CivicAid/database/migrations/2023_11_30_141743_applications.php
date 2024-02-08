@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('applications', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('applicationId');
             $table->string('title');
             $table->string('description');
+            $table->string('sector');
+            $table->string('subsector');
             $table->date('date');
-            
             $table->timestamps();
 
         });

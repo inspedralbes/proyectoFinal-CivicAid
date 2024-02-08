@@ -27,15 +27,27 @@ const Home = () => {
             </div>
 
             <div className='bg-white p-8 rounded shadow-md max-w-3xl w-full'>
+
                 <div className='text-center'>
-                    <NavLink to="/loginUsuario">
+                    <NavLink to="/makeApplication">
+                        <button
+                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                        >
+                            HACER SOLICITUD
+                        </button>
+                    </NavLink>
+                </div>
+
+                <br />
+
+                <div className='text-center'>
+                    <NavLink to="/login">
                         <button
                             className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
                         >
                             MODO CIUIDADANO
                         </button>
                     </NavLink>
-
                 </div>
 
                 <br />
@@ -48,7 +60,6 @@ const Home = () => {
                             MODO PROFESIONAL
                         </button>
                     </NavLink>
-
                 </div>
 
                 <br />
@@ -71,7 +82,6 @@ const Home = () => {
                             PERFIL
                         </button>
                     </NavLink>
-
                 </div>
             </div>
         </main>

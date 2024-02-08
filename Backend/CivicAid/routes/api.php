@@ -29,7 +29,7 @@ Route::post('/registerWorker', [WorkerAuthController::class, 'registerWorker']);
 
 Route::post('/loginWorker', [WorkerAuthController::class, 'loginWorker']);
 
-Route::post('/createApplication', [ApplicationController::class, 'createApplication']);
+Route::post('/makeApplication', [ApplicationController::class, 'makeApplication']);
 
 Route::post('/updateApplication/{id}', [ApplicationController::class, 'updateApplication']);
 

@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { HashRouter as Router } from 'react-router-dom';
 import { Routes, Route } from "react-router-dom";
 import HomePage from './pages/home';
+import HacerSolicitud from './pages/makeApplication';
 import LoginUsuario from './pages/loginUsuario';
 import LoginWorker from './pages/loginWorker';
 //A ESTE ERROR NO HACERLE CASO
@@ -23,9 +24,10 @@ root.render(
             <Router>
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/loginUsuario" element={<LoginUsuario />} />
+                    <Route path="/makeApplication" element={<HacerSolicitud />} />
+                    <Route path="/login" element={<LoginUsuario />} />
                     <Route path="/loginWorker" element={<LoginWorker />} />
-                    <Route path="/signinUsuario" element={<SigninUsuario />} />
+                    <Route path="/signin" element={<SigninUsuario />} />
                     <Route path="/profile" element={<UserProfile />} />
 
 
