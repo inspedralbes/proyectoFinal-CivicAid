@@ -13,24 +13,24 @@ use Illuminate\Database\QueryException;
 class WorkerAuthController extends Controller
 {
 
-    public function registerWorker(Request $request)
+    public function signinWorker(Request $request)
     {
         $request->validate([
             'name' => 'required',
             'surname' => 'required',
             'secondSurname' => 'required',
+            'sector' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required',
-            'sector' => 'required',
         ]);
 
         $worker = new Worker;
         $worker->name = $request->name;
         $worker->surname = $request->surname;
         $worker->secondSurname = $request->secondSurname;
+        $worker->sector = $request->sector;
         $worker->email = $request->email;
         $worker->password = Hash::make($request->password);
-        $worker->sector = $request->sector;
 
 
         try {

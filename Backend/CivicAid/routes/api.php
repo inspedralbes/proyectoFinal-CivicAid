@@ -25,7 +25,7 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/registerWorker', [WorkerAuthController::class, 'registerWorker']);
+Route::post('/signinWorker', [WorkerAuthController::class, 'signinWorker']);
 
 Route::post('/loginWorker', [WorkerAuthController::class, 'loginWorker']);
 

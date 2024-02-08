@@ -10,6 +10,7 @@ import LoginUsuario from './pages/loginUsuario';
 import LoginWorker from './pages/loginWorker';
 //A ESTE ERROR NO HACERLE CASO
 import SigninUsuario from './pages/signinUsuario';
+import SigninWorker from './pages/signinWorker';
 import UserProfile from './pages/userProfile';
 
 
@@ -28,6 +29,7 @@ root.render(
                     <Route path="/login" element={<LoginUsuario />} />
                     <Route path="/loginWorker" element={<LoginWorker />} />
                     <Route path="/signin" element={<SigninUsuario />} />
+                    <Route path="/signinWorker" element={<SigninWorker />} />
                     <Route path="/profile" element={<UserProfile />} />
 
 
