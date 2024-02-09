@@ -20,7 +20,7 @@ class WorkerAuthController extends Controller
             'surname' => 'required',
             'secondSurname' => 'required',
             'sector' => 'required',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:workers',
             'password' => 'required',
         ]);
 
@@ -43,9 +43,40 @@ class WorkerAuthController extends Controller
             return response()->json([$message, 500, 'isRegistered' => false]);
         }
     }
-    
+
     public function loginWorker(Request $request)
     {
+        // $credentials = $request->validate([
+        //     'email' => ['required', 'email'],
+        //     'password' => ['required'],
+        // ]);
+
+        // if (Auth::guard('worker')->attempt($credentials)) {
+        //     $details = Auth::guard('worker')->user();
+        //     $user = $details['original'];
+        //     return $user;
+        // } else {
+        //     return 'auth fail';
+        // }
+
+
+
+        // ---------
+
+
+        // $credentials = $request->validate([
+        //     'email' => ['required', 'email'],
+        //     'password' => ['required'],
+        // ]);
+
+        // if (Auth::guard('worker')->attempt($credentials)) {
+        //     $worker = Auth::guard('worker')->user();
+        //     $token = $worker->createToken('token')->plainTextToken;
+        //     return response([$token, $worker, 'isLoggedIn' => true]);
+        // } else {
+        //     return response(['isLoggedIn' => false]);
+        // }
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],

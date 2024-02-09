@@ -56,19 +56,19 @@ class AuthController extends Controller
         }
     }
 
-    public function loginWorker(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+    // public function loginWorker(Request $request)
+    // {
+    //     $credentials = $request->validate([
+    //         'email' => ['required', 'email'],
+    //         'password' => ['required'],
+    //     ]);
 
-        if (Auth::attempt($credentials)) {
-            $worker = Auth::worker();
-            $token = $worker->createToken('token')->plainTextToken;
-            return response([$token, $worker, 'isLoggedIn' => true]);
-        } else {
-            return response(['isLoggedIn' => false]);
-        }
-    }
+    //     if (Auth::attempt($credentials)) {
+    //         $worker = Auth::worker();
+    //         $token = $worker->createToken('token')->plainTextToken;
+    //         return response([$token, $worker, 'isLoggedIn' => true]);
+    //     } else {
+    //         return response(['isLoggedIn' => false]);
+    //     }
+    // }
 }
