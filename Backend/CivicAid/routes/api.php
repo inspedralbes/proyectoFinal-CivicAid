@@ -20,10 +20,10 @@ use App\Http\Controllers\Api\WorkerAuthController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::middleware('auth:sanctum')->get('/worker', function (Request $request) {
-    return $request->worker();
-});
-Route::post('/register', [AuthController::class, 'register']);
+// Route::middleware('auth:sanctum')->get('/worker', function (Request $request) {
+//     return $request->worker();
+// });
+Route::post('/signIn', [AuthController::class, 'signIn']);
 
 Route::post('/login', [AuthController::class, 'login']);
 

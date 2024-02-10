@@ -46,37 +46,6 @@ class WorkerAuthController extends Controller
 
     public function loginWorker(Request $request)
     {
-        // $credentials = $request->validate([
-        //     'email' => ['required', 'email'],
-        //     'password' => ['required'],
-        // ]);
-
-        // if (Auth::guard('worker')->attempt($credentials)) {
-        //     $details = Auth::guard('worker')->user();
-        //     $user = $details['original'];
-        //     return $user;
-        // } else {
-        //     return 'auth fail';
-        // }
-
-
-
-        // ---------
-
-
-        // $credentials = $request->validate([
-        //     'email' => ['required', 'email'],
-        //     'password' => ['required'],
-        // ]);
-
-        // if (Auth::guard('worker')->attempt($credentials)) {
-        //     $worker = Auth::guard('worker')->user();
-        //     $token = $worker->createToken('token')->plainTextToken;
-        //     return response([$token, $worker, 'isLoggedIn' => true]);
-        // } else {
-        //     return response(['isLoggedIn' => false]);
-        // }
-
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -89,5 +58,42 @@ class WorkerAuthController extends Controller
         } else {
             return response(['isLoggedIn' => false]);
         }
+
+        
+        // $credentials = $request->validate([
+        //     'email' => ['required', 'email'],
+        //     'password' => ['required'],
+        // ]);
+
+        // if (Auth::attempt($credentials)) {
+        //     return response('llega???');
+        //     $worker = Auth::worker();
+        //     $token = $worker->createToken('token')->plainTextToken;
+        //     return response([$token, $worker, 'isLoggedIn' => true]);
+        // } else {
+        //     return response(['isLoggedIn' => false]);
+        // }
+
+        // $credentials = $request->validate([
+        //     'email' => ['required', 'email'],
+        //     'password' => ['required'],
+        // ]);
+
+        // if (Auth::guard('worker')->attempt($credentials)) {
+        //     $details = Auth::guard('worker')->user();
+        //     $worker = $details['original'];
+        //     return response($worker);
+        // } else {
+        //     return 'auth fail';
+        // }
+
+
+
+        // ---------
+
+
+
+
+
     }
 }

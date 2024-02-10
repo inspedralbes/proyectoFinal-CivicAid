@@ -21,10 +21,8 @@ namespace App\Models;
 
 
 use Illuminate\Foundation\Auth\Worker as Authenticatable;
-
 class Worker extends Authenticatable
 {
-    
     /**
      * The attributes that are mass assignable.
      *
@@ -42,5 +40,7 @@ class Worker extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    
 }
 

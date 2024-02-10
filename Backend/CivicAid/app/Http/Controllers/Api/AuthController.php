@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function signIn(Request $request)
     {
         $request->validate([
             'name' => 'required',
@@ -31,11 +31,11 @@ class AuthController extends Controller
 
         try {
             if ($user->save()) {
-                $message = "Registered correctly.";
+                $message = "Signed in correctly.";
                 return response()->json([$message, 200, 'isRegistered' => true]);
             }
         } catch (QueryException $ex) {
-            $message = "Couldn't register.";
+            $message = "Couldn't sign in.";
             return response()->json([$message, 500, 'isRegistered' => false]);
         }
     }

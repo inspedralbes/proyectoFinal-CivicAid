@@ -20,7 +20,7 @@ function SigninForm() {
         setLoading(true);
 
         try {
-            const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/register', {
+            const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signIn', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
