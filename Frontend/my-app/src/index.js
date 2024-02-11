@@ -5,7 +5,6 @@ import reportWebVitals from './reportWebVitals';
 import { HashRouter as Router } from 'react-router-dom';
 import { Routes, Route } from "react-router-dom";
 import HomePage from './pages/home';
-import HacerSolicitud from './pages/makeApplication';
 import LoginUsuario from './pages/loginUsuario';
 import LoginWorker from './pages/loginWorker';
 //A ESTE ERROR NO HACERLE CASO
@@ -13,6 +12,8 @@ import SigninUsuario from './pages/signinUsuario';
 import SigninWorker from './pages/signinWorker';
 import UserProfile from './pages/userProfile';
 
+import HacerSolicitud from './pages/makeApplication';
+import GestionarSolicitud from './pages/manageApplication';
 
 
 import './App.css';
@@ -25,12 +26,14 @@ root.render(
             <Router>
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/makeApplication" element={<HacerSolicitud />} />
                     <Route path="/login" element={<LoginUsuario />} />
                     <Route path="/loginWorker" element={<LoginWorker />} />
                     <Route path="/signin" element={<SigninUsuario />} />
                     <Route path="/signinWorker" element={<SigninWorker />} />
                     <Route path="/profile" element={<UserProfile />} />
+
+                    <Route path="/makeApplication" element={<HacerSolicitud />} />
+                    <Route path="/manageApplication" element={<GestionarSolicitud />} />
 
 
                     {/* <Route path="/games" element={<Games sharedValue={sharedValue} onSharedValueChange={handleSharedValueChange} sharedId={sharedId} onSharedIdChange={handleSharedIdChange} />} />

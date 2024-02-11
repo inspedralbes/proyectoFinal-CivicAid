@@ -43,7 +43,7 @@ const persistConfig = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case 'LOGIN':
-            return { ...state, isLoggedIn: true };
+            return { ...state, isLoggedIn: true, isWorker: true };
         case 'LOGOUT':
             return { ...state, isLoggedIn: false, data: {} };
         case 'SAVE_DATA':

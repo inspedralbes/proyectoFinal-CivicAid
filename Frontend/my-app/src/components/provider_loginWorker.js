@@ -12,6 +12,7 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [isLoading, setLoading] = useState(false);
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
+    const isWorker = useSelector((state) => state.isWorker);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
@@ -35,6 +36,7 @@ const LoginForm = () => {
 
             if (data.isLoggedIn) {
                 dispatch(actions.login());
+                dispatch(actions.worker());
                 store.dispatch(actions.saveData(data[1]));
                 localStorage.setItem('access_token', data[0]);
                 navigate("/")
@@ -72,7 +74,7 @@ const LoginForm = () => {
 
     return (
         <div className="overflow-auto flex h-screen justify-center items-center min-h-screen bg-image-all bg-cover bg-no-repeat bg-center bg-fixed">
-            {isLoggedIn ?
+            {isWorker ?
                 <p>
                     YA ESTAS LOGEADO
                 </p> :

@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
+import { store, actions } from './store';
+
 import Swal from "sweetalert2";
 
 const ManageApplication = () => {
     // const [messageError, setMessageError] = useState("Error");
-    // const [error, setError] = useState(null);
-    // const seleccionaOpcion = "Selecciona un sector";
-
-    // const [isLoading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [isLoading, setLoading] = useState(false);
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const userInfo = useSelector((state) => state.data);
     const isWorker = useSelector((state) => state.isWorker);
+    const workerSector = useSelector((state) => state.workerSector);
     const token = localStorage.getItem('access_token');
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -23,17 +24,17 @@ const ManageApplication = () => {
         async function fetchApplications() {
             if (isWorker) {
                 try {
-                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplications', {
-                        method: 'POST', // Cambiar el método a POST para enviar datos al backend
+                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplicationsSector', {
+                        method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
                         },
-                        mode: 'same-origin',
                         body: JSON.stringify({ sector }), // Enviar el sector del trabajador al backend
                     });
                     const data = await response.json();
                     dispatch(actions.saveData(data));
+
+                    console.log(sector);
 
                 } catch (error) {
                     console.error(error);
@@ -47,41 +48,41 @@ const ManageApplication = () => {
     const handleApplication = async (e) => {
         e.preventDefault();
         setLoading(true);
+        console.log("SISI ESTO FUNCIONA");
+        // try {
+        //     const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/makeApplication', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({ title, description, sector, subsector, date }),
+        //     });
+        //     if (!response.ok) {
+        //         throw new Error(response.statusText);
+        //     } else {
+        //         console.log('La solicitud se ha hecho correctamente');
+        //         navigate("/")
+        //         Swal.fire({
+        //             position: "center",
+        //             icon: "error",
+        //             title: "The application did not completed correctly. Please try again",
+        //             html: "Remember to fill correctly all the fields",
+        //             showConfirmButton: false,
+        //             timer: 3500,
+        //         });
 
-        try {
-            const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/makeApplication', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ title, description, sector, subsector, date }),
-            });
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            } else {
-                console.log('La solicitud se ha hecho correctamente');
-                navigate("/")
-                Swal.fire({
-                    position: "center",
-                    icon: "error",
-                    title: "The application did not completed correctly. Please try again",
-                    html: "Remember to fill correctly all the fields",
-                    showConfirmButton: false,
-                    timer: 3500,
-                });
-
-            }
-            const data = await response.json();
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "The application completed correctly",
-                showConfirmButton: false,
-                timer: 3500,
-            });
-        } catch (error) {
-            setError(error);
-        }
+        //     }
+        //     const data = await response.json();
+        //     Swal.fire({
+        //         position: "center",
+        //         icon: "success",
+        //         title: "The application completed correctly",
+        //         showConfirmButton: false,
+        //         timer: 3500,
+        //     });
+        // } catch (error) {
+        //     setError(error);
+        // }
 
     }
 
