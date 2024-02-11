@@ -15,6 +15,40 @@ class ApplicationController extends Controller
         return $application;
     }
 
+    // public function listApplicationsSector($applicationSector)
+    // {
+    //     $applicationSector = Application::find($applicationSector);    
+    //     // $application = Application::all();
+    //     return $applicationSector;
+    // }
+
+    // public function listApplicationsSector(Request $request)
+    // {
+    //     // Aquí puedes realizar la lógica para recuperar las aplicaciones relacionadas con el sector del trabajador
+    //     // Por ejemplo, asumiendo que tienes un modelo de Application que está vinculado al sector del trabajador
+    //     $application->sector = $request->sector;
+
+    //     $applications = Application::where('sector', $sector)->get();
+
+    //     // Retornar las aplicaciones encontradas como respuesta
+    //     return response()->json($applications, 200);
+    // }
+
+    public function listApplicationsSector(Request $request)
+    {
+        // Obtener el sector del trabajador del cuerpo de la solicitud
+        $sector = $request->sector;
+
+        // Aquí puedes realizar la lógica para recuperar las aplicaciones relacionadas con el sector del trabajador
+        // Por ejemplo, asumiendo que tienes un modelo de Application que está vinculado al sector del trabajador
+
+        $applications = Application::where('sector', $sector)->get();
+
+        // Retornar las aplicaciones encontradas como respuesta
+        return response()->json($applications, 200);
+    }
+
+
 
     public function makeApplication(Request $request)
     {

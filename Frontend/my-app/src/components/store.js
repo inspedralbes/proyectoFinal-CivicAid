@@ -49,7 +49,7 @@ const reducer = (state = initialState, action) => {
         case 'SAVE_DATA':
             return { ...state, data: action.payload };
         case 'WORKER':
-            return { ...state, isLoggedIn: true };
+            return { ...state, isLoggedIn: true, isWorker: true };
         case 'GET_REQUESTINFO':
             return { ...state, requestInfo: action.payload };
         case 'GET_USERID':
@@ -73,6 +73,7 @@ const actions = {
     login: () => ({ type: LOGIN }),
     logout: () => ({ type: LOGOUT }),
     saveData: (data) => ({ type: SAVEDATA, payload: data }),
+    worker: () => ({ type: WORKER }),
     saveRequestInfo: (requestInfo) => ({ type: GET_REQUESTINFO, payload: requestInfo }),
     getUserId: (getUserId) => ({ type: GET_USERID, payload: getUserId }),
     dataOthers: (dataOthers) => ({ type: GET_OTHERSINFO, payload: dataOthers }),

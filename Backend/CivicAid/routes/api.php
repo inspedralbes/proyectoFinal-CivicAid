@@ -37,3 +37,4 @@ Route::post('/updateApplication/{id}', [ApplicationController::class, 'updateApp
 
 Route::get('/listApplications', [ApplicationController::class, 'listApplications']);
 
+Route::post('/listApplicationsSector', [ApplicationController::class, 'listApplicationsSector']);

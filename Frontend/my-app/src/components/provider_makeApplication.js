@@ -98,6 +98,11 @@ const MakeApplication = () => {
                                     <option value="Paramedicos:Servicios Médicos">Paramedicos</option>
                                     <option value="Primeros auxilios:Servicios Médicos">Servicio de primeros auxilios</option>
                                 </optgroup>
+                                <optgroup label="Bomberos">
+                                    <option value="Extincion de incendios:Bomberos">Extinción de incendios</option>
+                                    <option value="Rescate de personas:Bomberos">Rescate de personas atrapadas</option>
+                                    <option value="Materiales peligrosos:Bomberos">Control de materiales peligrosos</option>
+                                </optgroup>
                             </select>
                             {/* <select value={subsector} onChange={handleSubsectorChange}>
                                 <option value="" disabled>Selecciona un sector</option>
@@ -107,11 +112,6 @@ const MakeApplication = () => {
                                     <option value="Primeros auxilios:Servicios Médicos">Servicio de primeros auxilios</option>
                                 </optgroup> */}
 
-                            {/* <optgroup label="Bomberos">
-                                    <option value="Bomberos:Extincionde incendios">Extinción de incendios</option>
-                                    <option value="Bomberos:Rescate de personas">Rescate de personas atrapadas</option>
-                                    <option value="Bomberos:Materiales peligrosos">Control de materiales peligrosos</option>
-                                </optgroup> */}
                             {/* 
                             <optgroup label="Policia">
                                 <option value="policiaLocal">Policia Local</option>
