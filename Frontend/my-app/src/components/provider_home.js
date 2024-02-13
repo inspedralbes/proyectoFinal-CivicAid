@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { store, actions } from './store';
 import { NavLink } from 'react-router-dom';
@@ -6,6 +7,8 @@ import Swal from "sweetalert2";
 
 const Home = () => {
     const dispatch = useDispatch();
+    const isWorker = useSelector((state) => state.isWorker);
+    const applicationOngoing = useSelector((state) => state.applicationOngoing);
 
     function logout() {
 
@@ -21,7 +24,7 @@ const Home = () => {
     }
 
     return (
-        <main className='min-h-screen bg-gray-100 items-center justify-center'>
+        <main className='min-h-screen items-center justify-center'>
             <div className='text-center pt-5'>
                 <h1 className='text-5xl font-bold mb-4'>CivicAid</h1>
             </div>
@@ -58,6 +61,18 @@ const Home = () => {
                             className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
                         >
                             MODO PROFESIONAL
+                        </button>
+                    </NavLink>
+                </div>
+
+                <br />
+
+                <div className='text-center'>
+                    <NavLink to="/manageApplication">
+                        <button
+                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                        >
+                            MOSTRAR SOLICITUDES
                         </button>
                     </NavLink>
                 </div>

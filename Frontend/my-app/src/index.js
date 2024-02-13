@@ -7,7 +7,6 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from './pages/home';
 import LoginUsuario from './pages/loginUsuario';
 import LoginWorker from './pages/loginWorker';
-//A ESTE ERROR NO HACERLE CASO
 import SigninUsuario from './pages/signinUsuario';
 import SigninWorker from './pages/signinWorker';
 import UserProfile from './pages/userProfile';
@@ -34,19 +33,6 @@ root.render(
 
                     <Route path="/makeApplication" element={<HacerSolicitud />} />
                     <Route path="/manageApplication" element={<GestionarSolicitud />} />
-
-
-                    {/* <Route path="/games" element={<Games sharedValue={sharedValue} onSharedValueChange={handleSharedValueChange} sharedId={sharedId} onSharedIdChange={handleSharedIdChange} />} />
-                    <Route path="/upload" element={<Upload socket={socket} />} />
-                    <Route path="/update" element={<Update socket={socket} />} />
-                    <Route path="/profile" element={<Profile socket={socket} />} />
-                    <Route path="/otherProfile" element={<OtherProfile sharedValue={sharedValue} onSharedValueChange={handleSharedValueChange} sharedId={sharedId} onSharedIdChange={handleSharedIdChange} />} />
-                    <Route path="/signin" element={<Signin />} />
-                    <Route path="/login" element={<LoginForm />} />
-                    <Route path="/game" element={<Game socket={socket} sharedValue={sharedValue} sharedId={sharedId} />} />
-                    <Route path="/ranking" element={<GetRanking />} />
-                    <Route path="/store" element={<GetGameStore />} />
-                    <Route path="/guide" element={<Guide />} /> */}
                 </Routes>
                 {/* <HomePage /> */}
             </Router>
