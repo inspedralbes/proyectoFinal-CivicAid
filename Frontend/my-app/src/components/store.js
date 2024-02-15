@@ -2,18 +2,6 @@ import { createStore } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-// const LOGIN = 'LOGIN';
-// const LOGOUT = 'LOGOUT';
-// const SAVEDATA = 'SAVE_DATA';
-// const GET_STORE_ITEMS = 'GET_STORE_ITEMS';
-// const UPDATE_BOUGHT_ITEMS = 'UPDATE_BOUGHT_ITEMS';
-// const GET_GAMEINFO = 'GET_GAMEINFO';
-// const GET_PATHGAME = 'GET_PATHGAME';
-// const GET_USERID = 'GET_USERID';
-// const GET_OTHERSINFO = 'GET_OTHERSINFO';
-// const GET_UPLOADED_GAME_ID = 'GET_UPLOADED_GAME_ID';
-// const GET_UPLOADED_GAME_NAME = 'GET_UPLOADED_GAME_NAME';
-
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 const SAVEDATA = 'SAVE_DATA';
@@ -23,10 +11,12 @@ const GET_USERID = 'GET_USERID';
 const GET_OTHERSINFO = 'GET_OTHERSINFO';
 const GET_UPLOADED_REQUEST_ID = 'GET_UPLOADED_REQUEST_ID';
 const GET_UPLOADED_REQUEST_NAME = 'GET_UPLOADED_REQUEST_NAME';
+const APPLICATION_ONGOING = 'APPLICATION_ONGOING'
 
 const initialState = {
     isLoggedIn: false,
     isWorker: false,
+    applicationOngoing: false,
     data: {},
     requestInfo: {},
     getUserId: {},
@@ -50,6 +40,8 @@ const reducer = (state = initialState, action) => {
             return { ...state, data: action.payload };
         case 'WORKER':
             return { ...state, isLoggedIn: true, isWorker: true };
+        case 'APPLICATION_ONGOING':
+            return { ...state, applicationOngoing: true };
         case 'GET_REQUESTINFO':
             return { ...state, requestInfo: action.payload };
         case 'GET_USERID':
@@ -74,6 +66,7 @@ const actions = {
     logout: () => ({ type: LOGOUT }),
     saveData: (data) => ({ type: SAVEDATA, payload: data }),
     worker: () => ({ type: WORKER }),
+    applicationOngoing: () => ({ type: APPLICATION_ONGOING }),
     saveRequestInfo: (requestInfo) => ({ type: GET_REQUESTINFO, payload: requestInfo }),
     getUserId: (getUserId) => ({ type: GET_USERID, payload: getUserId }),
     dataOthers: (dataOthers) => ({ type: GET_OTHERSINFO, payload: dataOthers }),
