@@ -51,14 +51,49 @@ class WorkerAuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::guard('worker')->attempt($credentials)) {
-            $worker = Auth::guard('worker')->user();
-            $token = $worker->createToken('token')->plainTextToken;
-            return response([$token, $worker, 'isLoggedIn' => true]);
-        } else {
-            return response(['isLoggedIn' => false]);
-        }
+        // if (Auth::guard('worker')->attempt($credentials)) {
+        //     $worker = Auth::guard('worker')->user();
+        //     $token = $worker->createToken('token')->plainTextToken;
+        //     return response([$token, $worker, 'isLoggedIn' => true]);
+        // } else {
+        //     return response(['isLoggedIn' => false]);
+        // }
 
+
+        // $credentials = $request->validate([
+        //     'email' => ['required', 'email'],
+        //     'password' => ['required'],
+        // ]);
+
+        // // $user = Auth::user();
+        // $user = Auth::guard('worker')->attempt($credentials);
+        // if ($user instanceof \App\Models\Worker) {
+        //     // Hinting here for $user will be specific to the User object
+        //     return $user->createToken('token')->plainTextToken;
+        // } else {
+        //     return response(['isLoggedIn' => false]);
+        // }
+
+        // Buscar el usuario por su correo electrónico
+$user = Worker::where('email', $credentials['email'])->first();
+
+// Verificar si el usuario existe y si la contraseña coincide
+if ($user && Hash::check($credentials['password'], $user->password)) {
+    // Autenticación exitosa, crear token de acceso personal
+    $token = $user->createToken('token')->plainTextToken;
+    return response([$token, $user, 'isLoggedIn' => true]);
+} else {
+    // Autenticación fallida
+    return response(['isLoggedIn' => false]);
+}
+
+        // if (Auth::guard('worker')->attempt($credentials)) {
+        //     $user = Auth::guard('worker')->user();
+        //     $token = $user->createToken('token')->plainTextToken;
+        //     return response([$token, $user, 'isLoggedIn' => true]);
+        // } else {
+        //     return response(['isLoggedIn' => false]);
+        // }
         
         // $credentials = $request->validate([
         //     'email' => ['required', 'email'],
