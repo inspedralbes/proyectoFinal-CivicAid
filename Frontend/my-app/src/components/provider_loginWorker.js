@@ -16,7 +16,6 @@ const LoginForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-
     const token = localStorage.getItem('access_token');
 
     const handleSubmit = async (e) => {
@@ -40,6 +39,8 @@ const LoginForm = () => {
                 store.dispatch(actions.saveData(data[1]));
                 localStorage.setItem('access_token', data[0]);
                 navigate("/")
+
+                console.log(data[1].sector);
 
                 Swal.fire({
                     position: "bottom-end",

@@ -9,7 +9,9 @@ const Home = () => {
     const dispatch = useDispatch();
     const isWorker = useSelector((state) => state.isWorker);
     const applicationOngoing = useSelector((state) => state.applicationOngoing);
+    const userInfo = useSelector((state) => state.data?.sector);
 
+    // console.log("EL SECTOR ES ESTE: ", userInfo);
     function logout() {
 
         dispatch(actions.logout());
@@ -68,7 +70,7 @@ const Home = () => {
                 <br />
 
                 <div className='text-center'>
-                    <NavLink to="/manageApplication">
+                    <NavLink to="/manageApplications">
                         <button
                             className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
                         >
@@ -99,6 +101,24 @@ const Home = () => {
                     </NavLink>
                 </div>
             </div>
+
+            {applicationOngoing ?
+                <div>
+                    <div className='text-center'>
+                        <NavLink to="/applicationOngoing">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                SOLICITUD ACEPTADA
+                            </button>
+                        </NavLink>
+                    </div>
+                </div>
+
+                :
+
+                <div></div>
+            }
         </main>
     );
 }

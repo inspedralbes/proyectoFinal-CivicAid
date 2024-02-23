@@ -4,28 +4,26 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { store, actions } from './store';
 
 import Swal from "sweetalert2";
-import moment from 'moment';
+// import moment from 'moment';
 
 const ManageApplication = () => {
     // const [messageError, setMessageError] = useState("Error");
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const [error, setError] = useState(null);
-    const [isLoading, setLoading] = useState(false);
-    const isLoggedIn = useSelector((state) => state.isLoggedIn);
-    const userInfo = useSelector((state) => state.data);
+    // const [error, setError] = useState(null);
+    // const [isLoading, setLoading] = useState(false);
+    // const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const token = localStorage.getItem('access_token');
 
+
+    const userInfo = useSelector((state) => state.data?.sector);
     const isWorker = useSelector((state) => state.isWorker);
-    const workerSector = useSelector((state) => state.workerSector);
-    const sector = "Servicios Médicos";
+    const sector = useSelector((state) => state.data.sector);;
+    // const sector = "Servicios Médicos";
     const [applicationInfo, setApplicationInfo] = useState([]);
     const applicationOngoing = useSelector((state) => state.applicationOngoing);
 
     useEffect(() => {
-        // const sector = userInfo.sector;
-
         async function fetchApplications() {
             if (isWorker) {
                 try {
@@ -33,66 +31,32 @@ const ManageApplication = () => {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
                         },
                         body: JSON.stringify({ sector }), // Enviar el sector del trabajador al backend
                     });
+
+                    console.log("ESTE ES EL SECTOR: ", userInfo);
+
                     const data = await response.json();
-                    dispatch(actions.saveData(data));
 
                     setApplicationInfo(data)
-                    console.log(data);
 
                 } catch (error) {
-                    console.error(error);
+                    console.error("ESTE ES EL ERROR: ", error);
                 }
             }
         }
         fetchApplications();
-    }, [isWorker, workerSector]); // Añadir workerSector como una dependencia del efecto
+    }, [sector]); // Añadir workerSector como una dependencia del efecto
 
 
     const handleApplication = async (e) => {
-        e.preventDefault();
-        setLoading(true);
+        // e.preventDefault();
+        // setLoading(true);
 
         navigate("/");
-        dispatch(actions.applicationOngoing())
-        // console.log("SISI ESTO FUNCIONA");
-        // try {
-        //     const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/makeApplication', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify({ title, description, sector, subsector, date }),
-        //     });
-        //     if (!response.ok) {
-        //         throw new Error(response.statusText);
-        //     } else {
-        //         console.log('La solicitud se ha hecho correctamente');
-        //         navigate("/")
-        //         Swal.fire({
-        //             position: "center",
-        //             icon: "error",
-        //             title: "The application did not completed correctly. Please try again",
-        //             html: "Remember to fill correctly all the fields",
-        //             showConfirmButton: false,
-        //             timer: 3500,
-        //         });
-
-        //     }
-        //     const data = await response.json();
-        //     Swal.fire({
-        //         position: "center",
-        //         icon: "success",
-        //         title: "The application completed correctly",
-        //         showConfirmButton: false,
-        //         timer: 3500,
-        //     });
-        // } catch (error) {
-        //     setError(error);
-        // }
-
+        dispatch(actions.applicationOngoing(e))
     }
 
     return (

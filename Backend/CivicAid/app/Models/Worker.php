@@ -20,11 +20,11 @@ namespace App\Models;
 // }
 
 
+
 use Illuminate\Foundation\Auth\Worker as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 class Worker extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -32,7 +32,7 @@ class Worker extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
@@ -43,7 +43,7 @@ class Worker extends Authenticatable
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -53,22 +53,13 @@ class Worker extends Authenticatable
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
 
-    /**
-     * Get the tokens for the worker.
-     */
-    public function tokens()
-    {
-        return $this->hasMany(PersonalAccessToken::class);
-    }
-}
-
-
     
-
+}
 

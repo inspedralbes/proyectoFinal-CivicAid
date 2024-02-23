@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { store } from './components/store';
+
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { HashRouter as Router } from 'react-router-dom';
@@ -12,7 +15,8 @@ import SigninWorker from './pages/signinWorker';
 import UserProfile from './pages/userProfile';
 
 import HacerSolicitud from './pages/makeApplication';
-import GestionarSolicitud from './pages/manageApplication';
+import GestionarSolicitudes from './pages/manageApplication';
+import SolicitudAceptada from './pages/applicationOngoing';
 
 
 import './App.css';
@@ -21,22 +25,26 @@ import './App.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <div>
-            <Router>
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/login" element={<LoginUsuario />} />
-                    <Route path="/loginWorker" element={<LoginWorker />} />
-                    <Route path="/signin" element={<SigninUsuario />} />
-                    <Route path="/signinWorker" element={<SigninWorker />} />
-                    <Route path="/profile" element={<UserProfile />} />
+        {/* <Provider store={store}> */}
+            <div>
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/login" element={<LoginUsuario />} />
+                        <Route path="/loginWorker" element={<LoginWorker />} />
+                        <Route path="/signin" element={<SigninUsuario />} />
+                        <Route path="/signinWorker" element={<SigninWorker />} />
+                        <Route path="/profile" element={<UserProfile />} />
 
-                    <Route path="/makeApplication" element={<HacerSolicitud />} />
-                    <Route path="/manageApplication" element={<GestionarSolicitud />} />
-                </Routes>
-                {/* <HomePage /> */}
-            </Router>
-        </div>
+                        <Route path="/makeApplication" element={<HacerSolicitud />} />
+                        <Route path="/manageApplications" element={<GestionarSolicitudes />} />
+                        <Route path="/applicationOngoing" element={<SolicitudAceptada />} />
+
+                    </Routes>
+                    {/* <HomePage /> */}
+                </Router>
+            </div>
+        {/* </Provider> */}
     </React.StrictMode>
 );
 

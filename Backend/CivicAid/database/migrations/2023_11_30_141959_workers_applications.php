@@ -15,12 +15,11 @@ return new class extends Migration
             $table->bigIncrements('applicationId');
             $table->unsignedBigInteger('applicantId');
             $table->unsignedBigInteger('assignedWorker');
-            $table->enum('requestState', ['active', 'inactive', 'pending', 'completed'])->default('pending');
+            $table->enum('applicationStatus', ['active', 'inactive', 'pending', 'completed'])->default('pending');
 
             $table->foreign('applicationId')->references('applicationId')->on('applications'); // Define la clave foránea
             $table->foreign('applicantId')->references('id')->on('users'); // Define la clave foránea
-            $table->foreign('assignedWorker')->references('workerId')->on('workers'); // Define la clave foránea
-    
+            $table->foreign('assignedWorker')->references('id')->on('workers'); // Define la clave foránea
         });
     }
 
