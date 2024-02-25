@@ -20,9 +20,7 @@ use App\Http\Controllers\Api\WorkerAuthController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-// Route::middleware('auth:sanctum')->get('/worker', function (Request $request) {
-//     return $request->worker();
-// });
+
 Route::post('/signIn', [AuthController::class, 'signIn']);
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -38,3 +36,7 @@ Route::post('/updateApplication/{id}', [ApplicationController::class, 'updateApp
 Route::get('/listApplications', [ApplicationController::class, 'listApplications']);
 
 Route::post('/listApplicationsSector', [ApplicationController::class, 'listApplicationsSector']);
+
+Route::post('/updateApplicationStatus/{id}', [ApplicationController::class, 'updateApplicationStatus']);
+
+Route::post('/listOwnApplications', [ApplicationController::class, 'listOwnApplications']);

@@ -18,6 +18,7 @@ const LoginForm = () => {
     const location = useLocation();
     const token = localStorage.getItem('access_token');
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -133,7 +134,7 @@ const LoginForm = () => {
                                     <p className="mr-2 text-white">
                                         NO TIENES CUENTA?
                                     </p>
-                                    <NavLink to="/signin">
+                                    <NavLink to="/signinWorker">
                                         <button className="group relative h-10 w-36 border-2 overflow-hidden rounded-lg bg-transparent uppercase font-bold text-lg shadow" data-te-ripple-init data-te-ripple-color="light">
                                             <div className="absolute inset-0 w-3 bg-purple-400 transition-all duration-[500ms] ease-out group-hover:w-full"></div>
                                             <span className="relative text-white group-hover:text-black ">REGISTRARSE</span>

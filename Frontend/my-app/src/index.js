@@ -17,6 +17,7 @@ import UserProfile from './pages/userProfile';
 import HacerSolicitud from './pages/makeApplication';
 import GestionarSolicitudes from './pages/manageApplication';
 import SolicitudAceptada from './pages/applicationOngoing';
+import SolicitudPropia from './pages/getOwnApplication';
 
 
 import './App.css';
@@ -25,7 +26,6 @@ import './App.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        {/* <Provider store={store}> */}
             <div>
                 <Router>
                     <Routes>
@@ -39,12 +39,10 @@ root.render(
                         <Route path="/makeApplication" element={<HacerSolicitud />} />
                         <Route path="/manageApplications" element={<GestionarSolicitudes />} />
                         <Route path="/applicationOngoing" element={<SolicitudAceptada />} />
-
+                        <Route path="/ownApplication" element={<SolicitudPropia />} />
                     </Routes>
-                    {/* <HomePage /> */}
                 </Router>
             </div>
-        {/* </Provider> */}
     </React.StrictMode>
 );
 

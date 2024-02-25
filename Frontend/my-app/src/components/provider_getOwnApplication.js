@@ -2,86 +2,46 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { store, actions } from './store';
-
 import Swal from "sweetalert2";
 
-const ManageApplication = () => {
+const OwnApplication = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const token = localStorage.getItem('access_token');
 
-    const ñeñe = useSelector((state) => state.applicationOngoingInfo);
-    const applicationId = useSelector((state) => state.applicationOngoingInfo);
-    const applicantId = useSelector((state) => state.applicationOngoingInfo.applicantId);
-    const assignedWorker = useSelector((state) => state.data.id);
-
-    const userInfo = useSelector((state) => state.data?.sector);
-    const isWorker = useSelector((state) => state.isWorker);
-    const sector = useSelector((state) => state.data.sector);;
+    const userId = useSelector((state) => state.data.id);
+    const isUser = useSelector((state) => state.isUser);
     const [applicationInfo, setApplicationInfo] = useState([]);
-    const applicationOngoing = useSelector((state) => state.applicationOngoing);
 
     useEffect(() => {
         async function fetchApplications() {
-
-            if (isWorker) {
+            if (isUser) {
                 try {
-                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplicationsSector', {
+                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listOwnApplications', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`,
                         },
-                        body: JSON.stringify({ sector }),
+                        body: JSON.stringify({ userId }),
                     });
                     const data = await response.json();
-
                     setApplicationInfo(data)
-
                 } catch (error) {
                     console.error("ESTE ES EL ERROR: ", error);
                 }
             }
         }
+
         fetchApplications();
-    }, [sector]); // Añadir workerSector como una dependencia del efecto
-
-
-    const handleApplication = async (e) => {
-        // e.preventDefault(e);
-        setLoading(true);
-
-        try {
-            let applicationStatus = e.applicationStatus = "active";
-
-            const response = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/updateApplicationStatus/${e.id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({ applicationStatus }),
-            });
-
-            const data = await response.json();
-
-            console.log(data);
-
-            // setApplicationInfo(data)
-
-        } catch (error) {
-            console.error("ESTE ES EL ERROR: ", error);
-        }
-
-        navigate("/");
-        dispatch(actions.applicationOngoing(e))
-    }
+    }, []); // Añadir workerSector como una dependencia del efecto
 
     return (
         <main className='min-h-screen bg-gray-100 items-center justify-center'>
-            {isWorker ?
+            {isUser ?
                 <div>
                     {/* CARD */}
                     {applicationInfo.map((application, applicationId) => (
@@ -112,21 +72,13 @@ const ManageApplication = () => {
                                         {application.title}
                                     </h5>
                                     <br />
-                                    <h4 className="block font-sans text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">
-                                        SOLICITANTE: {application.applicantId}
-                                    </h4>
                                 </div>
+                                <h4 className="block font-sans text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">
+                                    STATUS: {application.applicationStatus}
+                                </h4>
                                 <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
                                     {application.description}
                                 </p>
-                            </div>
-                            <div className="p-6 pt-3">
-                                <button
-                                    onClick={() => handleApplication(application)}
-                                    className=" block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                    type="submit">
-                                    ACEPTAR
-                                </button>
                             </div>
                         </div>
                     ))}
@@ -163,4 +115,4 @@ const ManageApplication = () => {
 }
 
 
-export default ManageApplication;
+export default OwnApplication;

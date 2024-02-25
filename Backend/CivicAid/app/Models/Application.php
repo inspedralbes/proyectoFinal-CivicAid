@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Application extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'applicationId';
+    protected $primaryKey = 'id';
 
     public function user()
     {

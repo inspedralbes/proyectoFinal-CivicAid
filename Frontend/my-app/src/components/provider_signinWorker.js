@@ -61,7 +61,6 @@ function SigninForm() {
         <div className="overflow-auto flex h-screen justify-center items-center min-h-screen bg-image-all bg-cover bg-no-repeat bg-center bg-fixed">
             {isLoggedIn ?
                 <p>
-                    {/* {t('signInAlreadyLoggedIn')} */}
                     YA HAS INICIADO SESIÓN
                 </p> :
                 <div className="container h-full p-22">
@@ -85,15 +84,13 @@ function SigninForm() {
                                                 <div className="relative z-0 w-full mb-6 group">
                                                     <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="off" type="text" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
                                                     <label htmlFor="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                        {/* {t('signInUsername')} */}
-                                                        NOMBRE MOSTRO
+                                                        NOMBRE
                                                     </label>
                                                 </div>
 
                                                 <div className="relative z-0 w-full mb-6 group">
                                                     <input value={surname} onChange={(event) => setSurname(event.target.value)} autoComplete="off" type="text" name="floating_surname" id="floating_surname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
                                                     <label htmlFor="floating_surname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                        {/* {t('signInUsername')} */}
                                                         APELLIDO
                                                     </label>
                                                 </div>
@@ -101,7 +98,6 @@ function SigninForm() {
                                                 <div className="relative z-0 w-full mb-6 group">
                                                     <input value={secondSurname} onChange={(event) => setSecondSurname(event.target.value)} autoComplete="off" type="text" name="floating_secondSurname" id="floating_secondSurname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
                                                     <label htmlFor="floating_secondSurname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                        {/* {t('signInUsername')} */}
                                                         SEGUNDO APELLIDO
                                                     </label>
                                                 </div>
@@ -109,7 +105,6 @@ function SigninForm() {
                                                 <div className="relative z-0 w-full mb-6 group">
                                                     <input value={sector} onChange={(event) => setSector(event.target.value)} autoComplete="off" type="text" name="floating_sector" id="floating_sector" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
                                                     <label htmlFor="floating_sector" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                        {/* {t('signInUsername')} */}
                                                         SECTOR
                                                     </label>
                                                 </div>
@@ -117,13 +112,11 @@ function SigninForm() {
                                                 <div className="relative z-0 w-full mb-6 group">
                                                     <input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" type="email" name="floating_email" id="floating_email" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
                                                     <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                        {/* {t('signInEmail')} */}
                                                         EMAIL
                                                     </label>
                                                 </div>
 
                                                 <a className="text-neutral-500">
-                                                    {/* {t('signInEmailMustHave')} */}
                                                     Tiene que tener '@' y un dominio (Ej: civicaid@gmail.com).
                                                 </a>
                                                 <br></br><br></br>
@@ -132,13 +125,11 @@ function SigninForm() {
                                                 <div className="relative z-0 w-full mb-6 group">
                                                     <input value={password} onChange={(event) => setPassword(event.target.value)} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autoComplete="off" type="password" name="floating_password" id="floating_password" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
                                                     <label htmlFor="floating_password" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                        {/* {t('signInPassword')} */}
                                                         CONTRASEÑA
                                                     </label>
                                                 </div>
 
                                                 <a className="text-neutral-500">
-                                                    {/* {t('signInPasswordMustHave')} */}
                                                     8 caracteres, una mayúscula, una minúscula y un número.
                                                 </a>
 
@@ -158,7 +149,6 @@ function SigninForm() {
                                                             </div>
                                                         ) : (
                                                             <p>
-                                                                {/* {t('signIn')} */}
                                                                 REGISTRARSE
                                                             </p>
                                                         )}
@@ -167,7 +157,6 @@ function SigninForm() {
 
                                                 <div className="flex mt-10 items-center justify-between pb-6">
                                                     <p className="mb-0 mr-2 text-white">
-                                                        {/* {t('signInAlreadyAcc')} */}
                                                         YA TIENE CUENTA?
                                                     </p>
                                                     <NavLink to="/">
@@ -177,7 +166,6 @@ function SigninForm() {
                                                         >
                                                             <div className="absolute inset-0 w-3 bg-purple-400 transition-all duration-[500ms] ease-out group-hover:w-full"></div>
                                                             <span className="relative text-white group-hover:text-black ">
-                                                                {/* {t('logIn')} */}
                                                                 LOGEARSE
                                                             </span>
                                                         </button>

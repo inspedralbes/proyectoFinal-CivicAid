@@ -7,11 +7,11 @@ import Swal from "sweetalert2";
 
 const Home = () => {
     const dispatch = useDispatch();
+    const isLoggedIn = useSelector((state) => state.isLoggedIn);
+    const isUser = useSelector((state) => state.isUser);
     const isWorker = useSelector((state) => state.isWorker);
     const applicationOngoing = useSelector((state) => state.applicationOngoing);
-    const userInfo = useSelector((state) => state.data?.sector);
 
-    // console.log("EL SECTOR ES ESTE: ", userInfo);
     function logout() {
 
         dispatch(actions.logout());
@@ -31,44 +31,92 @@ const Home = () => {
                 <h1 className='text-5xl font-bold mb-4'>CivicAid</h1>
             </div>
 
-            <div className='bg-white p-8 rounded shadow-md max-w-3xl w-full'>
+            {isUser ?
+                <div>
+                    <div className='text-center'>
+                        <NavLink to="/makeApplication">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                HACER SOLICITUD
+                            </button>
+                        </NavLink>
+                    </div>
 
-                <div className='text-center'>
-                    <NavLink to="/makeApplication">
-                        <button
-                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                        >
-                            HACER SOLICITUD
-                        </button>
-                    </NavLink>
+                    <br />
+
+                    <div className='text-center'>
+                        <NavLink to="/ownApplication">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                MOSTRAR SOLICITUDES PROPIAS
+                            </button>
+                        </NavLink>
+                    </div>
+
+
+
+                    <br />
                 </div>
 
-                <br />
+                :
 
-                <div className='text-center'>
-                    <NavLink to="/login">
-                        <button
-                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                        >
-                            MODO CIUIDADANO
-                        </button>
-                    </NavLink>
+                <div>
+                    <div className='text-center'>
+                        <NavLink to="/login">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                MODO CIUIDADANO
+                            </button>
+                        </NavLink>
+                    </div>
+
+                    <br />
+
+                    <div className='text-center'>
+                        <NavLink to="/loginWorker">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                MODO PROFESIONAL
+                            </button>
+                        </NavLink>
+                    </div>
                 </div>
 
-                <br />
+            }
 
-                <div className='text-center'>
-                    <NavLink to="/loginWorker">
+            {isLoggedIn ?
+                <div>
+                    <div className='text-center'>
+                        <NavLink to="/profile">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                PERFIL
+                            </button>
+                        </NavLink>
+                    </div>
+
+                    <br />
+
+                    <div className='text-center'>
                         <button
-                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            onClick={() => logout()} className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
                         >
-                            MODO PROFESIONAL
+                            LOGOUT
                         </button>
-                    </NavLink>
+                    </div>
                 </div>
+ 
+                :
 
-                <br />
+                <div></div>
+            }
 
+            {isWorker ?
                 <div className='text-center'>
                     <NavLink to="/manageApplications">
                         <button
@@ -79,28 +127,10 @@ const Home = () => {
                     </NavLink>
                 </div>
 
-                <br />
+                :
 
-                <div className='text-center'>
-                    <button
-                        onClick={() => logout()} className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                    >
-                        LOGOUT
-                    </button>
-                </div>
-            </div>
-
-            <div>
-                <div className='text-center'>
-                    <NavLink to="/profile">
-                        <button
-                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                        >
-                            PERFIL
-                        </button>
-                    </NavLink>
-                </div>
-            </div>
+                <div></div>
+            }
 
             {applicationOngoing ?
                 <div>

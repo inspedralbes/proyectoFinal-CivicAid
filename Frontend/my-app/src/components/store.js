@@ -6,6 +6,7 @@ const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 const SAVEDATA = 'SAVE_DATA';
 const WORKER = 'WORKER';
+const USER = 'USER';
 const GET_APPLICATION_INFO = 'GET_APPLICATION_INFO';
 const GET_USERID = 'GET_USERID';
 const GET_OTHERSINFO = 'GET_OTHERSINFO';
@@ -16,6 +17,7 @@ const APPLICATION_ONGOING = 'APPLICATION_ONGOING'
 const initialState = {
     isLoggedIn: false,
     isWorker: false,
+    isUser: false,
     applicationOngoing: false,
     applicationOngoingInfo: {},
     data: {},
@@ -34,27 +36,38 @@ const persistConfig = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case 'LOGIN':
-            return { ...state, isLoggedIn: true};
+            return { ...state, isLoggedIn: true };
+
         case 'LOGOUT':
-            return { ...state, isLoggedIn: false, isWorker: false, data: {} };
+            return { ...state, isLoggedIn: false, isWorker: false, isUser: false, applicationOngoing: false, data: {} };
+
         case 'SAVE_DATA':
             return { ...state, data: action.payload };
+
         case 'WORKER':
             return { ...state, isLoggedIn: true, isWorker: true };
+
+        case 'USER':
+            return { ...state, isUser: true };
+
         case 'APPLICATION_ONGOING':
             return { ...state, applicationOngoing: true, applicationOngoingInfo: action.payload };
-        // case 'APPLICATION_ONGOING_INFO':
-        //     return { ...state, applicationOngoing: true };
+
         case 'GET_APPLICATION_INFO':
             return { ...state, applicationInfo: action.payload };
+
         case 'GET_USERID':
             return { ...state, getUserId: action.payload };
+
         case 'GET_OTHERSINFO':
             return { ...state, dataOthers: action.payload };
+
         case 'GET_UPLOADED_APPLICATION_ID':
             return { ...state, uploadedApplicationId: action.payload };
+
         case 'GET_UPLOADED_APPLICATION_NAME':
             return { ...state, uploadedApplicationName: action.payload };
+
         default:
             return state;
     }
@@ -69,6 +82,7 @@ const actions = {
     logout: () => ({ type: LOGOUT }),
     saveData: (data) => ({ type: SAVEDATA, payload: data }),
     worker: () => ({ type: WORKER }),
+    user: () => ({ type: USER }),
     applicationOngoing: (applicationOngoingInfo) => ({ type: APPLICATION_ONGOING, payload: applicationOngoingInfo }),
     saveApplicationInfo: (applicationInfo) => ({ type: GET_APPLICATION_INFO, payload: applicationInfo }),
     getUserId: (getUserId) => ({ type: GET_USERID, payload: getUserId }),

@@ -35,6 +35,7 @@ const LoginForm = () => {
 
             if (data.isLoggedIn) {
                 dispatch(actions.login());
+                dispatch(actions.user());
                 store.dispatch(actions.saveData(data[1]));
                 localStorage.setItem('access_token', data[0]);
                 navigate("/")
@@ -130,7 +131,7 @@ const LoginForm = () => {
                                     <p className="mr-2 text-white">
                                         NO TIENES CUENTA?
                                     </p>
-                                    <NavLink to="/signinUsuario">
+                                    <NavLink to="/signin">
                                         <button className="group relative h-10 w-36 border-2 overflow-hidden rounded-lg bg-transparent uppercase font-bold text-lg shadow" data-te-ripple-init data-te-ripple-color="light">
                                             <div className="absolute inset-0 w-3 bg-purple-400 transition-all duration-[500ms] ease-out group-hover:w-full"></div>
                                             <span className="relative text-white group-hover:text-black ">LOGEARSE</span>

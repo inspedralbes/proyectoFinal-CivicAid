@@ -15,6 +15,12 @@ const MakeApplication = () => {
     const [messageError, setMessageError] = useState("Error");
     const [error, setError] = useState(null);
     const seleccionaOpcion = "Selecciona un sector";
+    const [isLoading, setLoading] = useState(false);
+    const isLoggedIn = useSelector((state) => state.isLoggedIn);
+    const applicantId = useSelector((state) => state.data.id);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSubsectorChange = (e) => {
         const value = e.target.value;
@@ -26,13 +32,9 @@ const MakeApplication = () => {
         setSector(sectorValue);
 
         console.log(subsectorValue, sectorValue);
-    };
 
-    const [isLoading, setLoading] = useState(false);
-    const isLoggedIn = useSelector((state) => state.isLoggedIn);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    // const location = useLocation();
+        console.log("ESTA ES LA ID DEL USUARIO: ", applicantId);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,7 +46,7 @@ const MakeApplication = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ title, description, sector, subsector, date }),
+                body: JSON.stringify({ applicantId, title, description, sector, subsector, date }),
             });
             if (!response.ok) {
                 throw new Error(response.statusText);
