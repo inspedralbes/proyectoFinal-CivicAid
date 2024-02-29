@@ -43,7 +43,7 @@ class ApplicationController extends Controller
     {
         $id = $request->userId;
 
-        $applications = Application::where('id', $id)->get();
+        $applications = Application::where('applicantId', $id)->get();
 
         return response()->json($applications, 200);
     }

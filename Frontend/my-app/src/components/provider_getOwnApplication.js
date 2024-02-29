@@ -11,6 +11,7 @@ const OwnApplication = () => {
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const token = localStorage.getItem('access_token');
+    const comprobar = localStorage.getItem('perist:root');
 
     const userId = useSelector((state) => state.data.id);
     const isUser = useSelector((state) => state.isUser);
@@ -18,6 +19,7 @@ const OwnApplication = () => {
 
     useEffect(() => {
         async function fetchApplications() {
+            console.log(userId);
             if (isUser) {
                 try {
                     const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listOwnApplications', {
@@ -29,6 +31,7 @@ const OwnApplication = () => {
                         body: JSON.stringify({ userId }),
                     });
                     const data = await response.json();
+                    console.log(data);
                     setApplicationInfo(data)
                 } catch (error) {
                     console.error("ESTE ES EL ERROR: ", error);
@@ -37,15 +40,15 @@ const OwnApplication = () => {
         }
 
         fetchApplications();
-    }, []); // Añadir workerSector como una dependencia del efecto
+    }, [comprobar]); // Añadir workerSector como una dependencia del efecto
 
     return (
         <main className='min-h-screen bg-gray-100 items-center justify-center'>
             {isUser ?
                 <div>
                     {/* CARD */}
-                    {applicationInfo.map((application, applicationId) => (
-                        <div key={applicationId} className="relative flex w-full max-w-[26rem] p-5 mt-5 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
+                    {applicationInfo.map((application, id) => (
+                        <div key={id} className="relative flex w-full max-w-[26rem] p-5 mt-5 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
                             <div
                                 className="relative mx-4 mt-4 overflow-hidden text-white shadow-lg rounded-xl bg-blue-gray-500 bg-clip-border shadow-blue-gray-500/40">
                                 <img
