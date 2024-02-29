@@ -17,6 +17,7 @@ const LoginForm = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const token = localStorage.getItem('access_token');
+    const checkApplicationOngoing = localStorage.getItem('persist:root');
 
 
     const handleSubmit = async (e) => {
@@ -35,6 +36,22 @@ const LoginForm = () => {
             const data = await response.json();
 
             if (data.isLoggedIn) {
+
+                // Verificar si la variable "applicationOngoingInfo" tiene valor o no
+                if (checkApplicationOngoing) {
+                    const parsedData = JSON.parse(checkApplicationOngoing);
+
+                    const applicationOngoingInfo = parsedData.applicationOngoingInfo;
+                    const applicationOngoing = parsedData.applicationOngoing;
+
+                    console.log("Esta la aplicacion en marcha? ", applicationOngoing);
+                    console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
+                    dispatch(actions.checkAppOngoing());
+                    console.log("Y ahora? ", applicationOngoing);
+
+                } else {
+                    console.log('La variable del Local Storage está vacía');
+                }
                 dispatch(actions.login());
                 dispatch(actions.worker());
                 store.dispatch(actions.saveData(data[1]));

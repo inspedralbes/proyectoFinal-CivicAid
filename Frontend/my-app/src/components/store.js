@@ -13,6 +13,7 @@ const GET_OTHERSINFO = 'GET_OTHERSINFO';
 const GET_UPLOADED_APPLICATION_ID = 'GET_UPLOADED_APPLICATION_ID';
 const GET_UPLOADED_APPLICATION_NAME = 'GET_UPLOADED_APPLICATION_NAME';
 const APPLICATION_ONGOING = 'APPLICATION_ONGOING'
+const CHECK_APP_ONGOING = 'CHECK_APP_ONGOING'
 
 const initialState = {
     isLoggedIn: false,
@@ -46,6 +47,9 @@ const reducer = (state = initialState, action) => {
 
         case 'WORKER':
             return { ...state, isLoggedIn: true, isWorker: true };
+
+        case 'CHECK_APP_ONGOING':
+            return { ...state, applicationOngoing: true };
 
         case 'USER':
             return { ...state, isUser: true };
@@ -82,6 +86,7 @@ const actions = {
     logout: () => ({ type: LOGOUT }),
     saveData: (data) => ({ type: SAVEDATA, payload: data }),
     worker: () => ({ type: WORKER }),
+    checkAppOngoing: () => ({ type: CHECK_APP_ONGOING }),
     user: () => ({ type: USER }),
     applicationOngoing: (applicationOngoingInfo) => ({ type: APPLICATION_ONGOING, payload: applicationOngoingInfo }),
     saveApplicationInfo: (applicationInfo) => ({ type: GET_APPLICATION_INFO, payload: applicationInfo }),

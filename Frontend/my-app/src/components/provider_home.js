@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { store, actions } from './store';
@@ -11,6 +11,38 @@ const Home = () => {
     const isUser = useSelector((state) => state.isUser);
     const isWorker = useSelector((state) => state.isWorker);
     const applicationOngoing = useSelector((state) => state.applicationOngoing);
+
+
+    const checkApplicationOngoing = localStorage.getItem('persist:root');
+
+    useEffect(() => {
+        async function comprobar() {
+
+            // Verificar si hay datos en el Local Storage
+            if (checkApplicationOngoing) {
+                // Convertir el JSON almacenado a un objeto JavaScript
+                const parsedData = JSON.parse(checkApplicationOngoing);
+
+                // Obtener el valor de "applicationOngoingInfo"
+                const applicationOngoingInfo = parsedData.applicationOngoingInfo;
+                const applicationOngoing = parsedData.applicationOngoing;
+                // Ahora puedes utilizar la variable "applicationOngoingInfo" según necesites
+                console.log("Esta la aplicacion en marcha? ", applicationOngoing);
+                console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
+
+            } else {
+                console.log('La variable del Local Storage está vacía');
+            }
+        }
+        comprobar();
+    }, [checkApplicationOngoing]); // Añadir workerSector como una dependencia del efecto
+
+
+
+
+
+
+
 
     function logout() {
 
@@ -110,7 +142,7 @@ const Home = () => {
                         </button>
                     </div>
                 </div>
- 
+
                 :
 
                 <div></div>
