@@ -18,6 +18,7 @@ class ApplicationController extends Controller
         $application->description = $request->description;
         $application->sector = $request->sector;
         $application->subsector = $request->subsector;
+        $application->location = $request->location;
         $application->date = $request->date;
 
         $application->save();

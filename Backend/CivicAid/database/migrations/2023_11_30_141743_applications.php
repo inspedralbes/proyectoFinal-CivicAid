@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('sector');
             $table->string('subsector');
             $table->enum('applicationStatus', ['active', 'inactive', 'pending', 'completed'])->default('pending');
+            $table->string('location');
             $table->date('date');
             $table->timestamps();
 
