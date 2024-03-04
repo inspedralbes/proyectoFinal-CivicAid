@@ -49,7 +49,7 @@ const reducer = (state = initialState, action) => {
             return { ...state, isLoggedIn: true, isWorker: true };
 
         case 'CHECK_APP_ONGOING':
-            return { ...state, applicationOngoing: true };
+            return { ...state, applicationOngoing: false };
 
         case 'USER':
             return { ...state, isUser: true };

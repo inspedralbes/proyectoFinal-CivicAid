@@ -38,12 +38,6 @@ const Home = () => {
     }, [checkApplicationOngoing]); // Añadir workerSector como una dependencia del efecto
 
 
-
-
-
-
-
-
     function logout() {
 
         dispatch(actions.logout());
@@ -63,8 +57,12 @@ const Home = () => {
                 <h1 className='text-5xl font-bold mb-4'>CivicAid</h1>
             </div>
 
+
+
+
             {isUser ?
                 <div>
+                    <br />
                     <div className='text-center'>
                         <NavLink to="/makeApplication">
                             <button
@@ -86,10 +84,72 @@ const Home = () => {
                             </button>
                         </NavLink>
                     </div>
+                    <br />
+                </div>
 
+                :
 
+                <div></div>
+            }
+
+            {isWorker ?
+                <div className='text-center'>
+                    <br />
+                    <NavLink to="/manageApplications">
+                        <button
+                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                        >
+                            MOSTRAR SOLICITUDES
+                        </button>
+                    </NavLink>
+                </div>
+
+                :
+
+                <div></div>
+            }
+
+            {applicationOngoing ?
+                <div>
+                    <br />
+                    <div className='text-center'>
+                        <NavLink to="/applicationOngoing">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                SOLICITUD ACEPTADA
+                            </button>
+                        </NavLink>
+                    </div>
+                </div>
+
+                :
+
+                <div></div>
+            }
+
+            {isLoggedIn ?
+                <div>
+                    <br />
+                    <div className='text-center'>
+                        <NavLink to="/profile">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                PERFIL
+                            </button>
+                        </NavLink>
+                    </div>
 
                     <br />
+
+                    <div className='text-center'>
+                        <button
+                            onClick={() => logout()} className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                        >
+                            LOGOUT
+                        </button>
+                    </div>
                 </div>
 
                 :
@@ -116,70 +176,8 @@ const Home = () => {
                             </button>
                         </NavLink>
                     </div>
+
                 </div>
-
-            }
-
-            {isLoggedIn ?
-                <div>
-                    <div className='text-center'>
-                        <NavLink to="/profile">
-                            <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                PERFIL
-                            </button>
-                        </NavLink>
-                    </div>
-
-                    <br />
-
-                    <div className='text-center'>
-                        <button
-                            onClick={() => logout()} className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                        >
-                            LOGOUT
-                        </button>
-                    </div>
-                </div>
-
-                :
-
-                <div></div>
-            }
-
-            {isWorker ?
-                <div className='text-center'>
-                    <NavLink to="/manageApplications">
-                        <button
-                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                        >
-                            MOSTRAR SOLICITUDES
-                        </button>
-                    </NavLink>
-                </div>
-
-                :
-
-                <div></div>
-            }
-
-            {applicationOngoing ?
-                <div>
-                    <div className='text-center'>
-                        <NavLink to="/applicationOngoing">
-                            <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                SOLICITUD ACEPTADA
-                            </button>
-                        </NavLink>
-                    </div>
-                </div>
-
-                :
-
-                <div></div>
             }
         </main>
     );
