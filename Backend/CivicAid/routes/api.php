@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\WorkerAuthController;
+use App\Http\Controllers\Api\AdminAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,26 +18,28 @@ use App\Http\Controllers\Api\WorkerAuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::post('/signIn', [AuthController::class, 'signIn']);
-
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/signinWorker', [WorkerAuthController::class, 'signinWorker']);
-
 Route::post('/loginWorker', [WorkerAuthController::class, 'loginWorker']);
 
+// Route::get('/aa', [WorkerAuthController::class, 'aa']);
+
+Route::post('/signinAdmin', [AdminAuthController::class, 'signinAdmin']);
+Route::post('/loginAdmin', [AdminAuthController::class, 'loginAdmin']);
+
 Route::post('/makeApplication', [ApplicationController::class, 'makeApplication']);
-
-Route::post('/updateApplication/{id}', [ApplicationController::class, 'updateApplication']);
-
 Route::get('/listApplications', [ApplicationController::class, 'listApplications']);
-
+Route::post('/listOwnApplications', [ApplicationController::class, 'listOwnApplications']);
 Route::post('/listApplicationsSector', [ApplicationController::class, 'listApplicationsSector']);
-
+Route::post('/updateApplication/{id}', [ApplicationController::class, 'updateApplication']);
 Route::post('/updateApplicationStatus/{id}', [ApplicationController::class, 'updateApplicationStatus']);
 
-Route::post('/listOwnApplications', [ApplicationController::class, 'listOwnApplications']);
+
+
+

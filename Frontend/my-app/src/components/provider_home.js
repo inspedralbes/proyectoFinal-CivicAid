@@ -177,6 +177,18 @@ const Home = () => {
                         </NavLink>
                     </div>
 
+                    <br />
+
+                    <div className='text-center'>
+                        <NavLink to="/loginAdmin">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                MODO ADMIN
+                            </button>
+                        </NavLink>
+                    </div>
+
                 </div>
             }
         </main>

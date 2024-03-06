@@ -4,38 +4,34 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Worker;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
 
-
-class WorkerAuthController extends Controller
+class AdminAuthController extends Controller
 {
-
-    public function signinWorker(Request $request)
+    public function signinAdmin(Request $request)
     {
         $request->validate([
             'name' => 'required',
             'surname' => 'required',
             'secondSurname' => 'required',
-            'sector' => 'required',
-            'email' => 'required|email|unique:workers',
+            'assignedLocation' => 'required',
+            'email' => 'required|email|unique:admins',
             'password' => 'required',
         ]);
 
-        $worker = new Worker;
-        $worker->name = $request->name;
-        $worker->surname = $request->surname;
-        $worker->secondSurname = $request->secondSurname;
-        $worker->sector = $request->sector;
-        $worker->assignedLocation = $request->assignedLocation;
-        $worker->email = $request->email;
-        $worker->password = Hash::make($request->password);
-
+        $admin = new Admin;
+        $admin->name = $request->name;
+        $admin->surname = $request->surname;
+        $admin->secondSurname = $request->secondSurname;
+        $admin->assignedLocation = $request->assignedLocation;
+        $admin->email = $request->email;
+        $admin->password = Hash::make($request->password);
 
         try {
-            if ($worker->save()) {
+            if ($admin->save()) {
                 $message = "Registered correctly.";
                 return response()->json([$message, 200, 'isRegistered' => true]);
             }
@@ -45,7 +41,7 @@ class WorkerAuthController extends Controller
         }
     }
 
-    public function loginWorker(Request $request)
+    public function loginAdmin(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -53,7 +49,7 @@ class WorkerAuthController extends Controller
         ]);
 
         // Buscar el usuario por su correo electrónico
-        $user = Worker::where('email', $credentials['email'])->first();
+        $user = Admin::where('email', $credentials['email'])->first();
 
         // Verificar si el usuario existe y si la contraseña coincide
         if ($user && Hash::check($credentials['password'], $user->password)) {

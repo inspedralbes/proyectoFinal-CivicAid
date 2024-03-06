@@ -10,6 +10,7 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from './pages/home';
 import LoginUsuario from './pages/loginUsuario';
 import LoginWorker from './pages/loginWorker';
+import LoginAdmin from './pages/loginAdmin';
 import SigninUsuario from './pages/signinUsuario';
 import SigninWorker from './pages/signinWorker';
 import UserProfile from './pages/userProfile';
@@ -32,6 +33,7 @@ root.render(
                         <Route path="/" element={<HomePage />} />
                         <Route path="/login" element={<LoginUsuario />} />
                         <Route path="/loginWorker" element={<LoginWorker />} />
+                        <Route path="/loginAdmin" element={<LoginAdmin />} />
                         <Route path="/signin" element={<SigninUsuario />} />
                         <Route path="/signinWorker" element={<SigninWorker />} />
                         <Route path="/profile" element={<UserProfile />} />

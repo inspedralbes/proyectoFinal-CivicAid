@@ -6,6 +6,7 @@ const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 const SAVEDATA = 'SAVE_DATA';
 const WORKER = 'WORKER';
+const ADMIN = 'ADMIN';
 const USER = 'USER';
 const GET_APPLICATION_INFO = 'GET_APPLICATION_INFO';
 const GET_USERID = 'GET_USERID';
@@ -18,6 +19,7 @@ const CHECK_APP_ONGOING = 'CHECK_APP_ONGOING'
 const initialState = {
     isLoggedIn: false,
     isWorker: false,
+    isAdmin: false,
     isUser: false,
     applicationOngoing: false,
     applicationOngoingInfo: {},
@@ -40,13 +42,16 @@ const reducer = (state = initialState, action) => {
             return { ...state, isLoggedIn: true };
 
         case 'LOGOUT':
-            return { ...state, isLoggedIn: false, isWorker: false, isUser: false, applicationOngoing: false, data: {} };
+            return { ...state, isLoggedIn: false, isWorker: false, isUser: false, isAdmin: false, applicationOngoing: false, data: {} };
 
         case 'SAVE_DATA':
             return { ...state, data: action.payload };
 
         case 'WORKER':
             return { ...state, isLoggedIn: true, isWorker: true };
+
+        case 'ADMIN':
+            return { ...state, isAdmin: true };
 
         case 'CHECK_APP_ONGOING':
             return { ...state, applicationOngoing: false };
@@ -86,6 +91,7 @@ const actions = {
     logout: () => ({ type: LOGOUT }),
     saveData: (data) => ({ type: SAVEDATA, payload: data }),
     worker: () => ({ type: WORKER }),
+    admin: () => ({ type: ADMIN }),
     checkAppOngoing: () => ({ type: CHECK_APP_ONGOING }),
     user: () => ({ type: USER }),
     applicationOngoing: (applicationOngoingInfo) => ({ type: APPLICATION_ONGOING, payload: applicationOngoingInfo }),
