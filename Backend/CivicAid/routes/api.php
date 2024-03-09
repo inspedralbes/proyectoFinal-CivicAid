@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\WorkerAuthController;
 use App\Http\Controllers\Api\AdminAuthController;
+use App\Http\Controllers\Api\WorkerSigninRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,8 +29,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/signinWorker', [WorkerAuthController::class, 'signinWorker']);
 Route::post('/loginWorker', [WorkerAuthController::class, 'loginWorker']);
 
-// Route::get('/aa', [WorkerAuthController::class, 'aa']);
-
 Route::post('/signinAdmin', [AdminAuthController::class, 'signinAdmin']);
 Route::post('/loginAdmin', [AdminAuthController::class, 'loginAdmin']);
 
@@ -41,5 +40,7 @@ Route::post('/updateApplication/{id}', [ApplicationController::class, 'updateApp
 Route::post('/updateApplicationStatus/{id}', [ApplicationController::class, 'updateApplicationStatus']);
 
 
+Route::get('/listProvinces', [WorkerSigninRequest::class, 'listProvinces']);
+Route::post('/signinRequest', [WorkerSigninRequest::class, 'signinRequest']);
 
 
