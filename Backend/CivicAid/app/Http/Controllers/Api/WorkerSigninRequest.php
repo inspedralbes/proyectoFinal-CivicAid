@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\registrationRequestEmail;
 
 use App\Models\Province;
+use App\Models\Sector;
 use App\Models\SigninRequest;
 
 class WorkerSigninRequest extends Controller
@@ -19,7 +20,14 @@ class WorkerSigninRequest extends Controller
 
         $provinces = Province::all();
 
-        return $provinces;
+        return response()->json($provinces);
+    }
+
+    public function listSectors(){
+
+        $sectors = Sector::all();
+
+        return response()->json($sectors);
     }
 
     public function signinRequest(Request $request)
@@ -49,7 +57,7 @@ class WorkerSigninRequest extends Controller
             $workerRequest->save();
         
             // Envío del email
-            Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
+            // Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
         
             // Todo ha ido bien, hacemos commit
             DB::commit();

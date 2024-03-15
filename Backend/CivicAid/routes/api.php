@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\WorkerAuthController;
 use App\Http\Controllers\Api\AdminAuthController;
 use App\Http\Controllers\Api\WorkerSigninRequest;
+use App\Http\Controllers\Api\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,10 @@ Route::post('/updateApplicationStatus/{id}', [ApplicationController::class, 'upd
 
 
 Route::get('/listProvinces', [WorkerSigninRequest::class, 'listProvinces']);
+Route::get('/listSectors', [WorkerSigninRequest::class, 'listSectors']);
 Route::post('/signinRequest', [WorkerSigninRequest::class, 'signinRequest']);
+
+Route::get('/listRequests', [AdminController::class, 'listRequests']);
+
 
 

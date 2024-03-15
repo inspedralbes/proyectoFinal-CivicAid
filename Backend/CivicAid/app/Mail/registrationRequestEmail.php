@@ -8,6 +8,9 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Symfony\Component\Mime\Crypto\DkimSigner;
+// C:\Users\Carlos\Desktop\proyectoFinal-CivicAid-1\Backend\CivicAid\vendor\symfony\mime\Crypto\DkimSigner.php
+use Symfony\Component\Mime\Email;
 
 class registrationRequestEmail extends Mailable
 {
@@ -27,6 +30,14 @@ class registrationRequestEmail extends Mailable
             ->with([
                 'name' => $this->user->name,
             ]);
+
+            // $this->withSymfonyMessage(function (Email $message) {
+            //     $signer = new DkimSigner(config('mail.dkim_private_key'), config('mail.dkim_domain'),
+            //     config('mail.dkim_selector'));
+            //     $signer->sign($message);
+            // });
+
+            // return $this;
     }
 
     /**
