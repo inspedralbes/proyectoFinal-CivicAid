@@ -19,21 +19,24 @@ const Home = () => {
     useEffect(() => {
         async function comprobar() {
 
-            // Verificar si hay datos en el Local Storage
-            if (checkApplicationOngoing) {
-                // Convertir el JSON almacenado a un objeto JavaScript
-                const parsedData = JSON.parse(checkApplicationOngoing);
+            if (isWorker) {
+                // Verificar si hay datos en el Local Storage
+                if (checkApplicationOngoing) {
+                    // Convertir el JSON almacenado a un objeto JavaScript
+                    const parsedData = JSON.parse(checkApplicationOngoing);
 
-                // Obtener el valor de "applicationOngoingInfo"
-                const applicationOngoingInfo = parsedData.applicationOngoingInfo;
-                const applicationOngoing = parsedData.applicationOngoing;
-                // Ahora puedes utilizar la variable "applicationOngoingInfo" según necesites
-                console.log("Esta la aplicacion en marcha? ", applicationOngoing);
-                console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
+                    // Obtener el valor de "applicationOngoingInfo"
+                    const applicationOngoingInfo = parsedData.applicationOngoingInfo;
+                    const applicationOngoing = parsedData.applicationOngoing;
+                    // Ahora puedes utilizar la variable "applicationOngoingInfo" según necesites
+                    console.log("Esta la aplicacion en marcha? ", applicationOngoing);
+                    console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
 
-            } else {
-                console.log('La variable del Local Storage está vacía');
+                } else {
+                    console.log('La variable del Local Storage está vacía');
+                }
             }
+
         }
         comprobar();
     }, [checkApplicationOngoing]); // Añadir workerSector como una dependencia del efecto
@@ -125,7 +128,7 @@ const Home = () => {
 
                     <div>
                         <br />
-                        <NavLink to="/manageApplications">
+                        <NavLink to="/assignApplications">
                             <button
                                 className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
                             >

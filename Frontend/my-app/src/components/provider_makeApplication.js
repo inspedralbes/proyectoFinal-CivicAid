@@ -18,6 +18,7 @@ const MakeApplication = () => {
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const applicantId = useSelector((state) => state.data.id);
     const [location, setLocation] = useState(null);
+    const [province, setProvince] = useState(null);
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
     const [locationCorrect, setLocationCorrect] = useState(true);
@@ -34,7 +35,10 @@ const MakeApplication = () => {
             });
             const data = await response.json();
             setLocation(data.address.road);
+            setProvince(data.address.province);
+
             console.log("ESTA ES LA CALLE: ", data);
+            console.log("ñañañañaña ", data.address.province);
         }
 
         function getLocation() {
@@ -84,7 +88,7 @@ const MakeApplication = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ applicantId, title, description, sector, subsector, location: finalLocation, date }),
+                body: JSON.stringify({ applicantId, title, description, sector, subsector, province, location: finalLocation, date }),
             });
             if (!response.ok) {
                 throw new Error(response.statusText);
@@ -126,6 +130,7 @@ const MakeApplication = () => {
 
                     <form onSubmit={handleSubmit}>
                         <div>
+                            <h1>PROVINCIA ::::::: {province}</h1>
                             <h2>Titulo</h2>
                             <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" name="floating_title" id="floating_title" placeholder=" " required />
 

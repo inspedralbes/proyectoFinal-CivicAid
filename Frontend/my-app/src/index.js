@@ -48,7 +48,7 @@ root.render(
                         <Route path="/ownApplication" element={<SolicitudPropia />} />
 
                         <Route path="/manageSigninRequests" element={<GestionarSolicitudesRegistro />} />
-                        <Route path="/assignApplication" element={<AsignarSolicitud />} />
+                        <Route path="/assignApplications" element={<AsignarSolicitud />} />
 
                     </Routes>
                 </Router>

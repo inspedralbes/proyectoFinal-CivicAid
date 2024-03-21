@@ -13,6 +13,7 @@ use App\Models\SigninRequest;
 use App\Models\Worker;
 use App\Mail\registrationRequestAccepted;
 use App\Mail\registrationRequestDenied;
+use App\Models\Application;
 
 class AdminController extends Controller
 {
@@ -91,7 +92,7 @@ class AdminController extends Controller
 
         $location = $request->assignedLocation;
 
-        $requests = SigninRequest::where('requestedLocation', $location)->where('requestStatus', 'pending')->get();
+        $requests = Application::where('province', $location)->where('applicationStatus', 'pending')->get();
 
         return response()->json($requests, 200);
     }
