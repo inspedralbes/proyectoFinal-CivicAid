@@ -45,7 +45,10 @@ Route::get('/listProvinces', [WorkerSigninRequest::class, 'listProvinces']);
 Route::get('/listSectors', [WorkerSigninRequest::class, 'listSectors']);
 Route::post('/signinRequest', [WorkerSigninRequest::class, 'signinRequest']);
 
-Route::get('/listRequests', [AdminController::class, 'listRequests']);
+Route::post('/listRequests', [AdminController::class, 'listRequests']);
+Route::post('/acceptRequest', [AdminController::class, 'acceptRequest']);
+Route::post('/updateRequestStatus/{id}', [AdminController::class, 'updateRequestStatus']);
+Route::post('/listApplicationsLocation', [AdminController::class, 'listApplicationsLocation']); 
 
 
 

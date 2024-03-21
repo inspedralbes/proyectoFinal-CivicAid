@@ -7,12 +7,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\registrationRequestEmail;
 
 use App\Models\Province;
 use App\Models\Sector;
 use App\Models\SigninRequest;
+use Throwable;
 
 class WorkerSigninRequest extends Controller
 {
@@ -58,7 +60,7 @@ class WorkerSigninRequest extends Controller
         
             // Envío del email
             // Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
-        
+    
             // Todo ha ido bien, hacemos commit
             DB::commit();
         
@@ -69,9 +71,13 @@ class WorkerSigninRequest extends Controller
             // Algo ha fallado, hacemos rollback
             DB::rollBack();
         
-            // Respondemos con el error
-            $errorMessage = 'Error: ' . $e->getMessage();
-            return response()->json([$errorMessage], 500);
+            // Logueamos el error
+            // Log::error('Error al procesar la solicitud de registro: ' . $e->getMessage());
+        
+            // Respondemos con un mensaje de error genérico
+            // $errorMessage = 'Error al procesar la solicitud de registro.';
+            // return response()->json([$e], 500);
+            return response("DA ERROR EN CONTROLADOR", $e);
         }
     }
 }

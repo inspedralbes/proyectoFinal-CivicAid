@@ -8,15 +8,16 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
-// use Symfony\Component\Mime\Email;
 
-class registrationRequestEmail extends Mailable
+class registrationRequestAccepted extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $user;
 
+    /**
+     * Create a new message instance.
+     */
     public function __construct($user)
     {
         $this->user = $user;
@@ -24,22 +25,21 @@ class registrationRequestEmail extends Mailable
 
     public function build()
     {
-        try {
-            return $this->markdown('emails.registration.request')
-            ->subject('Your Registration Request is Being Processed')
+        return $this->markdown('emails.registration.requestAccepted')
+            ->subject('Your Registration Request has been accepted')
             ->with([
                 'name' => $this->user->name,
+                'email' => $this->user->email,
+                'password' => $this->user->password,
             ]);
-        } catch (\Throwable $th) {
-            // Logueamos el error
-            Log::error('Error al construir el correo electrónico de solicitud de registro: ' . $th->getMessage());
-            
-            // Respondemos con un mensaje de error genérico
-            // return $this->markdown('emails.error');
-            // return response($th);
-            return response("DA ERROR EN MAIL", 500);
 
-        }
+            // $this->withSymfonyMessage(function (Email $message) {
+            //     $signer = new DkimSigner(config('mail.dkim_private_key'), config('mail.dkim_domain'),
+            //     config('mail.dkim_selector'));
+            //     $signer->sign($message);
+            // });
+
+            // return $this;
     }
 
     /**
@@ -48,7 +48,7 @@ class registrationRequestEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Registration Request Email',
+            subject: 'Registration Request Accepted',
         );
     }
 
@@ -58,7 +58,7 @@ class registrationRequestEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.registration.request',
+            markdown: 'emails.registration.requestAccepted',
         );
     }
 

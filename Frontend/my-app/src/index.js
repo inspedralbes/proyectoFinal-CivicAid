@@ -20,6 +20,10 @@ import GestionarSolicitudes from './pages/manageApplication';
 import SolicitudAceptada from './pages/applicationOngoing';
 import SolicitudPropia from './pages/getOwnApplication';
 
+import GestionarSolicitudesRegistro from './pages/signinRequests';
+import AsignarSolicitud from './pages/assignApplication';
+
+
 
 import './App.css';
 
@@ -42,6 +46,10 @@ root.render(
                         <Route path="/manageApplications" element={<GestionarSolicitudes />} />
                         <Route path="/applicationOngoing" element={<SolicitudAceptada />} />
                         <Route path="/ownApplication" element={<SolicitudPropia />} />
+
+                        <Route path="/manageSigninRequests" element={<GestionarSolicitudesRegistro />} />
+                        <Route path="/assignApplication" element={<AsignarSolicitud />} />
+
                     </Routes>
                 </Router>
             </div>

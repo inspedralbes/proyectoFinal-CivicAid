@@ -10,6 +10,7 @@ const Home = () => {
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const isUser = useSelector((state) => state.isUser);
     const isWorker = useSelector((state) => state.isWorker);
+    const isAdmin = useSelector((state) => state.isAdmin);
     const applicationOngoing = useSelector((state) => state.applicationOngoing);
 
 
@@ -102,6 +103,36 @@ const Home = () => {
                             MOSTRAR SOLICITUDES
                         </button>
                     </NavLink>
+                </div>
+
+                :
+
+                <div></div>
+            }
+
+            {isAdmin ?
+                <div className='text-center'>
+                    <div>
+                        <br />
+                        <NavLink to="/manageSigninRequests">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                MOSTRAR SOLICITUDES DE REGISTRO
+                            </button>
+                        </NavLink>
+                    </div>
+
+                    <div>
+                        <br />
+                        <NavLink to="/manageApplications">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                MOSTRAR SOLICITUDES
+                            </button>
+                        </NavLink>
+                    </div>
                 </div>
 
                 :

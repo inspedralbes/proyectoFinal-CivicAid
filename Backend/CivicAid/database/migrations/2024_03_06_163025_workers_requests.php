@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('sector');
             $table->string('requestedLocation');
             $table->string('email')->unique();
-            $table->enum('requestStatus', ['acceped', 'denied', 'pending'])->default('pending');
+            $table->enum('requestStatus', ['accepted', 'denied', 'pending'])->default('pending');
             
             $table->timestamps();
         });
