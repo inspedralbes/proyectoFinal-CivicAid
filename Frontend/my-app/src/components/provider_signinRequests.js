@@ -85,7 +85,7 @@ const ManageSigninRequest = () => {
         const id = e.id;
         const name = e.name;
         const surname = e.surname;
-        const secondSurname = e.surname;
+        const secondSurname = e.secondSurname;
         const sector= e.sector;
         const assignedLocation = e.requestedLocation;
         const email = e.email;

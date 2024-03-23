@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('secondSurname');
             $table->string('sector');
             $table->string('assignedLocation');
+            $table->enum('workerStatus', ['inService', 'available'])->default('available');
+            $table->int('assignedApplications')->default(0);
             $table->string('email')->unique();
             $table->string('password');
-    
             $table->timestamps();
         });
     }

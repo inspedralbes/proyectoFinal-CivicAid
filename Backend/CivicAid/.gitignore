@@ -17,3 +17,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/Illuminate/Foundation/Auth/Admin.php
+/Illuminate/Foundation/Auth/Worker.php
