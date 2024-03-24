@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 // import logo from "../../public/logoPequeñoCivicAid.png"
 
 function SigninForm() {
+    const [dni, setDni] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [secondSurname, setSecondSurname] = useState('');
@@ -57,16 +58,16 @@ function SigninForm() {
                     },
                 });
                 const data = await response.json();
-                    // Convertimos el objeto en un arreglo utilizando Object.values()
-                    const sectorsArray = Object.values(data);
-                    // console.log(sectorsArray); // Esto imprimirá el arreglo de objetos
-                    // Ahora puedes utilizar el método map en locationsArray
-                    sectorsArray.map(sector => {
-                        // Hacer algo con cada ubicación
-                        console.log(sector.sector);
-                    });
+                // Convertimos el objeto en un arreglo utilizando Object.values()
+                const sectorsArray = Object.values(data);
+                // console.log(sectorsArray); // Esto imprimirá el arreglo de objetos
+                // Ahora puedes utilizar el método map en locationsArray
+                sectorsArray.map(sector => {
+                    // Hacer algo con cada ubicación
+                    console.log(sector.sector);
+                });
                 setSectors(sectorsArray)
-                
+
             } catch (error) {
                 console.error("ESTE ES EL ERROR: ", error);
             }
@@ -78,39 +79,67 @@ function SigninForm() {
     }, []);
 
 
+    function validarDNI(dni) {
+        const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+        const numero = dni.substring(0, dni.length - 1);
+        const letra = dni.charAt(dni.length - 1).toUpperCase();
+
+        if (!(/^\d{8}[A-Z]$/i.test(dni))) {
+            // Verifica que el formato sea correcto: 8 números seguidos de una letra
+            return false;
+        }
+
+        const letraCalculada = letras.charAt(parseInt(numero, 10) % 23);
+
+        return letraCalculada === letra;
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
 
-        try {
-            const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signinRequest', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name, surname, secondSurname, sector, requestedLocation, email }),
-            });
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-            const data = await response.json();
-            // if (data.isRegistered) {
-            navigate("/")
-            Swal.fire({
-                position: "bottom-end",
-                icon: "success",
-                title: "Your request has been succesfully registered",
-                showConfirmButton: false,
-                timer: 3500,
-            });
-            // }
+        if (validarDNI(dni)) {
 
-            setLoading(false);
-        } catch (error) {
+            try {
+                const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signinRequest', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ dni, name, surname, secondSurname, sector, requestedLocation, email }),
+                });
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+                const data = await response.json();
+                // if (data.isRegistered) {
+                navigate("/")
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "success",
+                    title: "Your request has been succesfully registered",
+                    showConfirmButton: false,
+                    timer: 3500,
+                });
+                // }
+
+                setLoading(false);
+            } catch (error) {
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "error",
+                    title: "An error occurred while loading",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                setError(error);
+                setLoading(false);
+            }
+        }else{
             Swal.fire({
                 position: "bottom-end",
                 icon: "error",
-                title: "An error occurred while loading",
+                title: "DNI mal amego",
                 showConfirmButton: false,
                 timer: 1500,
             });
@@ -161,6 +190,13 @@ function SigninForm() {
                                                     <input value={secondSurname} onChange={(event) => setSecondSurname(event.target.value)} autoComplete="off" type="text" name="floating_secondSurname" id="floating_secondSurname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
                                                     <label htmlFor="floating_secondSurname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                         SEGUNDO APELLIDO
+                                                    </label>
+                                                </div>
+
+                                                <div className="relative z-0 w-full mb-6 group">
+                                                    <input value={dni} onChange={(event) => setDni(event.target.value)} autoComplete="off" type="text" name="floating_dni" id="floating_dni" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                                    <label htmlFor="floating_dni" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                        DNI
                                                     </label>
                                                 </div>
 

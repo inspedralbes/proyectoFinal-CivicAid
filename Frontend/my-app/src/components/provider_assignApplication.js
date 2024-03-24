@@ -79,37 +79,6 @@ const ManageApplication = () => {
         }
     };
 
-
-
-    // const acceptRequest = async (e) => {
-    //     setLoading(true);
-
-    //     const { id, name, surname, secondSurname, sector, requestedLocation, email } = selectedApplication;
-
-    //     try {
-    //         const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/assignApplication/', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${token}`,
-    //             },
-    //             body: JSON.stringify({ id, selectedWorkers }),
-    //         });
-
-    //         if (response.ok) {
-    //             console.log('Solicitud enviada exitosamente');
-    //         }else{
-    //             throw new Error('Network response was not ok');
-
-    //         }
-
-
-    //         setSelectedApplication(null);
-    //     } catch (error) {
-    //         console.error('Error en la solicitud:', error);
-    //     }
-    // };
-
     const acceptRequest = async () => {
         if (!selectedApplication || selectedWorkers.length === 0) {
             Swal.fire({
@@ -133,6 +102,7 @@ const ManageApplication = () => {
                 body: JSON.stringify({
                     applicationId: selectedApplication.id, // Asegúrate de que este es el campo correcto
                     workerIds: selectedWorkers, // Esto envía el array de IDs
+
                     applicationStatus
                 }),
             });
@@ -222,7 +192,6 @@ const ManageApplication = () => {
                             </div>
                             <div className='p-5'>
                                 {workersList.map((worker, id) => {
-                                    // Aquí, directamente retornamos el resultado de la condición.
                                     return worker.sector === selectedApplication.sector ? (
                                         <div key={id} className="relative flex w-full max-w-[26rem] mb-5 cursor-pointer flex-col rounded-xl bg-gray-400 bg-clip-border text-gray-700 shadow-lg">
                                             <div className="p-6">
@@ -235,6 +204,11 @@ const ManageApplication = () => {
                                                     {worker.name} {worker.secondSurname}
                                                 </label>
                                             </div>
+                                            <div className='p-5 '>
+                                                <div>STATUS: {worker.workerStatus}</div>
+                                                <div>ASSIGNED APPLICATIONS: {worker.assignedApplications}</div>
+                                            </div>
+                                            {console.log("SELECTED: ",selectedWorkers)}
                                         </div>
                                     ) : (
                                         // Si no quieres mostrar nada cuando no se cumpla la condición, simplemente retorna null o un fragmento vacío <> </>

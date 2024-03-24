@@ -39,6 +39,7 @@ class WorkerSigninRequest extends Controller
             
             // Validación de los datos
             $validatedData = $request->validate([
+                'dni' => 'required',
                 'name' => 'required',
                 'surname' => 'required',
                 'secondSurname' => 'required',
@@ -49,6 +50,7 @@ class WorkerSigninRequest extends Controller
         
             // Creación y guardado de la solicitud
             $workerRequest = new SigninRequest;
+            $workerRequest->dni = $request->dni;
             $workerRequest->name = $request->name;
             $workerRequest->surname = $request->surname;
             $workerRequest->secondSurname = $request->secondSurname;

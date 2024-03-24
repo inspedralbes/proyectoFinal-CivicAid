@@ -16,6 +16,7 @@ class WorkerAuthController extends Controller
     public function signinWorker(Request $request)
     {
         $request->validate([
+            'id' => 'required',
             'name' => 'required',
             'surname' => 'required',
             'secondSurname' => 'required',
@@ -25,6 +26,7 @@ class WorkerAuthController extends Controller
         ]);
 
         $worker = new Worker;
+        $worker->id = $request->id;
         $worker->name = $request->name;
         $worker->surname = $request->surname;
         $worker->secondSurname = $request->secondSurname;

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('applicationId');
-            $table->unsignedBigInteger('workerId');
+            $table->string('workerId');
 
             $table->foreign('applicationId')->references('id')->on('applications');
             $table->foreign('workerId')->references('id')->on('workers');

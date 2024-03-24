@@ -20,9 +20,6 @@ class AdminController extends Controller
 {
     public function listRequests(Request $request)
     {
-        // $request = SigninRequest::all();
-        // return $request;
-
         $location = $request->assignedLocation;
 
         $requests = SigninRequest::where('requestedLocation', $location)->where('requestStatus', 'pending')->get();
@@ -47,21 +44,25 @@ class AdminController extends Controller
         // DB::beginTransaction();
 
         $request->validate([
+            'id' => 'required',
             'name' => 'required',
             'surname' => 'required',
             'secondSurname' => 'required',
             'sector' => 'required',
             'assignedLocation' => 'required',
+            'assignedApplications' => 'required',
             'email' => 'required|email|unique:workers',
             'password' => 'required',
         ]);
 
         $worker = new Worker;
+        $worker->id = $request->id;
         $worker->name = $request->name;
         $worker->surname = $request->surname;
         $worker->secondSurname = $request->secondSurname;
         $worker->sector = $request->sector;
         $worker->assignedLocation = $request->assignedLocation;
+        $worker->assignedApplications = $request->assignedApplications;
         $worker->email = $request->email;
         $worker->password = Hash::make($request->password);
 
@@ -89,45 +90,38 @@ class AdminController extends Controller
 
     public function assignApplication(Request $request)
     {
-
         $request->validate([
             'applicationId' => 'required',
-            'workerIds' => 'required|array', // workerIds debe ser un array
+            'workerIds' => 'required|array',
+            'applicationStatus' => 'required',
         ]);
 
         $applicationId = $request->applicationId;
         $workerIds = $request->workerIds;
 
         try {
-            // Iterar sobre los IDs de los trabajadores y crear una asignación para cada uno
             foreach ($workerIds as $workerId) {
                 $assignment = new Assignment();
                 $assignment->applicationId = $applicationId;
                 $assignment->workerId = $workerId;
-
-                // Guardar la asignación
                 $assignment->save();
             }
+            Worker::whereIn('id', $workerIds)->increment('assignedApplications');
 
             $application = Application::findOrFail($applicationId);
-
             $application->applicationStatus = $request->applicationStatus;
-
             $application->save();
 
-            // Si todas las asignaciones se guardaron correctamente, responder con éxito
             return response()->json(['message' => 'Asignaciones realizadas correctamente', 'success' => true], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['message' => 'Error al realizar las asignaciones: ' . $e->getMessage(), 'success' => false], 500);
         } catch (\Exception $e) {
-            // En caso de error, responder con un mensaje de error
             return response()->json(['message' => 'Error al realizar las asignaciones', 'success' => false, 'error' => $e->getMessage()], 500);
         }
     }
 
     public function listApplicationsLocation(Request $request)
     {
-        // $request = SigninRequest::all();
-        // return $request;
-
         $location = $request->assignedLocation;
 
         $requests = Application::where('province', $location)->where('applicationStatus', 'pending')->get();
@@ -137,14 +131,17 @@ class AdminController extends Controller
 
     public function listWorkers(Request $request)
     {
-        // $request = SigninRequest::all();
-        // return $request;
+        $request->validate([
+            'assignedLocation' => 'required|string',
+        ]);
 
         $location = $request->assignedLocation;
-        // $requestedSector = $request->requestedSector;
+        $workers = Worker::where('assignedLocation', $location)->get();
 
-        $requests = Worker::where('assignedLocation', $location)->get();
+        if ($workers->isEmpty()) {
+            return response()->json(['message' => 'No workers found for the specified location.'], 404);
+        }
 
-        return response()->json($requests, 200);
+        return response()->json($workers, 200);
     }
 }

@@ -10,23 +10,13 @@ const ManageSigninRequest = () => {
     const dispatch = useDispatch();
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(false);
-    const [showModal, setShowModal] = useState(false);
     const token = localStorage.getItem('access_token');
 
     const isAdmin = useSelector((state) => state.isAdmin);
-    // const sector = useSelector((state) => state.data.sector);;
     const [requestInfo, setRequestInfo] = useState([]);
     const checkAppOngoing = useSelector((state) => state.applicationOngoing);
     const assignedLocation = useSelector((state) => state.data.assignedLocation);
     const [selectedRequest, setSelectedRequest] = useState(null);
-    // const password = generatePassword(12);
-    // const name = "SISISIS";
-    // const surname = "SISISIS";
-    // const secondSurname = "SISISIS";
-    // const sector = "Policia";
-    // // const assignedLocation = e.requestedLocation;
-    // const email = "sisi@gmail.com";
-    // const password = "Cm12345-";
 
     useEffect(() => {
         async function fetchSigninRequests() {
@@ -83,6 +73,7 @@ const ManageSigninRequest = () => {
         setLoading(true);
 
         const id = e.id;
+        const dni = e.dni;
         const name = e.name;
         const surname = e.surname;
         const secondSurname = e.secondSurname;
@@ -91,9 +82,8 @@ const ManageSigninRequest = () => {
         const email = e.email;
         const password = generatePassword(12); // Generar contraseña de 12 caracteres
         const requestStatus = "accepted";
-        
-        // const { name, surname, secondSurname, sector, assignedLocation, email } = selectedRequest;
-        console.log(selectedRequest);
+        const assignedApplications = 0;
+        console.log("añañañaña: ", e.dni);
 
 
         try {
@@ -103,7 +93,7 @@ const ManageSigninRequest = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ name, surname, secondSurname, sector, assignedLocation, email, password }),
+                body: JSON.stringify({ id: e.dni, name, surname, secondSurname, sector, assignedLocation, assignedApplications, email, password }),
             });
 
             setSelectedRequest(false);
@@ -111,16 +101,11 @@ const ManageSigninRequest = () => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-        
-            // const responseData = await response.text();
-            // console.log(responseData); // Imprime la respuesta del servidor
-            // const data = JSON.parse(responseData);
-            // console.log("ESTA ES LA ULTIMA DATA: ", data);
 
             if (response.ok) {
                 console.log('Solicitud enviada exitosamente');
                 try {
-                    const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/updateRequestStatus/${id}`, {
+                    const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/updateRequestStatus/${e.id}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -185,14 +170,10 @@ const ManageSigninRequest = () => {
             {selectedRequest && (
                 <div className="fixed mt-5 inset-0 z-10 overflow-y-auto">
                     <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        {/* Fondo semi-transparente */}
                         <div className="fixed inset-0 transition-opacity" onClick={() => setSelectedRequest(null)}>
                             <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                         </div>
-
-                        {/* Aquí iría tu modal / detalle de la solicitud */}
                         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
-                            {/* Detalles de la solicitud */}
                             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                 <h3 className="text-lg leading-6 font-medium text-gray-900">{selectedRequest.name} {selectedRequest.surname} {selectedRequest.secondSurname}</h3>
                                 <h3 className="mt-2 text-gray-500">
@@ -204,14 +185,11 @@ const ManageSigninRequest = () => {
                                 <h3 className="mt-2 text-gray-500">
                                     REQUESTED LOCATION: {selectedRequest.requestedLocation}
                                 </h3>
-                                {/* Aquí más detalles si los necesitas */}
                             </div>
-                            {/* Botones o acciones */}
                             <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse justify-between">
                                 <button onClick={() => setSelectedRequest(null)} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                                     CERRAR
                                 </button>
-
                                 <div>
                                     <button onClick={() => acceptRequest(selectedRequest)} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                                         ACEPTAR
@@ -220,7 +198,6 @@ const ManageSigninRequest = () => {
                                         DENEGAR
                                     </button>
                                 </div>
-
                             </div>
                         </div>
                     </div>

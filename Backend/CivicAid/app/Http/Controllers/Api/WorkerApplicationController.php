@@ -10,15 +10,15 @@ class WorkerApplicationController extends Controller
 {
     public function updateApplicationStatus(Request $request){
 
-        $application = new WorkerApplication();
-        $application->applicationId = $request->applicationId;
-        $application->applicantId = $request->applicantId;
-        $application->assignedWorker = $request->assignedWorker;
-        $application->applicationStatus = $request->applicationStatus;
+        // $application = new WorkerApplication();
+        // $application->applicationId = $request->applicationId;
+        // $application->applicantId = $request->applicantId;
+        // $application->assignedWorker = $request->assignedWorker;
+        // $application->applicationStatus = $request->applicationStatus;
 
-        $application->save();
+        // $application->save();
 
-        return $application;
+        // return $application;
 
         // try {
         //     // Buscar la solicitud que deseas actualizar
