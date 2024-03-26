@@ -40,53 +40,56 @@ class AdminController extends Controller
 
     public function acceptRequest(Request $request)
     {
-        // try {
-        // DB::beginTransaction();
+        try {
+            // Validación de la solicitud
+            $validated = $request->validate([
+                'dni' => 'required',
+                'name' => 'required',
+                'surname' => 'required',
+                'secondSurname' => 'required',
+                'sector' => 'required',
+                'assignedLocation' => 'required',
+                'assignedApplications' => 'required',
+                'email' => 'required|email|unique:workers',
+                'password' => 'required',
+            ]);
 
-        $request->validate([
-            'id' => 'required',
-            'name' => 'required',
-            'surname' => 'required',
-            'secondSurname' => 'required',
-            'sector' => 'required',
-            'assignedLocation' => 'required',
-            'assignedApplications' => 'required',
-            'email' => 'required|email|unique:workers',
-            'password' => 'required',
-        ]);
+            // Creación del trabajador
+            $worker = new Worker;
+            $worker->fill($validated);
+            $worker->password = Hash::make($request->password);
 
-        $worker = new Worker;
-        $worker->id = $request->id;
-        $worker->name = $request->name;
-        $worker->surname = $request->surname;
-        $worker->secondSurname = $request->secondSurname;
-        $worker->sector = $request->sector;
-        $worker->assignedLocation = $request->assignedLocation;
-        $worker->assignedApplications = $request->assignedApplications;
-        $worker->email = $request->email;
-        $worker->password = Hash::make($request->password);
+            // Intentar guardar el trabajador
+            if ($worker->save()) {
+                // Envío de correo opcional, descomentar si es necesario
+                // Mail::to($request->email)->send(new RegistrationRequestAccepted($worker));
 
-        // Mail::to($request->email)->send(new registrationRequestAccepted($worker));
-
-        // try {
-        if ($worker->save()) {
-            $message = "Registered correctly.";
-            return response()->json([$message, 200, 'isRegistered' => true]);
-        } else {
-            $message = "Couldn't register.";
-            return response()->json([$message, 500, 'isRegistered' => false]);
+                return response()->json([
+                    'message' => "Registered correctly.",
+                    'isRegistered' => true
+                ], 200);
+            } else {
+                // Este bloque posiblemente nunca se ejecute, ya que un fallo en save() generalmente lanza una excepción
+                return response()->json([
+                    'message' => "Couldn't register due to an unknown error.",
+                    'isRegistered' => false
+                ], 500);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Captura de errores de validación
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            // Captura de cualquier otro error
+            return response()->json([
+                'message' => 'Server error',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-        // } catch (QueryException $ex) {
-        // }
-        // } catch (\Throwable $e) {
-        //     // DB::rollBack();
-
-        //     $errorMessage = 'Error: ' . $e->getMessage();
-        //     return response()->json([$errorMessage], 500);
-        // }
-
-        // DB::commit();
     }
+
 
     public function assignApplication(Request $request)
     {

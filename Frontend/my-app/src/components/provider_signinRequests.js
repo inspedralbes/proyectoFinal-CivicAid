@@ -93,13 +93,16 @@ const ManageSigninRequest = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ id: e.dni, name, surname, secondSurname, sector, assignedLocation, assignedApplications, email, password }),
+                body: JSON.stringify({ dni: e.dni, name, surname, secondSurname, sector, assignedLocation, assignedApplications, email, password }),
             });
 
             setSelectedRequest(false);
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const sisi = await response.json();
+                console.log("ESTA ES EL SISI: ", sisi);
+
+                // throw new Error('Network response was not ok');
             }
 
             if (response.ok) {
@@ -175,7 +178,7 @@ const ManageSigninRequest = () => {
                         </div>
                         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
                             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                <h3 className="text-lg leading-6 font-medium text-gray-900">{selectedRequest.name} {selectedRequest.surname} {selectedRequest.secondSurname}</h3>
+                                <h3 className="text-lg leading-6 font-medium text-gray-900">{selectedRequest.name} {selectedRequest.surname} {selectedRequest.secondSurname} | {selectedRequest.dni}</h3>
                                 <h3 className="mt-2 text-gray-500">
                                     SECTOR: {selectedRequest.sector}
                                 </h3>

@@ -50,20 +50,19 @@ class WorkerAuthController extends Controller
     public function loginWorker(Request $request)
     {
         $credentials = $request->validate([
+            'dni' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        // Buscar el usuario por su correo electrónico
-        $user = Worker::where('email', $credentials['email'])->first();
+        $user = Worker::where('email', $credentials['email'])->where('dni', $credentials['dni'])->first();
 
-        // Verificar si el usuario existe y si la contraseña coincide
         if ($user && Hash::check($credentials['password'], $user->password)) {
-            // Autenticación exitosa, crear token de acceso personal
             $token = $user->createToken('token')->plainTextToken;
+
             return response([$token, $user, 'isLoggedIn' => true]);
+
         } else {
-            // Autenticación fallida
             return response(['isLoggedIn' => false]);
         }
     }

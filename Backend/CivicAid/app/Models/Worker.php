@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Worker extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    protected $primaryKey = 'dni';
+    // protected $primaryKey = 'id';
+    // public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +20,11 @@ class Worker extends Authenticatable
     protected $fillable = [
         'dni',
         'name',
+        'surname',
+        'secondSurname',
+        'sector',
+        'assignedLocation',
+        'assignedApplications',
         'email',
         'password',
     ];
@@ -41,7 +47,7 @@ class Worker extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'dni' => 'string',
+        // 'id' => 'string',
     ];
 
     

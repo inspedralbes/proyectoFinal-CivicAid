@@ -15,7 +15,7 @@ class WorkersSeeder extends Seeder
     public function run(): void
     {
         Worker::create([
-            'id' => '12345678A',
+            'dni' => '12345678A',
             'name' => 'Juan',
             'surname' => 'García',
             'secondSurname' => 'López',
@@ -28,11 +28,11 @@ class WorkersSeeder extends Seeder
         ]);
 
         Worker::create([
-            'id' => '87654321B',
+            'dni' => '87654321B',
             'name' => 'María',
             'surname' => 'Martínez',
             'secondSurname' => 'Sánchez',
-            'sector' => 'Servicios Sociales',
+            'sector' => 'Servicios Médicos',
             'assignedLocation' => 'Madrid',
             'workerStatus' => 'available',
             'assignedApplications' => 0,
@@ -41,11 +41,11 @@ class WorkersSeeder extends Seeder
         ]);
 
         Worker::create([
-            'id' => '13579246C',
+            'dni' => '13579246C',
             'name' => 'Pedro',
             'surname' => 'Fernández',
             'secondSurname' => 'Gómez',
-            'sector' => 'Seguridad',
+            'sector' => 'Servicios Médicos',
             'assignedLocation' => 'Sevilla',
             'workerStatus' => 'available',
             'assignedApplications' => 0,

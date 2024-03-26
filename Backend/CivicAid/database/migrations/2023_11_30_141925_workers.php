@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('workers', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->id();
+            $table->string('dni');
             $table->string('name');
             $table->string('surname');
             $table->string('secondSurname');
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->timestamps();
-        });
+        }, ['charset' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci']);
     }
 
     /**

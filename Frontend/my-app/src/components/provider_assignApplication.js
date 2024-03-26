@@ -182,7 +182,7 @@ const ManageApplication = () => {
                         </div>
                         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
                             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                <h3 className="text-lg leading-6 font-medium text-gray-900">{selectedApplication.name} {selectedApplication.surname} {selectedApplication.secondSurname}</h3>
+                                <h3 className="text-lg leading-6 font-medium text-gray-900">ID DEL SOLICITANTE: {selectedApplication.id}</h3>
                                 <h3 className="mt-2 text-gray-500">
                                     SECTOR: {selectedApplication.sector}
                                 </h3>
@@ -201,14 +201,14 @@ const ManageApplication = () => {
                                                         checked={selectedWorkers.includes(worker.id)}
                                                         onChange={() => toggleSelectedWorker(worker.id)}
                                                     />
-                                                    {worker.name} {worker.secondSurname}
+                                                    {worker.name} {worker.surname} {worker.secondSurname} | {worker.dni}
                                                 </label>
                                             </div>
                                             <div className='p-5 '>
                                                 <div>STATUS: {worker.workerStatus}</div>
                                                 <div>ASSIGNED APPLICATIONS: {worker.assignedApplications}</div>
                                             </div>
-                                            {console.log("SELECTED: ",selectedWorkers)}
+                                            {console.log("SELECTED: ", selectedWorkers)}
                                         </div>
                                     ) : (
                                         // Si no quieres mostrar nada cuando no se cumpla la condición, simplemente retorna null o un fragmento vacío <> </>
