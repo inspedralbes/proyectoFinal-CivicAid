@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\WorkerAuthController;
 use App\Http\Controllers\Api\AdminAuthController;
 use App\Http\Controllers\Api\WorkerSigninRequest;
 use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\Api\WorkerApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +39,6 @@ Route::get('/listApplications', [ApplicationController::class, 'listApplications
 Route::post('/listOwnApplications', [ApplicationController::class, 'listOwnApplications']);
 Route::post('/listApplicationsSector', [ApplicationController::class, 'listApplicationsSector']);
 Route::post('/updateApplication/{id}', [ApplicationController::class, 'updateApplication']);
-Route::post('/updateApplicationStatus/{id}', [ApplicationController::class, 'updateApplicationStatus']);
 
 
 Route::get('/listProvinces', [WorkerSigninRequest::class, 'listProvinces']);
@@ -52,6 +52,10 @@ Route::post('/listApplicationsLocation', [AdminController::class, 'listApplicati
 Route::post('/listWorkers', [AdminController::class, 'listWorkers']); 
 Route::post('/assignApplication', [AdminController::class, 'assignApplication']); 
 
+
+Route::post('/listAssignedApplications', [WorkerApplicationController::class, 'listAssignedApplications']); 
+Route::post('/checkOngoingApp', [WorkerApplicationController::class, 'checkOngoingApp']); 
+Route::post('/updateApplicationStatus/{id}', [WorkerApplicationController::class, 'updateApplicationStatus']);
 
 
 

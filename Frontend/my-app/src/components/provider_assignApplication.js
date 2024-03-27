@@ -66,7 +66,7 @@ const ManageApplication = () => {
         }
         fetchApplications();
         fetchWorkers();
-    }, []); // Añadir workerSector como una dependencia del efecto
+    }, []); 
 
 
     const toggleSelectedWorker = (workerId) => {
@@ -100,9 +100,8 @@ const ManageApplication = () => {
                     'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    applicationId: selectedApplication.id, // Asegúrate de que este es el campo correcto
-                    workerIds: selectedWorkers, // Esto envía el array de IDs
-
+                    applicationId: selectedApplication.id,
+                    workerIds: selectedWorkers,
                     applicationStatus
                 }),
             });
@@ -111,7 +110,6 @@ const ManageApplication = () => {
                 throw new Error('Network response was not ok');
             }
 
-            // Procesa la respuesta aquí, por ejemplo, cerrando el modal y mostrando un mensaje de éxito
             Swal.fire({
                 icon: 'success',
                 title: 'Asignación Exitosa',
@@ -212,7 +210,7 @@ const ManageApplication = () => {
                                         </div>
                                     ) : (
                                         // Si no quieres mostrar nada cuando no se cumpla la condición, simplemente retorna null o un fragmento vacío <> </>
-                                        <div key={id}></div> // Esta línea se ejecutará si la condición es falsa, ajusta según necesidad.
+                                        <div key={id}></div>
                                     );
                                 })}
                             </div>

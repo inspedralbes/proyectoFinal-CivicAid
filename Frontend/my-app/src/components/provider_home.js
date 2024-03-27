@@ -39,7 +39,7 @@ const Home = () => {
 
         }
         comprobar();
-    }, [checkApplicationOngoing]); // Añadir workerSector como una dependencia del efecto
+    }, [checkApplicationOngoing]);
 
 
     function logout() {
@@ -60,9 +60,6 @@ const Home = () => {
             <div className='text-center pt-5'>
                 <h1 className='text-5xl font-bold mb-4'>CivicAid</h1>
             </div>
-
-
-
 
             {isUser ?
                 <div>

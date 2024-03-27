@@ -14,6 +14,7 @@ const GET_OTHERSINFO = 'GET_OTHERSINFO';
 const GET_UPLOADED_APPLICATION_ID = 'GET_UPLOADED_APPLICATION_ID';
 const GET_UPLOADED_APPLICATION_NAME = 'GET_UPLOADED_APPLICATION_NAME';
 const APPLICATION_ONGOING = 'APPLICATION_ONGOING'
+const APPLICATION_ONGOING_COMPLETED = 'APPLICATION_ONGOING_COMPLETED'
 const CHECK_APP_ONGOING = 'CHECK_APP_ONGOING'
 
 const initialState = {
@@ -21,9 +22,14 @@ const initialState = {
     isWorker: false,
     isAdmin: false,
     isUser: false,
+
+    // Booleano que controla si el empleado a aceptado una solicitud
     applicationOngoing: false,
+    // Si el booleano es cierto, en esta variable, se alamacenará la solicitud y todo su información
     applicationOngoingInfo: {},
+    // Variable en la que se almacenan todos los datos del usuario al hacer login
     data: {},
+
     applicationInfo: {},
     getUserId: {},
     dataOthers: {},
@@ -54,13 +60,16 @@ const reducer = (state = initialState, action) => {
             return { ...state, isAdmin: true };
 
         case 'CHECK_APP_ONGOING':
-            return { ...state, applicationOngoing: false };
+            return { ...state, applicationOngoing: false, applicationOngoingInfo: {} };
 
         case 'USER':
             return { ...state, isUser: true };
 
         case 'APPLICATION_ONGOING':
             return { ...state, applicationOngoing: true, applicationOngoingInfo: action.payload };
+
+        case 'APPLICATION_ONGOING_COMPLETED':
+            return {...state, applicationOngoing:false, applicationOngoingInfo: {} };
 
         case 'GET_APPLICATION_INFO':
             return { ...state, applicationInfo: action.payload };
@@ -95,6 +104,7 @@ const actions = {
     checkAppOngoing: () => ({ type: CHECK_APP_ONGOING }),
     user: () => ({ type: USER }),
     applicationOngoing: (applicationOngoingInfo) => ({ type: APPLICATION_ONGOING, payload: applicationOngoingInfo }),
+    applicationOngoingCompleted: () => ({ type: APPLICATION_ONGOING_COMPLETED }),
     saveApplicationInfo: (applicationInfo) => ({ type: GET_APPLICATION_INFO, payload: applicationInfo }),
     getUserId: (getUserId) => ({ type: GET_USERID, payload: getUserId }),
     dataOthers: (dataOthers) => ({ type: GET_OTHERSINFO, payload: dataOthers }),

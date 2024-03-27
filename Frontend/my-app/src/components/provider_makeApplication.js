@@ -11,9 +11,7 @@ const MakeApplication = () => {
     const [subsector, setSubsector] = useState('');
     const today = new Date().toISOString().substr(0, 10);
     const [date, setDate] = useState(today);
-    // const [messageError, setMessageError] = useState("Error");
     const [error, setError] = useState(null);
-    // const seleccionaOpcion = "Selecciona un sector";
     const [isLoading, setLoading] = useState(false);
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const applicantId = useSelector((state) => state.data.id);

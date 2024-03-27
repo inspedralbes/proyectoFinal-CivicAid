@@ -14,7 +14,6 @@ function SigninForm() {
     const [locations, setLocations] = useState([]);
     const [requestedLocation, setRequestedLocation] = useState('');
     const [email, setEmail] = useState('');
-    // const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
@@ -22,7 +21,6 @@ function SigninForm() {
 
     useEffect(() => {
         async function fetchProvinces() {
-            // console.log(userId);
 
             try {
                 const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listProvinces', {
@@ -35,7 +33,6 @@ function SigninForm() {
 
                 // Convertimos el objeto en un arreglo utilizando Object.values()
                 const locationsArray = Object.values(data);
-                // console.log(locationsArray); // Esto imprimirá el arreglo de objetos
                 // Ahora puedes utilizar el método map en locationsArray
                 locationsArray.map(location => {
                     // Hacer algo con cada ubicación

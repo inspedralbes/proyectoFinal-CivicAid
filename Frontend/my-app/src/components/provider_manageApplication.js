@@ -13,12 +13,7 @@ const ManageApplication = () => {
     const [showModal, setShowModal] = useState(false);
     const token = localStorage.getItem('access_token');
 
-    const ñeñe = useSelector((state) => state.applicationOngoingInfo);
-    const applicationId = useSelector((state) => state.applicationOngoingInfo);
-    const applicantId = useSelector((state) => state.applicationOngoingInfo.applicantId);
-    const assignedWorker = useSelector((state) => state.data.id);
-
-    const userInfo = useSelector((state) => state.data?.sector);
+    const workerId = useSelector((state) => state.data?.id);
     const isWorker = useSelector((state) => state.isWorker);
     const sector = useSelector((state) => state.data.sector);;
     const [applicationInfo, setApplicationInfo] = useState([]);
@@ -29,18 +24,19 @@ const ManageApplication = () => {
     useEffect(() => {
         async function fetchApplications() {
 
-            console.log(applicationOngoingInfo);
+            console.log("SOLICITUD EN MARCHA:", applicationOngoingInfo);
             if (isWorker) {
                 try {
-                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplicationsSector', {
+                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listAssignedApplications', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`,
                         },
-                        body: JSON.stringify({ sector }),
+                        body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
+                    console.log("ASSIGNED: ", data);
 
                     setApplicationInfo(data)
 
@@ -50,7 +46,7 @@ const ManageApplication = () => {
             }
         }
         fetchApplications();
-    }, [sector, checkAppOngoing]); // Añadir workerSector como una dependencia del efecto
+    }, [applicationOngoingInfo]);
 
 
     const handleApplication = async (e) => {
@@ -70,14 +66,12 @@ const ManageApplication = () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ applicationStatus }),
+                    body: JSON.stringify({ applicationStatus, workerId }),
                 });
 
                 const data = await response.json();
 
                 console.log(data);
-
-                // setApplicationInfo(data)
 
             } catch (error) {
                 console.error("ESTE ES EL ERROR: ", error);
@@ -97,7 +91,8 @@ const ManageApplication = () => {
 
         try {
             //PRIMER FETCH PARA PONER LA SOLICITUD VIEJA EN INACTIVA 
-            let applicationStatus = "inactive";
+            const applicationStatus = "inactive";
+
             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/updateApplicationStatus/${applicationOngoingInfo}`, {
                 method: 'POST',
                 headers: {
@@ -106,12 +101,16 @@ const ManageApplication = () => {
                 },
                 body: JSON.stringify({ applicationStatus }),
             });
-
             const data = await response.json();
-            console.log("PRIMER FETCH: ", data);
+            console.log("PRIMER STATUS: ", data);
 
+        } catch (error) {
+            console.error("ERROR EN EL PRIMER FETCH: ", error);
+        }
+
+        try {
             //SEGUNDO FETCH PARA PONER LA SOLICITUD NUEVA EN ACTIVA 
-            applicationStatus = "active";
+            const applicationStatus = "active";
             const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/updateApplicationStatus/${e.id}`, {
                 method: 'POST',
                 headers: {
@@ -121,16 +120,15 @@ const ManageApplication = () => {
                 body: JSON.stringify({ applicationStatus }),
             });
             const data2 = await response2.json();
-            console.log("SEGUNDO FETCH: ", data2);
+            console.log("SEGUNDO STATUS: ", data2);
+
+            navigate("/");
+            dispatch(actions.applicationOngoing(e))
 
         } catch (error) {
-            console.error("ESTE ES EL ERROR: ", error);
+            console.error("ERROR EN EL SEGUNDO FETCH: ", error);
+
         }
-
-        navigate("/");
-        dispatch(actions.applicationOngoing(e))
-
-
     }
 
     return (
@@ -139,13 +137,13 @@ const ManageApplication = () => {
                 <div>
                     {applicationInfo.map((application, id) => {
                         // No renderizar el div si la condición se cumple
-                        if (applicationOngoingInfo === application.id) {
+                        if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed') {
                             return null;
                         }
-
                         return (
-                            <div key={id} className="relative flex w-full max-w-[26rem] p-5 mt-5 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
+                            <div key={id} className="relative flex w-full max-w-[26rem] p-5 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
                                 {/* Contenido de la solicitud */}
+                                {console.log("ESTADO: ", application.applicationStatus)}
                                 <div className="relative mx-4 mt-4 overflow-hidden text-white shadow-lg rounded-xl bg-blue-gray-500 bg-clip-border shadow-blue-gray-500/40">
                                     <img src="https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="Imagen de ejemplo" />
                                     <div className="absolute inset-0 w-full h-full to-bg-black-10 bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
@@ -161,6 +159,11 @@ const ManageApplication = () => {
 
                                     <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
                                         {application.description}
+                                    </p>
+
+                                    <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                        {application.applicationStatus}
+                                        
                                     </p>
                                 </div>
                                 <div className="p-6 pt-3">
@@ -178,9 +181,9 @@ const ManageApplication = () => {
                                                 <div className="fixed inset-0 transition-opacity" aria-hidden="true">
                                                     <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                                                 </div>
-            
+
                                                 <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            
+
                                                 <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                                                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                                         <div className="sm:flex sm:items-start">

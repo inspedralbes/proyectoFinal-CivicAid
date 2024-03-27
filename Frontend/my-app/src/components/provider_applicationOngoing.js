@@ -10,21 +10,42 @@ const ApplicationOngoing = () => {
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const token = localStorage.getItem('access_token');
-    const [applicationStatus, setApplicationStatus] = useState();
+    const workerId = useSelector((state) => state.data.id);
     const isWorker = useSelector((state) => state.isWorker);
     const applicationOngoing = useSelector((state) => state.applicationOngoingInfo);
     const appOngoing = useSelector((state) => state.applicationOngoing);
-    
+    const [applicationFetch, setApplicationFetch] = useState([]);
 
-    // console.log("ESTE ES EL ID DE LA SOLICITUD ACEPTADA: ", applicationOngoing.id);
-    // console.log("ESTE ES EL ESTADO DE LA SOLICITUD ACEPTADA: ", applicationOngoing.applicationStatus);
-    // console.log("ES EMPLEADO? ", isWorker);
-    // console.log("SOLICITUD EN MARCHA? ", appOngoing);
+    useEffect(() => {
+
+        async function fetchApplication() {
+            if (isWorker) {
+                try {
+                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/checkOngoingApp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ applicationId: applicationOngoing.id }),
+                    });
+                    const data = await response.json();
+                    console.log("DATA??: ", data);
+                    setApplicationFetch(data[0]);
+
+                } catch (error) {
+                    console.error("ESTE ES EL ERROR: ", error);
+                }
+            }
+        }
+
+        fetchApplication();
+    }, [applicationOngoing]);
 
     const handleSubmit = async (e) => {
         // e.preventDefault();
         setLoading(true);
-
+        const applicationStatus = 'completed';
 
         try {
             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/updateApplicationStatus/${applicationOngoing.id}`, {
@@ -39,7 +60,9 @@ const ApplicationOngoing = () => {
                 throw new Error(response.statusText);
             } else {
                 console.log('El estado de la solicitud se ha actualizado correctamente');
-                navigate("/")
+                navigate("/");
+                dispatch(actions.applicationOngoingCompleted());
+
                 Swal.fire({
                     position: "center",
                     icon: "error",
@@ -85,22 +108,13 @@ const ApplicationOngoing = () => {
                     <div className="p-6">
                         <div className="flex items-center justify-between mb-3">
                             <h5 className="block font-sans text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">
-                                {applicationOngoing.title}
+                                {applicationFetch.title}
                             </h5>
                         </div>
                         <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                            {applicationOngoing.description}
+                            {applicationFetch.description}
                         </p>
-                    </div>
-                    <div className="p-6 pt-3">
-
-                        <select value={applicationStatus} onChange={(e) => setApplicationStatus(e.target.value)}>
-                            <option value="">Selecciona un estado</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="pending">Pending</option>
-                            <option vlaue="completed">Completed</option>
-                        </select>
+                        <h2>STATUS: {applicationFetch.applicationStatus}</h2>
                     </div>
 
                     <div className="p-6 pt-3">
@@ -108,7 +122,7 @@ const ApplicationOngoing = () => {
                             onClick={() => handleSubmit()}
                             className=" block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                             type="submit">
-                            ACEPTAR
+                            COMPLETADA
                         </button>
                     </div>
                 </div>
