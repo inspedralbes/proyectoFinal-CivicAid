@@ -52,10 +52,11 @@ Route::post('/listApplicationsLocation', [AdminController::class, 'listApplicati
 Route::post('/listWorkers', [AdminController::class, 'listWorkers']); 
 Route::post('/assignApplication', [AdminController::class, 'assignApplication']); 
 
-
 Route::post('/listAssignedApplications', [WorkerApplicationController::class, 'listAssignedApplications']); 
 Route::post('/checkOngoingApp', [WorkerApplicationController::class, 'checkOngoingApp']); 
 Route::post('/updateApplicationStatus/{id}', [WorkerApplicationController::class, 'updateApplicationStatus']);
+Route::post('/applicationCompleted', [WorkerApplicationController::class, 'applicationCompleted']);
+Route::post('/listApplicationMultipleWorkers', [WorkerApplicationController::class, 'listApplicationMultipleWorkers']);
 
 
 

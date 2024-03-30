@@ -7,24 +7,83 @@ use Illuminate\Http\Request;
 use App\Models\Application;
 use App\Models\Assignment;
 use App\Models\Worker;
+use App\Models\CompletedApplication;
 
 class WorkerApplicationController extends Controller
 {
     public function listAssignedApplications(Request $request)
     {
-        $validated = $request->validate([
-            'workerId' => 'required',
-        ]);
-    
-        $workerId = $validated['workerId'];
-    
-        // Primero, obtén todos los IDs de las aplicaciones asignadas al trabajador
-        $applicationIds = Assignment::where('workerId', $workerId)->pluck('applicationId');
-    
-        // Luego, utiliza esos IDs para obtener las aplicaciones asignadas
-        $assignedApplications = Application::whereIn('id', $applicationIds)->where('applicationStatus', '!=', 'completed')->get();
-    
-        return response()->json($assignedApplications, 200);
+        // $validated = $request->validate([
+        //     'workerId' => 'required',
+        // ]);
+
+        // $workerId = $validated['workerId'];
+
+        // // Primero, obtén todos los IDs de las aplicaciones asignadas al trabajador
+        // $applicationIds = Assignment::where('workerId', $workerId)->pluck('applicationId');
+
+        // // Luego, utiliza esos IDs para obtener las aplicaciones asignadas
+        // $assignedApplications = Application::whereIn('id', $applicationIds)->where('applicationStatus', '!=', 'completed')->get();
+
+        // return response()->json($assignedApplications, 200);
+
+        try {
+            $validated = $request->validate([
+                'workerId' => 'required',
+            ]);
+
+            $workerId = $validated['workerId'];
+
+            // Consulta para obtener los ids de las aplicaciones asignadas al trabajador
+            $applicationId = Assignment::where('workerId', $workerId)->pluck('applicationId');
+
+            // Consulta para obtener las asignaciones agrupadas por applicationId
+            $assignments = Assignment::whereIn('applicationId', $applicationId)
+                ->select('applicationId')
+                ->groupBy('applicationId')
+                ->havingRaw('COUNT(DISTINCT workerId) = 1') // Filtrar grupos con más de un workerId
+                ->pluck('applicationId');
+
+            // Consulta para obtener las solicitudes asociadas a las asignaciones encontradas
+            $applications = Application::whereIn('id', $assignments)->get();
+
+            return response()->json($applications, 200);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error en la solicitud'], 500);
+        }
+    }
+
+    public function listApplicationMultipleWorkers(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'workerId' => 'required',
+            ]);
+
+            $workerId = $request->workerId;
+
+            // Obtener todas las asignaciones para las aplicaciones asociadas al trabajador
+            $assignments = Assignment::where('workerId', $workerId)->pluck('applicationId');
+
+            // Obtener las aplicaciones que están asignadas a más de un empleado
+            $multipleWorkerApps = Assignment::whereIn('applicationId', $assignments)
+                ->select('applicationId')
+                ->groupBy('applicationId')
+                ->havingRaw('COUNT(DISTINCT workerId) > 1')
+                ->pluck('applicationId');
+
+            // Obtener las aplicaciones y los trabajadores asociados
+            $applications = Application::whereIn('id', $multipleWorkerApps)->get();
+            $workers = Worker::whereIn('id', function ($query) use ($multipleWorkerApps) {
+                $query->select('workerId')
+                    ->from('assignments')
+                    ->whereIn('applicationId', $multipleWorkerApps);
+            })->get();
+
+            return response()->json(['applications' => $applications, 'workers' => $workers], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error en la solicitud'], 500);
+        }
     }
 
     public function checkOngoingApp(Request $request)
@@ -38,7 +97,6 @@ class WorkerApplicationController extends Controller
         $application = Application::where('id', $applicationId)->where('applicationStatus', '!=', 'completed')->get();
 
         return response()->json($application, 200);
-
     }
 
     public function updateApplicationStatus(Request $request, $id)
@@ -50,7 +108,7 @@ class WorkerApplicationController extends Controller
 
             $workerId = $request->workerId;
             Worker::where('id', $workerId)->update(['workerStatus' => 'inService']);
-            
+
 
             return response()->json($application, 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -59,6 +117,30 @@ class WorkerApplicationController extends Controller
         } catch (\Exception $e) {
             // Manejar otros errores
             return response()->json(['error' => 'Error interno del servidor'], 500);
+        }
+    }
+
+    public function applicationCompleted(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'applicationId' => 'required',
+                'workerId' => 'required',
+                'applicationExplanation' => 'required',
+            ]);
+
+            $applicationCompleted = new CompletedApplication();
+            $applicationCompleted->applicationId = $request->applicationId;
+            $applicationCompleted->workerId = $request->workerId;
+            $applicationCompleted->applicationExplanation = $request->applicationExplanation;
+            $applicationCompleted->save();
+            // $updateStatus = $request->applicationStatus;
+            Application::where('id', $request->applicationId)->update(['applicationStatus' => 'completed']);
+            Worker::where('id', $request->workerId)->update(['workerStatus' => 'available']);
+
+            return response($applicationCompleted);
+        } catch (\Exception $e) {
+            return response('SUPER ERROR: ' + $e);
         }
     }
 }
