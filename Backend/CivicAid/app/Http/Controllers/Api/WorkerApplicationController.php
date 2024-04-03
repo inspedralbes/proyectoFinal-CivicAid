@@ -74,11 +74,95 @@ class WorkerApplicationController extends Controller
 
             // Obtener las aplicaciones y los trabajadores asociados
             $applications = Application::whereIn('id', $multipleWorkerApps)->get();
+            
             $workers = Worker::whereIn('id', function ($query) use ($multipleWorkerApps) {
                 $query->select('workerId')
                     ->from('assignments')
                     ->whereIn('applicationId', $multipleWorkerApps);
             })->get();
+
+            return response()->json(['applications' => $applications, 'workers' => $workers], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Error en la solicitud'], 500);
+        }
+    }
+
+    // public function listWorkersExactApplication(Request $request)
+    // {
+    //     try {
+    //         $validated = $request->validate([
+    //             'workerId' => 'required',
+    //         ]);
+
+    //         $workerId = $request->workerId;
+
+    //         // Obtener todas las asignaciones para las aplicaciones asociadas al trabajador
+    //         $assignments = Assignment::where('workerId', $workerId)->pluck('applicationId');
+
+    //         // Obtener las aplicaciones que están asignadas a más de un empleado
+    //         $multipleWorkerApps = Assignment::whereIn('applicationId', $assignments)
+    //             ->select('applicationId')
+    //             ->groupBy('applicationId')
+    //             ->havingRaw('COUNT(DISTINCT workerId) > 1')
+    //             ->pluck('applicationId');
+
+    //         // Obtener las solicitudes y los empleados asigandos a esta
+    //         $applications = Application::whereIn('id', $multipleWorkerApps)
+    //             ->with(['workers' => function ($query) {
+    //                 $query->select('workers.id', 'name'); // Asegúrate de ajustar los campos seleccionados según tu modelo y necesidades
+    //             }])
+    //             ->get();
+
+    //         // Obetener los empleados y las solicitudes que tienen asignadas estos
+    //         $workers = Worker::whereIn('id', function ($query) use ($multipleWorkerApps) {
+    //             $query->select('workerId')
+    //                 ->from('assignments')
+    //                 ->whereIn('applicationId', $multipleWorkerApps);
+    //         })->with(['applications' => function ($query) use ($multipleWorkerApps) {
+    //             $query->whereIn('applications.id', $multipleWorkerApps);
+    //         }])->get();            
+
+    //         return response()->json(['applications' => $applications, 'workers' => $workers], 200);
+    //     } catch (\Throwable $th) {
+    //         return response()->json(['error' => 'Error en la solicitud'], 500);
+    //     }
+    // }
+
+    public function listWorkersExactApplication(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'workerId' => 'required',
+                'applicationId' => 'required',
+            ]);
+
+            $workerId = $request->workerId;
+
+            // Obtener todas las asignaciones para las aplicaciones asociadas al trabajador
+            $assignments = Assignment::where('workerId', $workerId)->pluck('applicationId');
+
+            // Obtener las aplicaciones que están asignadas a más de un empleado
+            $multipleWorkerApps = Assignment::whereIn('applicationId', $assignments)
+                ->select('applicationId')
+                ->groupBy('applicationId')
+                ->havingRaw('COUNT(DISTINCT workerId) > 1')
+                ->pluck('applicationId');
+
+            // Obtener las solicitudes y los empleados asigandos a esta
+            $applications = Application::whereIn('id', $multipleWorkerApps)
+                ->with(['workers' => function ($query) {
+                    $query->select('workers.id', 'name'); // Asegúrate de ajustar los campos seleccionados según tu modelo y necesidades
+                }])
+                ->get();
+
+            // Obetener los empleados y las solicitudes que tienen asignadas estos
+            $workers = Worker::whereIn('id', function ($query) use ($multipleWorkerApps) {
+                $query->select('workerId')
+                    ->from('assignments')
+                    ->whereIn('applicationId', $multipleWorkerApps);
+            })->with(['applications' => function ($query) use ($multipleWorkerApps) {
+                $query->whereIn('applications.id', $multipleWorkerApps);
+            }])->get();            
 
             return response()->json(['applications' => $applications, 'workers' => $workers], 200);
         } catch (\Throwable $th) {

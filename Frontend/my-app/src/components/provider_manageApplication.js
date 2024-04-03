@@ -5,33 +5,71 @@ import { store, actions } from './store';
 
 import Swal from "sweetalert2";
 
-const ManageApplication = () => {
+const ManageApplication = ({ socket }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const token = localStorage.getItem('access_token');
-    const [filter, setFilter] = useState('single'); // O 'multiple', dependiendo de qué vista quieres mostrar por defecto
 
+    const userName = useSelector((state) => state.data.name);
+    const userSurname = useSelector((state) => state.data.surname);
+    const userSecondSurname = useSelector((state) => state.data.secondSurname);
+    const completeName = `${userName} ${userSurname} ${userSecondSurname}`
     const workerId = useSelector((state) => state.data?.id);
     const isWorker = useSelector((state) => state.isWorker);
     const sector = useSelector((state) => state.data.sector);
     const [applicationInfo, setApplicationInfo] = useState([]);
     const [multipleAssigned, setMultipleAssigned] = useState([]);
     const [otherAssignedWorkers, setOtherAssignedWorkers] = useState([]);
+    const [countMaxUsers, setCountMaxUsers] = useState([]);
     const applicationOngoingInfo = useSelector((state) => state.applicationOngoingInfo.id);
     const checkAppOngoing = useSelector((state) => state.applicationOngoing);
     const [activeTab, setActiveTab] = useState("tab1"); // initialize active tab to tab1
+    const [room, setRoom] = useState(null);
 
+    console.log("SOCKET: ", socket.id);
+    // console.log("SOCKET: ", socket);
     const handleTabClick = (tab) => {
         setActiveTab(tab); // update active tab based on the tab clicked
     };
 
     useEffect(() => {
-        async function fetchApplications() {
+        async function socketConnection() {
+            socket.on("connect", () => {
+                console.log("Conectado al servidor");
 
-            // console.log("SOLICITUD EN MARCHA:", applicationOngoingInfo);
+                socket.emit("new_lobby", {
+                    users: [],
+                });
+            });
+
+            socket.on("connect_error", (error) => {
+                // Muestra información más detallada sobre el error
+                console.log("Error de conexión:", error.message);
+                if (error.description) {
+                    console.log("Descripción del error:", error.description);
+                }
+
+                // Reintenta la conexión después de un retraso
+                const RETRY_DELAY = 5000; // 5 segundos
+                console.log(`Intentando reconectar en ${RETRY_DELAY / 1000} segundos...`);
+                setTimeout(() => {
+                    console.log("Reintentando conexión...");
+                    socket.connect();
+                }, RETRY_DELAY);
+
+                // Proporciona sugerencias basadas en tipos de error comunes
+                if (error.message.includes("ECONNREFUSED")) {
+                    console.log("El servidor rechazó la conexión. ¿Está seguro de que está corriendo y accesible?");
+                } else if (error.message.includes("timeout")) {
+                    console.log("Tiempo de espera agotado. Verifique su conexión de red y la URL del servidor.");
+                }
+            });
+        }
+
+        async function fetchApplications() {
             if (isWorker) {
                 try {
                     const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listAssignedApplications', {
@@ -43,7 +81,7 @@ const ManageApplication = () => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
-                    console.log("ASSIGNED: ", data);
+                    // console.log("ASSIGNED: ", data);
 
                     setApplicationInfo(data)
 
@@ -54,7 +92,6 @@ const ManageApplication = () => {
         }
 
         async function fetchMultipleAssigned() {
-
             if (isWorker) {
                 try {
                     const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplicationMultipleWorkers', {
@@ -66,7 +103,7 @@ const ManageApplication = () => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
-                    console.log("ASSIGNEDMULTIPLE: ", data);
+                    // console.log("ASSIGNEDMULTIPLE: ", data);
 
                     setMultipleAssigned(data.applications);
                     setOtherAssignedWorkers(data.workers);
@@ -77,12 +114,50 @@ const ManageApplication = () => {
                 }
             }
         }
-
+        
         fetchApplications();
         fetchMultipleAssigned();
-    }, [applicationOngoingInfo]);
+        socketConnection();
+        // maxUsers();
+    }, [applicationOngoingInfo, socket]);
+    
+    
+    const maxUsers = (e) => {
+        for (let index = 0; index < otherAssignedWorkers.length; index++) {
+            if(index >= otherAssignedWorkers.length){
+                setCountMaxUsers(index);
+            }
+        }
+        console.log("NOSE: ", countMaxUsers);
+        console.log("NOSE222: ", e);
+    }
+    
+    const codeGenerator = () => {
+        const randomCode = Math.floor(
+            Math.random() * (100000 - 999999 + 1) + 999999
+        );
+        setRoom(randomCode);
+    };
 
+    const getLobby = () => {
+        socket.emit("get lobbies", {});
+        socket.on("lobbies list", function (data) {
+            // setLobbies(data);
+            // console.log(data);
+        });
+    };
 
+    const createInvitation = async (e) => {
+        codeGenerator();
+
+        socket.emit("newLobby", {
+            lobby_code: room,
+            maxUsers: countMaxUsers,
+            lobbyCreator: completeName,
+            // words: words,
+            // teacher: stateLoginUser,
+        });
+    }
     const handleApplication = async (e) => {
         // e.preventDefault(e);
         setLoading(true);
@@ -136,7 +211,7 @@ const ManageApplication = () => {
                 body: JSON.stringify({ applicationStatus }),
             });
             const data = await response.json();
-            console.log("PRIMER STATUS: ", data);
+            // console.log("PRIMER STATUS: ", data);
 
         } catch (error) {
             console.error("ERROR EN EL PRIMER FETCH: ", error);
@@ -154,7 +229,7 @@ const ManageApplication = () => {
                 body: JSON.stringify({ applicationStatus }),
             });
             const data2 = await response2.json();
-            console.log("SEGUNDO STATUS: ", data2);
+            // console.log("SEGUNDO STATUS: ", data2);
 
             navigate("/");
             dispatch(actions.applicationOngoing(e))
@@ -326,6 +401,13 @@ const ManageApplication = () => {
                                                 className="block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                                 type="submit">
                                                 ACEPTAR
+                                            </button>
+
+                                            <button
+                                                onClick={() => createInvitation(application)}
+                                                className="block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                                type="submit">
+                                                INVITAR
                                             </button>
                                         </div>
                                         {showModal && (

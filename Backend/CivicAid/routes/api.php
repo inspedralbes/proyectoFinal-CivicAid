@@ -57,6 +57,7 @@ Route::post('/checkOngoingApp', [WorkerApplicationController::class, 'checkOngoi
 Route::post('/updateApplicationStatus/{id}', [WorkerApplicationController::class, 'updateApplicationStatus']);
 Route::post('/applicationCompleted', [WorkerApplicationController::class, 'applicationCompleted']);
 Route::post('/listApplicationMultipleWorkers', [WorkerApplicationController::class, 'listApplicationMultipleWorkers']);
+Route::post('/listWorkersExactApplication', [WorkerApplicationController::class, 'listWorkersExactApplication']);
 
 
 

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './components/store';
+import socketIO from 'socket.io-client';
 
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -23,36 +24,43 @@ import SolicitudPropia from './pages/getOwnApplication';
 import GestionarSolicitudesRegistro from './pages/signinRequests';
 import AsignarSolicitud from './pages/assignApplication';
 
-
-
 import './App.css';
+
+let socket = socketIO(process.env.REACT_APP_NODE_URL, {
+  withCredentials: true,
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
+  path: "/node/",
+});
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-            <div>
-                <Router>
-                    <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/login" element={<LoginUsuario />} />
-                        <Route path="/loginWorker" element={<LoginWorker />} />
-                        <Route path="/loginAdmin" element={<LoginAdmin />} />
-                        <Route path="/signin" element={<SigninUsuario />} />
-                        <Route path="/signinWorker" element={<SigninWorker />} />
-                        <Route path="/profile" element={<UserProfile />} />
+        <div>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/login" element={<LoginUsuario />} />
+                    <Route path="/loginWorker" element={<LoginWorker />} />
+                    <Route path="/loginAdmin" element={<LoginAdmin />} />
+                    <Route path="/signin" element={<SigninUsuario />} />
+                    <Route path="/signinWorker" element={<SigninWorker />} />
+                    <Route path="/profile" element={<UserProfile />} />
 
-                        <Route path="/makeApplication" element={<HacerSolicitud />} />
-                        <Route path="/manageApplications" element={<GestionarSolicitudes />} />
-                        <Route path="/applicationOngoing" element={<SolicitudAceptada />} />
-                        <Route path="/ownApplication" element={<SolicitudPropia />} />
+                    <Route path="/makeApplication" element={<HacerSolicitud />} />
+                    <Route path="/manageApplications" element={<GestionarSolicitudes socket={socket}/>} />
+                    <Route path="/applicationOngoing" element={<SolicitudAceptada socket={socket}/>} />
+                    <Route path="/ownApplication" element={<SolicitudPropia />} />
 
-                        <Route path="/manageSigninRequests" element={<GestionarSolicitudesRegistro />} />
-                        <Route path="/assignApplications" element={<AsignarSolicitud />} />
+                    <Route path="/manageSigninRequests" element={<GestionarSolicitudesRegistro />} />
+                    <Route path="/assignApplications" element={<AsignarSolicitud />} />
 
-                    </Routes>
-                </Router>
-            </div>
+                </Routes>
+            </Router>
+        </div>
     </React.StrictMode>
 );
 

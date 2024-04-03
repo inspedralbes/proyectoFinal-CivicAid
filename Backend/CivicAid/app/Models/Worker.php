@@ -11,6 +11,10 @@ class Worker extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
     // protected $primaryKey = 'id';
     // public $incrementing = false;
+    public function applications()
+    {
+        return $this->belongsToMany(Application::class, 'assignments', 'workerId', 'applicationId');
+    }
 
     /**
      * The attributes that are mass assignable.

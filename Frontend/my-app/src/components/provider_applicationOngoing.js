@@ -4,7 +4,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { store, actions } from './store';
 import Swal from "sweetalert2";
 
-const ApplicationOngoing = () => {
+const ApplicationOngoing = ({ socket }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [error, setError] = useState(null);
