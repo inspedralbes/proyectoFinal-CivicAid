@@ -22,53 +22,84 @@ const ManageApplication = ({ socket }) => {
     const sector = useSelector((state) => state.data.sector);
     const [applicationInfo, setApplicationInfo] = useState([]);
     const [multipleAssigned, setMultipleAssigned] = useState([]);
-    const [otherAssignedWorkers, setOtherAssignedWorkers] = useState([]);
     const [countMaxUsers, setCountMaxUsers] = useState([]);
     const applicationOngoingInfo = useSelector((state) => state.applicationOngoingInfo.id);
     const checkAppOngoing = useSelector((state) => state.applicationOngoing);
     const [activeTab, setActiveTab] = useState("tab1"); // initialize active tab to tab1
     const [room, setRoom] = useState(null);
+    const [receivedInvitation, setReceivedInvitation] = useState(null);
+    const [invitationStatus, setInvitationStatus] = useState(false);
+    const [sendWorkersNode, setSendWorkersNode] = useState(null);
 
-    console.log("SOCKET: ", socket.id);
-    // console.log("SOCKET: ", socket);
+
     const handleTabClick = (tab) => {
         setActiveTab(tab); // update active tab based on the tab clicked
     };
 
     useEffect(() => {
-        async function socketConnection() {
-            socket.on("connect", () => {
-                console.log("Conectado al servidor");
 
-                socket.emit("new_lobby", {
-                    users: [],
-                });
+        socket.on("connect", () => {
+            console.log("Conectado al servidor");
+
+            socket.emit("new_lobby", {
+                users: [],
             });
+        });
 
-            socket.on("connect_error", (error) => {
-                // Muestra información más detallada sobre el error
-                console.log("Error de conexión:", error.message);
-                if (error.description) {
-                    console.log("Descripción del error:", error.description);
-                }
+        /**
+         * SOCKET QUE EMITE EL ID DEL EMPLEADO PARA ENLAZARLA CON LA ID DEL SOCKET
+         */
+        socket.emit("register", workerId);
 
-                // Reintenta la conexión después de un retraso
-                const RETRY_DELAY = 5000; // 5 segundos
-                console.log(`Intentando reconectar en ${RETRY_DELAY / 1000} segundos...`);
-                setTimeout(() => {
-                    console.log("Reintentando conexión...");
-                    socket.connect();
-                }, RETRY_DELAY);
+        /**
+         * SOCKET PARA CONTROLAR CUANDO TE INVITAN
+         */
+        socket.on("invitationReceived", (data) => {
+            // Aquí puedes actualizar el estado para mostrar la invitación en la UI
+            // console.log("Invitación recibida:", invitation);
+            console.log("DATA??: ", data.message);
+            console.log("ESTADO??: ", data.invitation);
+            console.log("ID SOLICITUD??: ", data.applicationId);
+            // Por ejemplo, guardar esta invitación en el estado para mostrarla
+            // console.log("ID DEL BOTON: invitationButton", verId);
+            try {
+                let verId = document.getElementById(`invitationButton${data.applicationId}`).id;
+                document.getElementById(verId).style.display = "none";
 
-                // Proporciona sugerencias basadas en tipos de error comunes
-                if (error.message.includes("ECONNREFUSED")) {
-                    console.log("El servidor rechazó la conexión. ¿Está seguro de que está corriendo y accesible?");
-                } else if (error.message.includes("timeout")) {
-                    console.log("Tiempo de espera agotado. Verifique su conexión de red y la URL del servidor.");
-                }
-            });
-        }
+            } catch (error) {
+                console.log("ERROR DEL ID: ", error);
+            }
+        });
 
+        /**
+         * SOCKET PARA MANEJAR LOS ERRORES DE CONEXIÓN
+         */
+        socket.on("connect_error", (error) => {
+            // Muestra información más detallada sobre el error
+            console.log("Error de conexión:", error.message);
+            if (error.description) {
+                console.log("Descripción del error:", error.description);
+            }
+
+            // Reintenta la conexión después de un retraso
+            const RETRY_DELAY = 5000; // 5 segundos
+            console.log(`Intentando reconectar en ${RETRY_DELAY / 1000} segundos...`);
+            setTimeout(() => {
+                console.log("Reintentando conexión...");
+                socket.connect();
+            }, RETRY_DELAY);
+
+            // Proporciona sugerencias basadas en tipos de error comunes
+            if (error.message.includes("ECONNREFUSED")) {
+                console.log("El servidor rechazó la conexión. ¿Está seguro de que está corriendo y accesible?");
+            } else if (error.message.includes("timeout")) {
+                console.log("Tiempo de espera agotado. Verifique su conexión de red y la URL del servidor.");
+            }
+        });
+
+        /**
+         * Funcion para pedir la solicitudes sin compartir
+         */
         async function fetchApplications() {
             if (isWorker) {
                 try {
@@ -81,9 +112,10 @@ const ManageApplication = ({ socket }) => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
-                    // console.log("ASSIGNED: ", data);
 
                     setApplicationInfo(data)
+
+                    console.log("DATATATATATATATA: ", data);
 
                 } catch (error) {
                     console.error("ESTE ES EL ERROR: ", error);
@@ -91,10 +123,13 @@ const ManageApplication = ({ socket }) => {
             }
         }
 
+        /**
+         * Funcion para pedir las solicitudes compartidas
+         */
         async function fetchMultipleAssigned() {
             if (isWorker) {
                 try {
-                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplicationMultipleWorkers', {
+                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listWorkersExactApplication', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -103,35 +138,30 @@ const ManageApplication = ({ socket }) => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
-                    // console.log("ASSIGNEDMULTIPLE: ", data);
 
                     setMultipleAssigned(data.applications);
-                    setOtherAssignedWorkers(data.workers);
+                    setSendWorkersNode(data.workers)
 
-                    console.log(data.workers);
+                    // Emite sendWorkersNode después de la actualización
+                    console.log("DATATATATA22222: ", data.workers);
+                    socket.emit("returnWorkerStatus", data.workers);
+
                 } catch (error) {
                     console.error("ESTE ES EL ERROR: ", error);
                 }
             }
         }
-        
+
         fetchApplications();
         fetchMultipleAssigned();
-        socketConnection();
-        // maxUsers();
-    }, [applicationOngoingInfo, socket]);
-    
-    
+    }, [applicationOngoingInfo]);
+
+
     const maxUsers = (e) => {
-        for (let index = 0; index < otherAssignedWorkers.length; index++) {
-            if(index >= otherAssignedWorkers.length){
-                setCountMaxUsers(index);
-            }
-        }
-        console.log("NOSE: ", countMaxUsers);
-        console.log("NOSE222: ", e);
+        setCountMaxUsers(e.workers.length);
+        console.log("Número máximo de usuarios: ", e.workers.length);
     }
-    
+
     const codeGenerator = () => {
         const randomCode = Math.floor(
             Math.random() * (100000 - 999999 + 1) + 999999
@@ -147,16 +177,37 @@ const ManageApplication = ({ socket }) => {
         });
     };
 
-    const createInvitation = async (e) => {
-        codeGenerator();
-
-        socket.emit("newLobby", {
-            lobby_code: room,
-            maxUsers: countMaxUsers,
-            lobbyCreator: completeName,
-            // words: words,
-            // teacher: stateLoginUser,
+    const acceptInvitation = () => {
+        console.log("Aceptar invitación para:", receivedInvitation.applicationId);
+        // Aquí enviarías otra señal a través de socket.io para manejar la aceptación de la invitación
+        socket.emit("acceptInvitation", {
+            applicationId: receivedInvitation.applicationId,
+            lobbyCode: receivedInvitation.lobbyCode
         });
+        setReceivedInvitation(null); // Limpiar la invitación actual
+    };
+
+    const createInvitation = async (e) => {
+
+        try {
+            codeGenerator();
+            maxUsers(e);
+
+            // Podrías necesitar adaptar este objeto a los detalles exactos que tu backend espera
+            const invitationData = {
+                applicationId: e.id,
+                assignedWorkers: e.workers,
+                hostId: workerId, // Asegúrate de tener este dato disponible
+                lobbyCode: room, // Suponiendo que cada solicitud tiene un código de lobby asociado
+            };
+
+            socket.emit("sendInvitation", invitationData);
+
+            console.log("Invitación enviada a los sockets:", invitationData);
+            // Aquí puedes mostrar una confirmación al usuario de que la invitación ha sido enviada
+        } catch (error) {
+            console.error("Error al enviar la invitación:", error);
+        }
     }
     const handleApplication = async (e) => {
         // e.preventDefault(e);
@@ -381,7 +432,7 @@ const ManageApplication = ({ socket }) => {
 
                                             <div>
                                                 <h2>OTHER WORKERS</h2>
-                                                {otherAssignedWorkers.map((worker, id) => {
+                                                {application.workers.map((worker, id) => {
                                                     if (worker.id === workerId) {
                                                         return null;
                                                     }
@@ -405,10 +456,17 @@ const ManageApplication = ({ socket }) => {
 
                                             <button
                                                 onClick={() => createInvitation(application)}
+                                                id={`invitationButton${application.id}`}
                                                 className="block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                                 type="submit">
                                                 INVITAR
                                             </button>
+                                            {receivedInvitation && (
+                                                <div>
+                                                    <p>Has sido invitado a la aplicación {receivedInvitation.applicationId}</p>
+                                                    <button onClick={acceptInvitation}>Aceptar Invitación</button>
+                                                </div>
+                                            )}
                                         </div>
                                         {showModal && (
                                             <div className="fixed z-10 inset-0 overflow-y-auto">
