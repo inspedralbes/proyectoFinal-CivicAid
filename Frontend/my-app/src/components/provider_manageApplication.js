@@ -30,76 +30,51 @@ const ManageApplication = ({ socket }) => {
     const [receivedInvitation, setReceivedInvitation] = useState(null);
     const [invitationStatus, setInvitationStatus] = useState(false);
     const [sendWorkersNode, setSendWorkersNode] = useState(null);
+    const [applicationsNode, setApplicationsNode] = useState(null);
 
 
     const handleTabClick = (tab) => {
         setActiveTab(tab); // update active tab based on the tab clicked
     };
 
+    /**
+     * USE EFFECT DE LAS FUNCIONES NORMALES
+     */
     useEffect(() => {
+        // console.log(socket.id);
 
-        socket.on("connect", () => {
-            console.log("Conectado al servidor");
+        // async function socketConnection(){
+        //     socket.on("connect", () => {
+        //         console.log("Conectado al servidor");
 
-            socket.emit("new_lobby", {
-                users: [],
-            });
-        });
+        //         /**
+        //          * SOCKET PARA ENVIAR EL ID DEL EMPLEADO Y QUE SE ASOCIE CON EL ID DE SU SOCKET
+        //          */
+        //         socket.emit("register", workerId);
 
-        /**
-         * SOCKET QUE EMITE EL ID DEL EMPLEADO PARA ENLAZARLA CON LA ID DEL SOCKET
-         */
-        socket.emit("register", workerId);
 
-        /**
-         * SOCKET PARA CONTROLAR CUANDO TE INVITAN
-         */
-        socket.on("invitationReceived", (data) => {
-            // Aquí puedes actualizar el estado para mostrar la invitación en la UI
-            // console.log("Invitación recibida:", invitation);
-            console.log("DATA??: ", data.message);
-            console.log("ESTADO??: ", data.invitation);
-            console.log("ID SOLICITUD??: ", data.applicationId);
-            // Por ejemplo, guardar esta invitación en el estado para mostrarla
-            // console.log("ID DEL BOTON: invitationButton", verId);
-            try {
-                let verId = document.getElementById(`invitationButton${data.applicationId}`).id;
-                document.getElementById(verId).style.display = "none";
+        //         /**
+        //          * SOCKET PARA PEDIR LAS SOLICITUDES COMPARTIDAS
+        //          */
+        //         const fetchMultipleAssignedData = {
+        //             token: token,
+        //             isWorker: isWorker,
+        //             workerId: workerId
+        //         }
+        //         socket.emit("fetchMultipleAssigned", fetchMultipleAssignedData);
 
-            } catch (error) {
-                console.log("ERROR DEL ID: ", error);
-            }
-        });
+        //         socket.on("returnFetchMultipleAssigned", (data) =>{
+        //             console.log("ori3oi3ow", data);
+        //         })
+        //     });
+        // }
+
+
+
 
         /**
-         * SOCKET PARA MANEJAR LOS ERRORES DE CONEXIÓN
-         */
-        socket.on("connect_error", (error) => {
-            // Muestra información más detallada sobre el error
-            console.log("Error de conexión:", error.message);
-            if (error.description) {
-                console.log("Descripción del error:", error.description);
-            }
-
-            // Reintenta la conexión después de un retraso
-            const RETRY_DELAY = 5000; // 5 segundos
-            console.log(`Intentando reconectar en ${RETRY_DELAY / 1000} segundos...`);
-            setTimeout(() => {
-                console.log("Reintentando conexión...");
-                socket.connect();
-            }, RETRY_DELAY);
-
-            // Proporciona sugerencias basadas en tipos de error comunes
-            if (error.message.includes("ECONNREFUSED")) {
-                console.log("El servidor rechazó la conexión. ¿Está seguro de que está corriendo y accesible?");
-            } else if (error.message.includes("timeout")) {
-                console.log("Tiempo de espera agotado. Verifique su conexión de red y la URL del servidor.");
-            }
-        });
-
-        /**
-         * Funcion para pedir la solicitudes sin compartir
-         */
+        * Funcion para pedir la solicitudes sin compartir
+        */
         async function fetchApplications() {
             if (isWorker) {
                 try {
@@ -115,7 +90,7 @@ const ManageApplication = ({ socket }) => {
 
                     setApplicationInfo(data)
 
-                    console.log("DATATATATATATATA: ", data);
+                    // console.log("DATATATATATATATA: ", data);
 
                 } catch (error) {
                     console.error("ESTE ES EL ERROR: ", error);
@@ -143,7 +118,7 @@ const ManageApplication = ({ socket }) => {
                     setSendWorkersNode(data.workers)
 
                     // Emite sendWorkersNode después de la actualización
-                    console.log("DATATATATA22222: ", data.workers);
+                    // console.log("DATATATATA22222: ", data.workers);
                     socket.emit("returnWorkerStatus", data.workers);
 
                 } catch (error) {
@@ -152,9 +127,98 @@ const ManageApplication = ({ socket }) => {
             }
         }
 
+        // socketConnection();
         fetchApplications();
         fetchMultipleAssigned();
     }, [applicationOngoingInfo]);
+
+    /**
+     * USE EFFECT DE LOS SOCKETS
+     */
+    useEffect(() => {
+        console.log("HASTA AQUI LLEGA NOOOOO?");
+
+        socket.on("connect", () => {
+            console.log("Conectado al servidor");
+
+            /**
+             * SOCKET PARA ENVIAR EL ID DEL EMPLEADO Y QUE SE ASOCIE CON EL ID DE SU SOCKET
+             */
+            socket.emit("register", workerId);
+
+            /**
+             * SOCKET PARA PEDIR LAS SOLICITUDES COMPARTIDAS
+             */
+            const fetchMultipleAssignedData = {
+                token: token,
+                isWorker: isWorker,
+                workerId: workerId
+            }
+            socket.emit("fetchMultipleAssigned", fetchMultipleAssignedData);
+        });
+
+        const handleReturnFetchMultipleAssigned = (data) => {
+            console.log("Solicitudes de NODE: ", data);
+            setApplicationsNode(data.applications)
+
+        };
+
+        // Configurar el listener
+        socket.on("returnFetchMultipleAssigned", handleReturnFetchMultipleAssigned);
+
+        // Limpiar el listener anterior al desmontar el componente o al actualizar el efecto
+        return () => {
+            socket.off("returnFetchMultipleAssigned", handleReturnFetchMultipleAssigned);
+        };
+    }, []);
+
+
+
+    /**
+    * SOCKET PARA CONTROLAR CUANDO TE INVITAN
+    */
+    socket.on("invitationReceived", (data) => {
+        // Aquí puedes actualizar el estado para mostrar la invitación en la UI
+        // console.log("Invitación recibida:", invitation);
+        console.log("DATA??: ", data.message);
+        console.log("ESTADO??: ", data.invitation);
+        console.log("ID SOLICITUD??: ", data.applicationId);
+        // Por ejemplo, guardar esta invitación en el estado para mostrarla
+        // console.log("ID DEL BOTON: invitationButton", verId);
+        try {
+            let verId = document.getElementById(`invitationButton${data.applicationId}`).id;
+            document.getElementById(verId).style.display = "none";
+
+        } catch (error) {
+            console.log("ERROR DEL ID: ", error);
+        }
+    });
+
+    /**
+     * SOCKET PARA MANEJAR LOS ERRORES DE CONEXIÓN
+     */
+    socket.on("connect_error", (error) => {
+        // Muestra información más detallada sobre el error
+        console.log("Error de conexión:", error.message);
+        if (error.description) {
+            console.log("Descripción del error:", error.description);
+        }
+
+        // Reintenta la conexión después de un retraso
+        const RETRY_DELAY = 5000; // 5 segundos
+        console.log(`Intentando reconectar en ${RETRY_DELAY / 1000} segundos...`);
+        setTimeout(() => {
+            console.log("Reintentando conexión...");
+            socket.connect();
+        }, RETRY_DELAY);
+
+        // Proporciona sugerencias basadas en tipos de error comunes
+        if (error.message.includes("ECONNREFUSED")) {
+            console.log("El servidor rechazó la conexión. ¿Está seguro de que está corriendo y accesible?");
+        } else if (error.message.includes("timeout")) {
+            console.log("Tiempo de espera agotado. Verifique su conexión de red y la URL del servidor.");
+        }
+    });
 
 
     const maxUsers = (e) => {
@@ -401,7 +465,7 @@ const ManageApplication = ({ socket }) => {
 
                     {activeTab === "tab2" && (
                         <div>
-                            {multipleAssigned.map((application, id) => {
+                            {applicationsNode.map((application, id) => {
                                 // No renderizar el div si la condición se cumple
                                 if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed') {
                                     return null;
@@ -441,7 +505,12 @@ const ManageApplication = ({ socket }) => {
                                                             <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
                                                                 {worker.name}
                                                             </p>
+
+                                                            <p className="block uppercase font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                                                {worker.status}
+                                                            </p>
                                                         </div>
+                                                        
                                                     )
                                                 })}
                                             </div>
