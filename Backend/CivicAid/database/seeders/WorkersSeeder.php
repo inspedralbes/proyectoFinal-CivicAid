@@ -33,7 +33,7 @@ class WorkersSeeder extends Seeder
             'surname' => 'Martínez',
             'secondSurname' => 'Sánchez',
             'sector' => 'Servicios Médicos',
-            'assignedLocation' => 'Madrid',
+            'assignedLocation' => 'Barcelona',
             'workerStatus' => 'available',
             'assignedApplications' => 0,
             'email' => 'maria@example.com',
@@ -46,10 +46,23 @@ class WorkersSeeder extends Seeder
             'surname' => 'Fernández',
             'secondSurname' => 'Gómez',
             'sector' => 'Servicios Médicos',
-            'assignedLocation' => 'Sevilla',
+            'assignedLocation' => 'Barcelona',
             'workerStatus' => 'available',
             'assignedApplications' => 0,
             'email' => 'pedro@example.com',
+            'password' => 'Cm12345-',
+        ]);
+
+        Worker::create([
+            'dni' => '20565266S',
+            'name' => 'Ermengol',
+            'surname' => 'Bota',
+            'secondSurname' => 'Pere',
+            'sector' => 'Servicios Médicos',
+            'assignedLocation' => 'Barcelona',
+            'workerStatus' => 'available',
+            'assignedApplications' => 0,
+            'email' => 'ermengol@example.com',
             'password' => 'Cm12345-',
         ]);
     }

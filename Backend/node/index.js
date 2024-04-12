@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
      */
     socket.on("register", (employeeId) => {
         // employeeSocketMap[employeeId] = socket.id;
-        employeeSocketMap[employeeId] = { socketId: socket.id, status: "connected" };
+        employeeSocketMap[employeeId] = { socketId: socket.id };
 
         // console.log("MAP: ", employeeSocketMap);
     });
@@ -49,8 +49,6 @@ io.on("connection", (socket) => {
         const targetSocket = employeeSocketMap[workerId];
         const targetSocketId = targetSocket ? targetSocket.socketId : null;
 
-        // console.log("ESTE ES EL TARGET:", targetSocketId);
-
         if (isWorker && targetSocketId) {
             try {
                 const response = await fetch(`${laravelUrl}/api/listWorkersExactApplication`, {
@@ -63,15 +61,6 @@ io.on("connection", (socket) => {
                 });
                 let fetchData = await response.json();
 
-                // Iterar a través de cada aplicación para acceder a sus trabajadores
-                fetchData.applications.forEach(application => {
-                    // Agregar el estado del socket a cada trabajador en la aplicación
-                    application.workers.forEach(worker => {
-                        // Aquí cambiamos la lógica para marcar como 'inactive' por defecto si no está en employeeSocketMap
-                        worker.status = employeeSocketMap[worker.id] ? employeeSocketMap[worker.id].status : 'inactive';
-                    });
-                });
-
                 // Emitir los datos actualizados al cliente
                 io.to(targetSocketId).emit("returnFetchMultipleAssigned", fetchData);
 
@@ -81,88 +70,122 @@ io.on("connection", (socket) => {
         }
     });
 
-
-    socket.on("get lobbies", () => {
-        sendLobbyList();
-    });
-
-    socket.on("newLobby", (data) => {
-        // console.log("ESTA ES LA DTTAA: ", data);
-        // console.log("LOBBIES: ", lobbies);
-        let lobby_exists = false;
-        lobbies.forEach((element) => {
-            if (element.lobby_code == data.lobby_code) {
-                lobby_exists = true;
-            }
-        });
-
-        if (!lobby_exists) {
-            lobbies.push({
-                lobby_code: data.lobby_code,
-                maxUsers: data.maxUsers,
-                lobbyCreator: data.lobbyCreator,
-                users: [],
-                applicationInfo: [],
-                // created: new Date().getTime(),
-            });
-            sendLobbyList();
-        }
-    });
-
-
     /**
      * Socket para cuando un empleado de la al boton de invitar
      */
     socket.on("sendInvitation", (data) => {
-        const hostSocketId = employeeSocketMap[data.hostId]; // ID de socket del host
-        console.log("Socket ID del host: ", hostSocketId);
+        // Obtener el objeto del host que contiene el socketId, no solo el socketId
+        const hostSocket = employeeSocketMap[data.hostId];
+        console.log("Socket del host: ", hostSocket);
         console.log("DATA ", data);
 
-        // data.assignedWorkers es un arreglo de objetos, cada uno tiene la propiedad 'id' para el workerId
-        data.assignedWorkers.forEach(worker => { // Nota el cambio aquí, usamos 'worker' en lugar de 'workerId'
-            const workerId = worker.id; // Accedemos al 'id' del trabajador aquí
-            // Asegúrate de no enviar una invitación al host mismo
+        // CREAR LA LOBBY
+        let lobby_exists = false;
+        lobbies.forEach((element) => {
+            if (element.lobbyCode == data.lobbyCode) {
+                lobby_exists = true;
+            }
+
+        });
+
+        if (!lobby_exists) {
+            lobbies.push({
+                lobbyCode: data.lobbyCode,
+                maxUsers: data.maxUsers,
+                lobbyCreator: data.hostId,
+                users: [{
+                    workerId: data.hostId,
+                    completeName: data.completeName
+                }],
+            });
+
+            lobbies.forEach((lobbie) => {
+                lobbie.users.forEach((user) => {
+                    console.log("ESTON SON LOS USUARIOS: ", user);
+                })
+            })
+        }
+
+        data.assignedWorkers.forEach(worker => {
+            const workerId = worker.id; 
+    
             if (workerId !== data.hostId) {
-                const targetSocketId = employeeSocketMap[workerId];
+                const workerSocket = employeeSocketMap[workerId];
                 console.log("Procesando workerId:", workerId);
-                if (targetSocketId) {
-                    // Envía la invitación a cada trabajador asignado, excepto al host
-                    io.to(targetSocketId).emit("invitationReceived", {
+
+                if (workerSocket && workerSocket.socketId) {
+                    console.log(workerSocket.socketId + " EXISTE");
+
+                    io.to(workerSocket.socketId).emit("invitationReceived", {
                         message: "Estás invitado",
                         invitation: true,
-                        applicationId: data.applicationId
+                        applicationId: data.applicationId,
+                        lobbyCode: data.lobbyCode
                     });
                 }
             }
         });
     });
 
-    /**
-     * Socket para devolver el status online del trabajador para saber si está conectado
-     */
-    socket.on("returnWorkerStatus", (data) => {
-        // Iterar sobre cada trabajador en data
-        data.forEach(worker => {
-            // Acceder a propiedades específicas de cada trabajador
-            // console.log(`Worker ID: ${worker.id}`);
+    socket.on("acceptInvitation", (data) => {
+        console.log("Revisando lobbies para el código:", data.lobbyCode);
+    
+        lobbies.forEach(lobby => {
+            if (lobby.lobbyCode === data.lobbyCode) {
+                console.log("Lobby encontrado, revisando usuarios...");
+                const isUserInLobby = lobby.users.some(user => user.workerId === data.workerId);
+    
+                if (!isUserInLobby) {
+                    console.log("Usuario no está en el lobby, verificando capacidad...");
+                    if (lobby.users.length < lobby.maxUsers) {
+                        lobby.users.push({
+                            workerId: data.workerId,
+                            completeName: data.workerName
+                        });
+    
+                        console.log("Añadiendo usuario y enviando lista actualizada...");
+                        const socketId = employeeSocketMap[lobby.lobbyCreator].socketId;
+                        const socketIdUser = employeeSocketMap[data.workerId].socketId;
+                        console.log("A quien le tengo que mandar el emit:", socketId);
+                        console.log("A quien le tengo que mandar el emit 22:", socketIdUser);
 
+                        
+                        if (socketId) {
+                            io.to(socketId).emit("newUserInLobby", {
+                                users: Array.from(lobby.users)
+                            });
+
+                            console.log("USERS: ", lobby.users);
+                            io.to(socketIdUser).emit("newUserInLobby", {
+                                users: Array.from(lobby.users)
+                            });
+                        } else {
+                            console.log("No se encontró el socket ID para el creador del lobby.");
+                        }
+    
+                    } else {
+                        console.log('El lobby ya está lleno. No se puede agregar más usuarios.');
+                    }
+                } else {
+                    console.log('El usuario ya está en el lobby.');
+                }
+            }
         });
     });
 
-    // Manejador de eventos para desconexion
-    socket.on("disconnect", () => {
-        const workerId = Object.keys(employeeSocketMap).find(key => employeeSocketMap[key].socketId === socket.id);
 
-        // Si se encuentra el ID del trabajador, actualiza su estado a "inactivo"
-        if (workerId) {
-            employeeSocketMap[workerId].status = "idle";
-            console.log(`Empleado con ID ${workerId} desconectado y marcado como inactivo.`);
-            console.log(employeeSocketMap);
+    // Manejador de eventos para desconexión de clientes
+    socket.on("disconnect", () => {
+        // Buscar el ID del trabajador asociado al socket que se ha desconectado
+        const disconnectedWorkerId = Object.keys(employeeSocketMap).find(key => employeeSocketMap[key].socketId === socket.id);
+
+        // Si se encuentra el ID del trabajador desconectado, eliminarlo de employeeSocketMap
+        if (disconnectedWorkerId) {
+            delete employeeSocketMap[disconnectedWorkerId];
+            console.log(`El trabajador con ID ${disconnectedWorkerId} se ha desconectado y se ha eliminado de employeeSocketMap.`, employeeSocketMap);
         } else {
             console.log(`No se encontró el ID del trabajador asociado al socket ${socket.id}.`);
         }
-
-        // console.log("Cliente desconectado: ", socket.id);
     });
 
     // Manejador de eventos para errores
@@ -170,11 +193,6 @@ io.on("connection", (socket) => {
         console.error("Error en el socket:", error);
     });
 });
-
-
-function sendLobbyList() {
-    io.emit("lobbies list", lobbies);
-}
 
 
 server.listen(port, host, () => {
