@@ -31,6 +31,8 @@ const ManageApplication = ({ socket }) => {
     const [invitationCreated, setInvitationCreated] = useState(false);
     const [invitationAccepted, setInvitationAccepted] = useState(false);
     const [usersList, setUsersList] = useState([]);
+    const [canStartApplication, setCanStartApplication] = useState(true);
+    const [actualApplication, setActualApplication] = useState(true);
 
     // console.log("SOCKET: ", socket.id);
 
@@ -59,8 +61,6 @@ const ManageApplication = ({ socket }) => {
                     const data = await response.json();
 
                     setApplicationInfo(data)
-
-                    // console.log("DATATATATATATATA: ", data);
 
                 } catch (error) {
                     console.error("ESTE ES EL ERROR: ", error);
@@ -141,8 +141,20 @@ const ManageApplication = ({ socket }) => {
      * SOCKET PARA MANEJAR CADA VEZ QUE UN USUARIO SE UNE A UNA LOBBY
      */
     socket.on("newUserInLobby", (data) => {
-        console.log("USERS LIST: ", data.users);
+        console.log("USERS LIST: ", data);
         setUsersList(data.users);
+        setCanStartApplication(data.startApplication)
+    })
+
+    socket.on("returnAppOngoing", (data) =>{
+        console.log("EL RETURN: ", data);
+
+        dispatch(actions.applicationNodeOngoing(data.actualApplication))
+
+        return () => {
+            socket.off("returnAppOngoing");
+        };
+
     })
 
     /**
@@ -187,14 +199,6 @@ const ManageApplication = ({ socket }) => {
         // setRoom(randomCode);
     };
 
-    const getLobby = () => {
-        socket.emit("get lobbies", {});
-        socket.on("lobbies list", function (data) {
-            // setLobbies(data);
-            // console.log(data);
-        });
-    };
-
     const acceptInvitation = (applicationId, lobbyCode) => {
         // const invitationForApplication10 = receivedInvitations.get(10);
         // receivedInvitations.forEach(invitation => {
@@ -210,7 +214,7 @@ const ManageApplication = ({ socket }) => {
 
             })
             setInvitationAccepted(true);
-        
+
         }
         // })
     };
@@ -233,6 +237,8 @@ const ManageApplication = ({ socket }) => {
             socket.emit("sendInvitation", invitationData);
 
             setInvitationCreated(true);
+            setActualApplication(e);
+
             console.log("Invitación enviada a los sockets:", invitationData);
             // Aquí puedes mostrar una confirmación al usuario de que la invitación ha sido enviada
         } catch (error) {
@@ -272,6 +278,16 @@ const ManageApplication = ({ socket }) => {
             dispatch(actions.applicationOngoing(e))
         }
 
+    }
+
+    const handleNodeApplication = async () => {
+        console.log("ESTA ES LA PEDAZO DE LISTA: ", usersList)
+
+        socket.emit("startApplication", {
+            usersList: usersList,
+            actualApplication: actualApplication,
+            token: token,
+        })
     }
 
 
@@ -436,7 +452,7 @@ const ManageApplication = ({ socket }) => {
                                 const isCurrentAppInvited = receivedInvitations.get(application.id)?.invited;
                                 const currentAppInvitedLobbyCode = receivedInvitations.get(application.id)?.lobbyCode;
                                 // No renderizar el div si la condición se cumple
-                                if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed') {
+                                if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed' || application.applicationStatus === 'active') {
                                     return null;
                                 }
                                 return (
@@ -580,8 +596,10 @@ const ManageApplication = ({ socket }) => {
                                                                                     }
                                                                                     return (
                                                                                         <div key={id} className="text-sm text-gray-500">
-                                                                                            {user.completeName}
+                                                                                            <p>{user.completeName}</p>
+
                                                                                         </div>
+
                                                                                     );
                                                                                 })}
                                                                             </div>
@@ -599,6 +617,18 @@ const ManageApplication = ({ socket }) => {
                                                             <button onClick={() => setInvitationCreated(false)} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                                                                 Cancelar
                                                             </button>
+                                                            {canStartApplication ? 
+                                                                <div className="p-6 pt-3">
+                                                                    <button
+                                                                        onClick={() => handleNodeApplication()}
+                                                                        className="block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                                                        type="submit">
+                                                                        ACEPTAR
+                                                                    </button>
+                                                                </div>
+                                                                :
+                                                                <div></div>
+                                                            }
                                                         </div>
                                                     </div>
                                                 </div>

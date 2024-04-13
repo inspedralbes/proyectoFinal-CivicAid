@@ -95,6 +95,7 @@ class WorkerApplicationController extends Controller
 
             // Obtener las solicitudes y los empleados asigandos a esta
             $applications = Application::whereIn('id', $multipleWorkerApps)
+                ->where('applicationStatus', 'inactive') 
                 ->with(['workers' => function ($query) {
                     $query->select('workers.id', 'name'); // Asegúrate de ajustar los campos seleccionados según tu modelo y necesidades
                 }])
@@ -136,7 +137,15 @@ class WorkerApplicationController extends Controller
             $application->save();
 
             $workerId = $request->workerId;
-            Worker::where('id', $workerId)->update(['workerStatus' => 'inService']);
+            if (is_array($request->workerId)) {
+                // Si $request->workerId es un array, iteramos sobre él con foreach
+                foreach ($request->workerId as $id) {
+                    Worker::where('id', $id)->update(['workerStatus' => 'inService']);   
+                }
+            } else {
+                // Si $request->workerId no es un array, realizamos el update directamente
+                Worker::where('id', $request->workerId)->update(['workerStatus' => 'inService']);   
+            }
 
 
             return response()->json($application, 200);

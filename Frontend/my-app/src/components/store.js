@@ -16,6 +16,8 @@ const GET_UPLOADED_APPLICATION_NAME = 'GET_UPLOADED_APPLICATION_NAME';
 const APPLICATION_ONGOING = 'APPLICATION_ONGOING'
 const APPLICATION_ONGOING_COMPLETED = 'APPLICATION_ONGOING_COMPLETED'
 const CHECK_APP_ONGOING = 'CHECK_APP_ONGOING'
+const APPLICATION_NODE_ONGOING = 'APPLICATION_NODE_ONGOING'
+const APPLICATION_NODE_ONGOING_COMPLETED = 'APPLICATION_NODE_ONGOING_COMPLETED'
 
 const initialState = {
     isLoggedIn: false,
@@ -27,6 +29,13 @@ const initialState = {
     applicationOngoing: false,
     // Si el booleano es cierto, en esta variable, se alamacenará la solicitud y todo su información
     applicationOngoingInfo: {},
+
+    // Booleano que controla si el empleado a aceptado una solicitud
+    applicationNodeOngoing: false,
+    // Si el booleano es cierto, en esta variable, se alamacenará la solicitud y todo su información
+    applicationNodeOngoingInfo: {},
+
+
     // Variable en la que se almacenan todos los datos del usuario al hacer login
     data: {},
 
@@ -69,7 +78,13 @@ const reducer = (state = initialState, action) => {
             return { ...state, applicationOngoing: true, applicationOngoingInfo: action.payload };
 
         case 'APPLICATION_ONGOING_COMPLETED':
-            return {...state, applicationOngoing:false, applicationOngoingInfo: {} };
+            return { ...state, applicationOngoing: false, applicationOngoingInfo: {} };
+
+        case 'APPLICATION_NODE_ONGOING':
+            return { ...state, applicationNodeOngoing: true, applicationNodeOngoingInfo: action.payload };
+
+        case 'APPLICATION_NODE_ONGOING_COMPLETED':
+            return { ...state, applicationNodeOngoing: false, applicationNodeOngoingInfo: {} };
 
         case 'GET_APPLICATION_INFO':
             return { ...state, applicationInfo: action.payload };
@@ -103,8 +118,13 @@ const actions = {
     admin: () => ({ type: ADMIN }),
     checkAppOngoing: () => ({ type: CHECK_APP_ONGOING }),
     user: () => ({ type: USER }),
+
     applicationOngoing: (applicationOngoingInfo) => ({ type: APPLICATION_ONGOING, payload: applicationOngoingInfo }),
     applicationOngoingCompleted: () => ({ type: APPLICATION_ONGOING_COMPLETED }),
+    
+    applicationNodeOngoing: (applicationNodeOngoingInfo) => ({ type: APPLICATION_NODE_ONGOING, payload: applicationNodeOngoingInfo }),
+    applicationNodeOngoingCompleted: () => ({ type: APPLICATION_NODE_ONGOING_COMPLETED }),
+
     saveApplicationInfo: (applicationInfo) => ({ type: GET_APPLICATION_INFO, payload: applicationInfo }),
     getUserId: (getUserId) => ({ type: GET_USERID, payload: getUserId }),
     dataOthers: (dataOthers) => ({ type: GET_OTHERSINFO, payload: dataOthers }),

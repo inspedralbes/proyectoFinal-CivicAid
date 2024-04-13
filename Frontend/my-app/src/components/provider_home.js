@@ -12,6 +12,7 @@ const Home = () => {
     const isWorker = useSelector((state) => state.isWorker);
     const isAdmin = useSelector((state) => state.isAdmin);
     const applicationOngoing = useSelector((state) => state.applicationOngoing);
+    const applicationNodeOngoing = useSelector((state) => state.applicationNodeOngoing);
 
 
     const checkApplicationOngoing = localStorage.getItem('persist:root');
@@ -31,6 +32,9 @@ const Home = () => {
                     // Ahora puedes utilizar la variable "applicationOngoingInfo" según necesites
                     console.log("Esta la aplicacion en marcha? ", applicationOngoing);
                     console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
+
+
+                    // console.log("SEGURO??? ", applicationNodeOngoing);
 
                 } else {
                     console.log('La variable del Local Storage está vacía');
@@ -141,6 +145,25 @@ const Home = () => {
             }
 
             {applicationOngoing ?
+                <div>
+                    <br />
+                    <div className='text-center'>
+                        <NavLink to="/applicationOngoing">
+                            <button
+                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                SOLICITUD ACEPTADA
+                            </button>
+                        </NavLink>
+                    </div>
+                </div>
+
+                :
+
+                <div></div>
+            }
+
+            {applicationNodeOngoing ?
                 <div>
                     <br />
                     <div className='text-center'>

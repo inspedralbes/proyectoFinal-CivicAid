@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import http from "http";
 import fetch from "node-fetch";
 import dotenv from 'dotenv';
+import { start } from "repl";
 dotenv.config();
 
 const laravelUrl = process.env.LARAVEL_URL;
@@ -148,16 +149,22 @@ io.on("connection", (socket) => {
                         const socketIdUser = employeeSocketMap[data.workerId].socketId;
                         console.log("A quien le tengo que mandar el emit:", socketId);
                         console.log("A quien le tengo que mandar el emit 22:", socketIdUser);
-
+                        // let startApplication = false;
                         
+                        // if (lobby.maxUsers === lobby.users.length) {
+                        //     startApplication = true;
+                        // }
+
                         if (socketId) {
                             io.to(socketId).emit("newUserInLobby", {
-                                users: Array.from(lobby.users)
+                                users: Array.from(lobby.users),
+                                startApplication: true,
                             });
 
                             console.log("USERS: ", lobby.users);
                             io.to(socketIdUser).emit("newUserInLobby", {
-                                users: Array.from(lobby.users)
+                                users: Array.from(lobby.users),
+                                startApplication: false,
                             });
                         } else {
                             console.log("No se encontró el socket ID para el creador del lobby.");
@@ -172,6 +179,43 @@ io.on("connection", (socket) => {
             }
         });
     });
+
+    socket.on("startApplication", async (data) => {
+        // const workerIds = data.usersList;
+        const workerId = data.usersList.map(user => user.workerId);
+        const actualApplicationId = data.actualApplication.id;
+        const actualApplication = data.actualApplication;
+        const token = data.token;
+
+        console.log("DATA DEL START: ", workerId);
+        console.log("DATA DEL START: ", actualApplicationId);
+
+        try {
+            let applicationStatus = "active";
+
+            const response = await fetch(`${laravelUrl}/api/updateApplicationStatus/${actualApplicationId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ applicationStatus, workerId }),
+            });
+
+            const data = await response.json();
+
+            console.log("RETURN DEL FETCH: ", data);
+
+            workerId.forEach(empleado => {
+                io.to(employeeSocketMap[empleado].socketId).emit("returnAppOngoing", {
+                    actualApplication: data,
+                })
+            })
+
+        } catch (error) {
+            console.error("ESTE ES EL ERROR: ", error);
+        }
+    })
 
 
     // Manejador de eventos para desconexión de clientes
