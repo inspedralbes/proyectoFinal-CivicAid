@@ -5,7 +5,7 @@ import { store, actions } from './store';
 import { NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
 
-const Home = () => {
+const Home = ({ socket }) => {
     const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const isUser = useSelector((state) => state.isUser);
@@ -16,6 +16,7 @@ const Home = () => {
 
 
     const checkApplicationOngoing = localStorage.getItem('persist:root');
+    console.log(applicationNodeOngoing);
 
     useEffect(() => {
         async function comprobar() {
@@ -33,7 +34,7 @@ const Home = () => {
                     console.log("Esta la aplicacion en marcha? ", applicationOngoing);
                     console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
 
-
+                    
                     // console.log("SEGURO??? ", applicationNodeOngoing);
 
                 } else {
@@ -43,6 +44,12 @@ const Home = () => {
 
         }
         comprobar();
+
+        socket.on("connect", () => {
+            console.log("Conectado al servidor");
+            console.log("SOCKET HOME: ", socket.id);
+
+        });
     }, [checkApplicationOngoing]);
 
 

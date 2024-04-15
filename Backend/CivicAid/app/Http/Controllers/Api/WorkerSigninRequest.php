@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\registrationRequestEmail;
+use App\Mail\registrationRequestDenied;
 
 use App\Models\Province;
 use App\Models\Sector;
 use App\Models\SigninRequest;
+use PhpParser\Node\Stmt\TryCatch;
 use Throwable;
 
 class WorkerSigninRequest extends Controller
@@ -57,11 +59,18 @@ class WorkerSigninRequest extends Controller
             $workerRequest->sector = $request->sector;
             $workerRequest->requestedLocation = $request->requestedLocation;
             $workerRequest->email = $request->email;
-        
+            
             $workerRequest->save();
         
             // Envío del email
-            // Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
+            // Log::info('Path to the email view:', [resource_path('views/emails/registration/request.blade.php')]);
+            // try {
+            //     Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
+            //     Mail::to($request->email)->send(new registrationRequestDenied($workerRequest));
+                
+            // } catch (\Throwable $th) {
+            //     return response("DA ERROR SISISI \n". $th);
+            // }
     
             // Todo ha ido bien, hacemos commit
             DB::commit();
@@ -74,7 +83,7 @@ class WorkerSigninRequest extends Controller
             DB::rollBack();
         
             // Logueamos el error
-            // Log::error('Error al procesar la solicitud de registro: ' . $e->getMessage());
+            Log::error('Error al procesar la solicitud de registro: ' . $e->getMessage());
         
             // Respondemos con un mensaje de error genérico
             // $errorMessage = 'Error al procesar la solicitud de registro.';

@@ -4,6 +4,7 @@ import http from "http";
 import fetch from "node-fetch";
 import dotenv from 'dotenv';
 import { start } from "repl";
+import { AsyncResource } from "async_hooks";
 dotenv.config();
 
 const laravelUrl = process.env.LARAVEL_URL;
@@ -29,7 +30,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-    console.log("Nuevo cliente conectado: ", socket.id);
+    console.log("Nuevo cliente conectado: ", socket.id, employeeSocketMap);
 
     /**
      * Socket para "asociar" el ID del empleado con el ID del socket
@@ -108,8 +109,8 @@ io.on("connection", (socket) => {
         }
 
         data.assignedWorkers.forEach(worker => {
-            const workerId = worker.id; 
-    
+            const workerId = worker.id;
+
             if (workerId !== data.hostId) {
                 const workerSocket = employeeSocketMap[workerId];
                 console.log("Procesando workerId:", workerId);
@@ -130,12 +131,12 @@ io.on("connection", (socket) => {
 
     socket.on("acceptInvitation", (data) => {
         console.log("Revisando lobbies para el código:", data.lobbyCode);
-    
+
         lobbies.forEach(lobby => {
             if (lobby.lobbyCode === data.lobbyCode) {
                 console.log("Lobby encontrado, revisando usuarios...");
                 const isUserInLobby = lobby.users.some(user => user.workerId === data.workerId);
-    
+
                 if (!isUserInLobby) {
                     console.log("Usuario no está en el lobby, verificando capacidad...");
                     if (lobby.users.length < lobby.maxUsers) {
@@ -143,14 +144,14 @@ io.on("connection", (socket) => {
                             workerId: data.workerId,
                             completeName: data.workerName
                         });
-    
+
                         console.log("Añadiendo usuario y enviando lista actualizada...");
                         const socketId = employeeSocketMap[lobby.lobbyCreator].socketId;
                         const socketIdUser = employeeSocketMap[data.workerId].socketId;
                         console.log("A quien le tengo que mandar el emit:", socketId);
                         console.log("A quien le tengo que mandar el emit 22:", socketIdUser);
                         // let startApplication = false;
-                        
+
                         // if (lobby.maxUsers === lobby.users.length) {
                         //     startApplication = true;
                         // }
@@ -169,7 +170,7 @@ io.on("connection", (socket) => {
                         } else {
                             console.log("No se encontró el socket ID para el creador del lobby.");
                         }
-    
+
                     } else {
                         console.log('El lobby ya está lleno. No se puede agregar más usuarios.');
                     }
@@ -218,6 +219,65 @@ io.on("connection", (socket) => {
     })
 
 
+    socket.on('updateText', (data) => {
+        console.log('Texto recibido:', data.newText);
+        console.log('Texto recibido:', data.users);
+
+        // Emitir el texto a todos los usuarios excepto al que lo envió
+        data.users.forEach(user => {
+            const id = user.id;
+            console.log(employeeSocketMap);
+            console.log(employeeSocketMap[user.id].socketId);
+            if (employeeSocketMap[id].socketId && data.writer != user.id) {
+                socket.to(employeeSocketMap[id].socketId).emit('textUpdate', data.newText);
+
+            } else {
+                console.log("ESTE NO EXISTE COMPADRE");
+            }
+        })
+    });
+
+    socket.on('applicationNodeCompleted', async (data) => {
+        console.log("PARA COMPLETAR: ", data);
+        const users = data.workerId;
+        const token = data.token;
+        const applicationId = data.applicationId;
+        const workerId = data.workerId.map(worker => worker.id);
+        const applicationExplanation = data.applicationExplanation;
+
+        console.log("LAS ID: ", workerId);
+
+        // try {
+        //     const response = await fetch(`${laravelUrl}/api/applicationNodeCompleted`, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': `Bearer ${token}`,
+        //         },
+        //         body: JSON.stringify({ applicationId: applicationId, workerId: workerId, applicationExplanation: applicationExplanation }),
+        //     });
+
+        //     // data = await response.json();
+        //     // console.log("DATATATATATATATA", data);
+        //     const data = await response.json();
+        //     console.log("FETCH NODE COMPLETED: ", data);
+        // } catch (error) {
+
+        // }
+
+
+        users.forEach(user => {
+
+            console.log("JAJA", user.id);
+
+            if (employeeSocketMap[user.id].socketId) {
+                io.to(employeeSocketMap[user.id].socketId).emit("applicationNodeCompletedConfirmation", {
+                    completed: true
+                })
+            }
+        })
+    })
+
     // Manejador de eventos para desconexión de clientes
     socket.on("disconnect", () => {
         // Buscar el ID del trabajador asociado al socket que se ha desconectado
@@ -225,8 +285,8 @@ io.on("connection", (socket) => {
 
         // Si se encuentra el ID del trabajador desconectado, eliminarlo de employeeSocketMap
         if (disconnectedWorkerId) {
-            delete employeeSocketMap[disconnectedWorkerId];
-            console.log(`El trabajador con ID ${disconnectedWorkerId} se ha desconectado y se ha eliminado de employeeSocketMap.`, employeeSocketMap);
+            // delete employeeSocketMap[disconnectedWorkerId];
+            console.log(`El trabajador con ID ${disconnectedWorkerId} se ha desconectado.`, employeeSocketMap);
         } else {
             console.log(`No se encontró el ID del trabajador asociado al socket ${socket.id}.`);
         }

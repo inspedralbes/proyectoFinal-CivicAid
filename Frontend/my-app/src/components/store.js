@@ -57,7 +57,7 @@ const reducer = (state = initialState, action) => {
             return { ...state, isLoggedIn: true };
 
         case 'LOGOUT':
-            return { ...state, isLoggedIn: false, isWorker: false, isUser: false, isAdmin: false, applicationOngoing: false, data: {} };
+            return { ...state, isLoggedIn: false, isWorker: false, isUser: false, isAdmin: false, applicationOngoing: false, applicationNodeOngoing: false,data: {} };
 
         case 'SAVE_DATA':
             return { ...state, data: action.payload };

@@ -181,4 +181,34 @@ class WorkerApplicationController extends Controller
             return response('SUPER ERROR: ' + $e);
         }
     }
+
+    public function applicationNodeCompleted(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'applicationId' => 'required',
+                'workerId' => 'required|array', // Asegúrate de validar que workerId sea un array
+                'applicationExplanation' => 'required',
+            ]);
+    
+            // Iterar sobre cada workerId y guardar la información en la base de datos
+            foreach ($request->workerId as $workerId) {
+                $applicationCompleted = new CompletedApplication();
+                $applicationCompleted->applicationId = $request->applicationId;
+                $applicationCompleted->workerId = $workerId; // Guardar el workerId actual
+                $applicationCompleted->applicationExplanation = $request->applicationExplanation;
+                $applicationCompleted->save();
+                
+                // Actualizar el estado del worker
+                Worker::where('id', $workerId)->update(['workerStatus' => 'available']);
+            }
+    
+            // Actualizar el estado de la aplicación
+            Application::where('id', $request->applicationId)->update(['applicationStatus' => 'completed']);
+    
+            return response($applicationCompleted);
+        } catch (\Exception $e) {
+            return response('SUPER ERROR: ' + $e);
+        }
+    }
 }

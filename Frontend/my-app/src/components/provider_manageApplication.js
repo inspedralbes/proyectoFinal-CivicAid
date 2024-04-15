@@ -77,7 +77,7 @@ const ManageApplication = ({ socket }) => {
     useEffect(() => {
         console.log("HASTA AQUI LLEGA NOOOOO?");
 
-        socket.on("connect", () => {
+        // socket.on("connect", () => {
             console.log("Conectado al servidor");
 
             /**
@@ -94,20 +94,24 @@ const ManageApplication = ({ socket }) => {
                 workerId: workerId
             }
             socket.emit("fetchMultipleAssigned", fetchMultipleAssignedData);
-        });
+        // });
 
 
-        const handleReturnFetchMultipleAssigned = (data) => {
+        // const handleReturnFetchMultipleAssigned = (data) => {
+        //     // console.log("Solicitudes de NODE: ", data);
+        //     // setApplicationsNode(data.applications);
+        // };
+        // Configurar el listener
+        socket.on("returnFetchMultipleAssigned", (data) =>{
             console.log("Solicitudes de NODE: ", data);
             setApplicationsNode(data.applications);
-        };
-        // Configurar el listener
-        socket.on("returnFetchMultipleAssigned", handleReturnFetchMultipleAssigned);
+        });
 
 
         // Limpiar el listener anterior al desmontar el componente o al actualizar el efecto
         return () => {
-            socket.off("returnFetchMultipleAssigned", handleReturnFetchMultipleAssigned);
+            // socket
+            // socket.off("returnFetchMultipleAssigned");
         };
     }, []);
 

@@ -138,33 +138,61 @@ const MakeApplication = () => {
                             <h3>Sector</h3>
                             <select value={`${subsector}:${sector}`} onChange={handleSubsectorChange}>
                                 <option value="">Selecciona un sector</option>
+                            
                                 <optgroup label="Servicios Médicos">
                                     <option value="Ambulancias:Servicios Médicos">Ambulancias</option>
                                     <option value="Paramedicos:Servicios Médicos">Paramedicos</option>
                                     <option value="Primeros auxilios:Servicios Médicos">Servicio de primeros auxilios</option>
                                 </optgroup>
+
                                 <optgroup label="Bomberos">
                                     <option value="Extincion de incendios:Bomberos">Extinción de incendios</option>
                                     <option value="Rescate de personas:Bomberos">Rescate de personas atrapadas</option>
                                     <option value="Materiales peligrosos:Bomberos">Control de materiales peligrosos</option>
                                 </optgroup>
-                            </select>
-                            {/* <select value={subsector} onChange={handleSubsectorChange}>
-                                <option value="" disabled>Selecciona un sector</option>
-                                <optgroup label="Servicios Médicos">
-                                    <option value="Ambulancias:Servicios Médicos">Ambulancias</option>
-                                    <option value="Paramedicos:Servicios Médicos">Paramedicos</option>
-                                    <option value="Primeros auxilios:Servicios Médicos">Servicio de primeros auxilios</option>
-                                </optgroup> */}
 
-                            {/* 
-                            <optgroup label="Policia">
-                                <option value="policiaLocal">Policia Local</option>
-                                <option value="policiaNacional">Policia Nacional</option>
-                                <option value="emergenciasPoliciales">Servicios de emergencias policiales</option>
-                            </optgroup> */}
-                            {/* </select> */}
-                            {/* <h3>Subsector seleccionado: {subsector}</h3> */}
+                                <optgroup label="Policia">
+                                    <option value="Policia local:Policia">Policia local</option>
+                                    <option value="Policia nacional:Policia">Policia Nacional</option>
+                                    <option value="Servicios de emergencia policiales:Policia">Servicios de emergencia policiales</option>
+                                </optgroup>
+
+                                <optgroup label="Protección Civil">
+                                    <option value="Asistencia en desastres naturales:Protección civil">Asistencia en desastres naturales</option>
+                                    <option value="Evacuación de zonas de riesgo:Protección civil">Evacuación de zonas de riesgo</option>
+                                    <option value="Coordinación de servicios de emergencia:Protección civil">Coordinación de servicios de emergencia</option>
+                                </optgroup>
+
+                                <optgroup label="Servicios de Agua y Saneamiento">
+                                    <option value="Reparación de fugas de agua:Servicios de agua y saneamiento">Reparación de fugas de agua</option>
+                                    <option value="Mantenimiento de redes de alcantarillado:Servicios de agua y saneamiento">Mantenimiento de redes de alcantarillado</option>
+                                    <option value="Suministro de agua potable en emergencias:Servicios de agua y saneamiento">Suministro de agua potable en emergencias</option>
+                                </optgroup>
+
+                                <optgroup label="Servicios de Electricidad">
+                                    <option value="Reparación de averías eléctricas:Servicios de electricidad">Reparación de averías eléctricas</option>
+                                    <option value="Restauración del suministro eléctrico tras cortes:Servicios de electricidad">Restauración del suministro eléctrico tras cortes</option>
+                                </optgroup>
+
+                                <optgroup label="Recogida de Residuos y Limpieza Urbana">
+                                    <option value="Recogida de basura:Recogida de residuos y limpieza urbana">Recogida de basura</option>
+                                    <option value="Servicios de limpieza viaria y de espacios públicos:Recogida de residuos y limpieza urbana">Servicios de limpieza viaria y de espacios públicos</option>
+                                    <option value="Recogida de residuos especiales:Recogida de residuos y limpieza urbana">Recogida de residuos especiales</option>
+                                </optgroup>
+
+                                <optgroup label="Servicios Sociales">
+                                    <option value="Asistencia social y de apoyo a personas vulnerables:Servicios sociales">Asistencia social y de apoyo a personas vulnerables</option>
+                                    <option value="Centros de acogida y albergues:Servicios sociales">Centros de acogida y albergues</option>
+                                    <option value="Programas de asistencia alimentaria y de vivienda:Servicios sociales">Programas de asistencia alimentaria y de vivienda</option>
+                                </optgroup>
+
+                                <optgroup label="Servicios de Recogida de Poda y Residuos Verdes">
+                                    <option value="Recogida de poda y residuos vegetales:Servicios de recogida de poda y residuos verdes">Recogida de poda y residuos vegetales</option>
+                                    <option value="Gestión de parques y jardines:Servicios de recogida de poda y residuos verdes">Gestión de parques y jardines</option>
+                                    <option value="Reciclaje y compostaje de residuos orgánicos:Servicios de recogida de poda y residuos verdes">Reciclaje y compostaje de residuos orgánicos</option>
+                                </optgroup>
+                            </select>
+
 
                             <div>
                                 <h3>Location</h3>

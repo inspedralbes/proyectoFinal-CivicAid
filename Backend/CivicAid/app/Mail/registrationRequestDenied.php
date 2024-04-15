@@ -8,18 +8,28 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class registrationRequestDenied extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct()
+    public $user;
+
+    public function __construct($user)
     {
-        //
+        $this->user = $user;
     }
+
+    public function build()
+    {
+        return $this->markdown('emails.registration.requestDenied')
+            ->subject('Registration Request Denied')
+            ->with([
+                'name' => $this->user->name,
+            ]);
+    }
+
 
     /**
      * Get the message envelope.

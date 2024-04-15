@@ -18,6 +18,11 @@ const ApplicationOngoing = ({ socket }) => {
     const appOngoing = useSelector((state) => state.applicationOngoing);
     const [applicationFetch, setApplicationFetch] = useState([]);
     const [applicationExplanation, setApplicationExplanation] = useState([]);
+    const [explanation, setExplanation] = useState('');
+    const [, forceUpdate] = useState();
+
+    // console.log(applicationNodeOngoingInfo.workers);
+    // { console.log("EXPLANATION: ", explanation) }
 
     useEffect(() => {
 
@@ -44,6 +49,32 @@ const ApplicationOngoing = ({ socket }) => {
 
         fetchApplication();
     }, [applicationOngoing]);
+
+
+
+    useEffect(() => {
+        socket.emit("register", workerId);
+
+
+    }, []);
+
+    socket.on('textUpdate', (updatedText) => {
+        // console.log(updatedText);
+        setExplanation(updatedText);
+        forceUpdate();
+
+    });
+
+    const handleTextChange = (event) => {
+        const newText = event.target.value;
+        setExplanation(newText);
+        socket.emit('updateText', {
+            writer: workerId,
+            newText: newText,
+            users: applicationNodeOngoingInfo.workers,
+        });
+    };
+
 
     const handleSubmit = async (e) => {
         // e.preventDefault();
@@ -103,6 +134,27 @@ const ApplicationOngoing = ({ socket }) => {
         }
     }
 
+    const handleNodeSubmit = async (e) => {
+        // e.preventDefault();
+        setLoading(true);
+
+        socket.emit("applicationNodeCompleted", {
+            token: token,
+            applicationId: applicationNodeOngoingInfo.id, 
+            workerId: applicationNodeOngoingInfo.workers, 
+            applicationExplanation: explanation
+        });
+    }
+
+    socket.on("applicationNodeCompletedConfirmation", (data) =>{
+        console.log("COMPLETED? ", data.completed);
+
+        if(data.completed){
+            dispatch(actions.applicationNodeOngoingCompleted());
+
+        }
+    })
+
     return (
         <div>
             {isWorker ?
@@ -136,8 +188,19 @@ const ApplicationOngoing = ({ socket }) => {
                                     <h2>STATUS: {applicationFetch.applicationStatus}</h2>
                                     {/* {console.log("IDIDIDIDID:", applicationFetch.id)} */}
                                     <h3 className='text-sm font-bold'>BREVE EXPLICACIÓN DE CÓMO SE HA SOLUCIONADO LA SOLICITUD</h3>
+                                    {/* <label
+                                        htmlFor='floatingTextarea'
+                                    >
+                                        {explanation}
+                                    </label> */}
                                     <textarea onChange={(event) => setApplicationExplanation(event.target.value)} className='w-full mt-5 bg-gray-400'>
                                     </textarea>
+
+                                    <div className='bg-black'>
+
+                                        <p className='bg-black'>ÑAÑAÑAÑA {explanation}</p>
+                                    </div>
+
                                 </div>
 
                                 <div className="p-6 pt-3">
@@ -183,13 +246,15 @@ const ApplicationOngoing = ({ socket }) => {
                                     <h2>STATUS: {applicationNodeOngoingInfo.applicationStatus}</h2>
                                     {/* {console.log("IDIDIDIDID:", applicationFetch.id)} */}
                                     <h3 className='text-sm font-bold'>BREVE EXPLICACIÓN DE CÓMO SE HA SOLUCIONADO LA SOLICITUD</h3>
-                                    <textarea onChange={(event) => setApplicationExplanation(event.target.value)} className='w-full mt-5 bg-gray-400'>
+                                    <textarea value={explanation} onChange={handleTextChange} className='w-full mt-5 bg-gray-400'>
                                     </textarea>
                                 </div>
+                                
+                                
 
                                 <div className="p-6 pt-3">
                                     <button
-                                        onClick={() => handleSubmit()}
+                                        onClick={() => handleNodeSubmit()}
                                         className=" block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                         type="submit">
                                         COMPLETADA

@@ -27,12 +27,17 @@ import AsignarSolicitud from './pages/assignApplication';
 import './App.css';
 
 let socket = socketIO(process.env.REACT_APP_NODE_URL, {
-  withCredentials: true,
-  cors: {
-    origin: "*",
-    credentials: true,
-  },
-  path: "/node/",
+    withCredentials: true,
+    cors: {
+        origin: "*",
+        credentials: true,
+    },
+    path: "/node/",
+    reconnection: true,            // Habilita la reconexión automática
+    reconnectionAttempts: Infinity, // Número máximo de intentos de reconexión
+    reconnectionDelay: 1000,        // Tiempo de espera inicial antes de intentar reconectar (ms)
+    reconnectionDelayMax: 5000,     // Tiempo máximo de espera entre intentos de reconexión (ms)
+    randomizationFactor: 0.5        // Factor de aleatorización para los tiempos de espera de reconexión
 });
 
 
@@ -42,7 +47,7 @@ root.render(
         <div>
             <Router>
                 <Routes>
-                    <Route path="/" element={<HomePage />} />
+                    <Route path="/" element={<HomePage socket={socket} />} />
                     <Route path="/login" element={<LoginUsuario />} />
                     <Route path="/loginWorker" element={<LoginWorker />} />
                     <Route path="/loginAdmin" element={<LoginAdmin />} />
@@ -51,8 +56,8 @@ root.render(
                     <Route path="/profile" element={<UserProfile />} />
 
                     <Route path="/makeApplication" element={<HacerSolicitud />} />
-                    <Route path="/manageApplications" element={<GestionarSolicitudes socket={socket}/>} />
-                    <Route path="/applicationOngoing" element={<SolicitudAceptada socket={socket}/>} />
+                    <Route path="/manageApplications" element={<GestionarSolicitudes socket={socket} />} />
+                    <Route path="/applicationOngoing" element={<SolicitudAceptada socket={socket} />} />
                     <Route path="/ownApplication" element={<SolicitudPropia />} />
 
                     <Route path="/manageSigninRequests" element={<GestionarSolicitudesRegistro />} />

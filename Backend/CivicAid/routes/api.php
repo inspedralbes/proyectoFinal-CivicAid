@@ -56,6 +56,7 @@ Route::post('/listAssignedApplications', [WorkerApplicationController::class, 'l
 Route::post('/checkOngoingApp', [WorkerApplicationController::class, 'checkOngoingApp']); 
 Route::post('/updateApplicationStatus/{id}', [WorkerApplicationController::class, 'updateApplicationStatus']);
 Route::post('/applicationCompleted', [WorkerApplicationController::class, 'applicationCompleted']);
+Route::post('/applicationNodeCompleted', [WorkerApplicationController::class, 'applicationNodeCompleted']);
 Route::post('/listApplicationMultipleWorkers', [WorkerApplicationController::class, 'listApplicationMultipleWorkers']);
 Route::post('/listWorkersExactApplication', [WorkerApplicationController::class, 'listWorkersExactApplication']);
 

@@ -26,20 +26,36 @@ class registrationRequestEmail extends Mailable
     {
         try {
             return $this->markdown('emails.registration.request')
-            ->subject('Your Registration Request is Being Processed')
-            ->with([
-                'name' => $this->user->name,
-            ]);
+                ->subject('Your Registration Request is Being Processed')
+                ->with([
+                    'name' => $this->user->name,
+                ]);
         } catch (\Throwable $th) {
             // Logueamos el error
             Log::error('Error al construir el correo electrónico de solicitud de registro: ' . $th->getMessage());
             
-            // Respondemos con un mensaje de error genérico
-            // return $this->markdown('emails.error');
-            // return response($th);
-            return response("DA ERROR EN MAIL", 500);
-
+            // Aquí puedes manejar el error de otra manera, como enviar un email de error a un administrador o registrar el error en algún servicio de monitoreo.
+            
+            // Devolvemos una instancia de Mailable vacía en caso de error
+            return new self([]);
         }
+
+        // try {
+        //     return $this->markdown('emails.registration.request')
+        //         ->subject('Your Registration Request is Being Processed')
+        //         ->with([
+        //             'name' => $this->user->name,
+        //         ]);
+        // } catch (\Throwable $th) {
+        //     // Logueamos el error
+        //     Log::error('Error al construir el correo electrónico de solicitud de registro: ' . $th->getMessage());
+            
+        //     // Respondemos con un mensaje de error genérico
+        //     // return $this->markdown('emails.error');
+        //     // return response($th);
+        //     return response(`DA ERROR EN MAIL`, $this->user->email);
+
+        // }
     }
 
     /**
