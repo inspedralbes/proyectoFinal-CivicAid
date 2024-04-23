@@ -32,6 +32,10 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
     console.log("Nuevo cliente conectado: ", socket.id, employeeSocketMap);
 
+    lobbies.forEach(lobbie => {
+        console.log(lobbie);
+    })
+    // console.log("\n"+lobbies);
     /**
      * Socket para "asociar" el ID del empleado con el ID del socket
      */
@@ -183,9 +187,11 @@ io.on("connection", (socket) => {
 
     socket.on("startApplication", async (data) => {
         // const workerIds = data.usersList;
+        // console.log("SEGURO??", data);
         const workerId = data.usersList.map(user => user.workerId);
         const actualApplicationId = data.actualApplication.id;
         const actualApplication = data.actualApplication;
+        // const actualLobbyCode = data.actualLobbyCode;
         const token = data.token;
 
         console.log("DATA DEL START: ", workerId);
@@ -209,9 +215,17 @@ io.on("connection", (socket) => {
 
             workerId.forEach(empleado => {
                 io.to(employeeSocketMap[empleado].socketId).emit("returnAppOngoing", {
-                    actualApplication: data,
+                    actualApplication: actualApplication,
                 })
             })
+
+            // lobbies.forEach(lobby => {
+            //     if (lobby.lobbyCode === actualLobbyCode) {
+            //         lobby.remove();
+            //     }else{
+            //         console.log("No se ha podido eliminar la lobby");
+            //     }
+            // })
 
         } catch (error) {
             console.error("ESTE ES EL ERROR: ", error);
@@ -220,22 +234,40 @@ io.on("connection", (socket) => {
 
 
     socket.on('updateText', (data) => {
-        console.log('Texto recibido:', data.newText);
-        console.log('Texto recibido:', data.users);
+        // console.log('Texto recibido:', data.newText);
+        // console.log('Texto recibido:', data.users);
+        console.log('Texto recibido:', data);
 
+        try {
+            // requestCurrentText(data);
+            data.users.forEach(user => {
+                const id = user.id;
+                console.log(employeeSocketMap);
+                console.log(employeeSocketMap[user.id].socketId);
+                if (employeeSocketMap[id].socketId && data.writer != user.id) {
+                    socket.to(employeeSocketMap[id].socketId).emit('textUpdate', data.newText);
+
+                } else {
+                    console.log("ESTE NO EXISTE COMPADRE");
+                }
+            })
+        } catch (error) {
+            console.log("error en updatetext", error);
+        }
         // Emitir el texto a todos los usuarios excepto al que lo envió
-        data.users.forEach(user => {
-            const id = user.id;
-            console.log(employeeSocketMap);
-            console.log(employeeSocketMap[user.id].socketId);
-            if (employeeSocketMap[id].socketId && data.writer != user.id) {
-                socket.to(employeeSocketMap[id].socketId).emit('textUpdate', data.newText);
-
-            } else {
-                console.log("ESTE NO EXISTE COMPADRE");
-            }
-        })
     });
+
+    // socket.on('requestCurrentText', (workerId) => {
+    //     // Suponiendo que guardas el último texto conocido en alguna variable
+    //     socket.to(employeeSocketMap[workerId].socketId).emit('textUpdate', currentText); // Emite el te
+    //     console.log("CURRENT TEXT: ", currentText);
+    // });
+
+    // function requestCurrentText(currentText) {
+    //     // currentText = ...currentText
+    //     return currentText;
+
+    // }
 
     socket.on('applicationNodeCompleted', async (data) => {
         console.log("PARA COMPLETAR: ", data);
@@ -247,23 +279,23 @@ io.on("connection", (socket) => {
 
         console.log("LAS ID: ", workerId);
 
-        // try {
-        //     const response = await fetch(`${laravelUrl}/api/applicationNodeCompleted`, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Authorization': `Bearer ${token}`,
-        //         },
-        //         body: JSON.stringify({ applicationId: applicationId, workerId: workerId, applicationExplanation: applicationExplanation }),
-        //     });
+        try {
+            const response = await fetch(`${laravelUrl}/api/applicationNodeCompleted`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ applicationId: applicationId, workerId: workerId, applicationExplanation: applicationExplanation }),
+            });
 
-        //     // data = await response.json();
-        //     // console.log("DATATATATATATATA", data);
-        //     const data = await response.json();
-        //     console.log("FETCH NODE COMPLETED: ", data);
-        // } catch (error) {
-
-        // }
+            // data = await response.json();
+            // console.log("DATATATATATATATA", data);
+            const data = await response.json();
+            console.log("FETCH NODE COMPLETED: ", data);
+        } catch (error) {
+            console.log("ERROR EN applicationNodeCompleted ", error);
+        }
 
 
         users.forEach(user => {

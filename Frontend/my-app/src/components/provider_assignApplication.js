@@ -20,6 +20,14 @@ const ManageApplication = () => {
     const [workersList, setWorkersList] = useState(null);
     const [selectedWorkers, setSelectedWorkers] = useState([]);
 
+    const [zoomedImages, setZoomedImages] = useState(Array(applicationInfo.length).fill(false));
+
+    const toggleZoom = (index) => {
+        const newZoomedImages = [...zoomedImages];
+        newZoomedImages[index] = !newZoomedImages[index];
+        setZoomedImages(newZoomedImages);
+    };
+
     useEffect(() => {
         async function fetchApplications() {
             if (isAdmin) {
@@ -135,19 +143,30 @@ const ManageApplication = () => {
             {isAdmin ? (
                 <div className='p-5'>
                     {applicationInfo.map((request, id) => (
-                        <div key={id} onClick={() => setSelectedApplication(request)} className="relative flex w-full max-w-[26rem] p-5 cursor-pointer flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
+                        <div key={id} className="relative flex w-full max-w-[26rem] p-5 cursor-pointer flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
                             <div className="p-6">
-                                <h1 className="block font-sans text-xl antialiased leading-relaxed text-gray-700">
-                                    {request.title}
-                                </h1>
-                                <br />
-                                <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                    {request.description}
-                                </p>
-                                <br />
-                                <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                    SERVICIOS SOLICITADOS: {request.sector}
-                                </p>
+                                <div>
+                                    <img 
+                                        src={request.image} 
+                                        alt={request.title} 
+                                        className={`rounded-lg ${zoomedImages[id] ? 'zoomed' : ''}`}
+                                        onClick={() => toggleZoom(id)}
+                                        />
+                                        
+                                </div>
+                                <div onClick={() => setSelectedApplication(request)} >
+                                    <h1 className="block font-sans text-xl antialiased leading-relaxed text-gray-700">
+                                        {request.title}
+                                    </h1>
+                                    <br />
+                                    <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                        {request.description}
+                                    </p>
+                                    <br />
+                                    <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                        SERVICIOS SOLICITADOS: {request.sector}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     ))}

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('applicantId');
             $table->string('title');
             $table->string('description');
+            $table->binary('image'); 
             $table->string('sector');
             $table->string('subsector');
             $table->enum('applicationStatus', ['active', 'inactive', 'pending', 'completed'])->default('pending');

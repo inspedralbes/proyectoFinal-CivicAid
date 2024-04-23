@@ -27,15 +27,22 @@ const ManageApplication = ({ socket }) => {
     const [activeTab, setActiveTab] = useState("tab1");
     const [receivedInvitations, setReceivedInvitations] = useState(new Map());
     const [applicationsNode, setApplicationsNode] = useState(null);
-    const [actualLobbyCode, setActualLobbyCode] = useState(false);
+    const [actualLobbyCode, setActualLobbyCode] = useState(null);
     const [invitationCreated, setInvitationCreated] = useState(false);
     const [invitationAccepted, setInvitationAccepted] = useState(false);
     const [usersList, setUsersList] = useState([]);
     const [canStartApplication, setCanStartApplication] = useState(true);
     const [actualApplication, setActualApplication] = useState(true);
 
-    // console.log("SOCKET: ", socket.id);
+    const [invitationModal, setInvitationModal] = useState(null);
 
+    const applicationNodeOngoing = useSelector((state) => state.applicationNodeOngoing);
+
+
+    // console.log("SOCKET: ", socket.id);
+// console.log("????", actualLobbyCode);
+
+console.log("QUE ES? ", applicationNodeOngoing);
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
@@ -154,6 +161,7 @@ const ManageApplication = ({ socket }) => {
         console.log("EL RETURN: ", data);
 
         dispatch(actions.applicationNodeOngoing(data.actualApplication))
+        navigate("/applicationOngoing")
 
         return () => {
             socket.off("returnAppOngoing");
@@ -225,26 +233,34 @@ const ManageApplication = ({ socket }) => {
 
     const createInvitation = async (e) => {
         try {
-            const room = codeGenerator();
-            maxUsers(e);
-
-            // Podrías necesitar adaptar este objeto a los detalles exactos que tu backend espera
-            const invitationData = {
-                applicationId: e.id,
-                assignedWorkers: e.workers,
-                hostId: workerId, // Asegúrate de tener este dato disponible
-                lobbyCode: room, // Suponiendo que cada solicitud tiene un código de lobby asociado
-                maxUsers: e.workers.length,
-                completeName: completeName,
-            };
-
-            socket.emit("sendInvitation", invitationData);
-
-            setInvitationCreated(true);
-            setActualApplication(e);
-
-            console.log("Invitación enviada a los sockets:", invitationData);
-            // Aquí puedes mostrar una confirmación al usuario de que la invitación ha sido enviada
+            if (!applicationNodeOngoing) {
+                
+                setInvitationModal(false)
+                
+                const room = codeGenerator();
+                maxUsers(e);
+    
+                // Podrías necesitar adaptar este objeto a los detalles exactos que tu backend espera
+                const invitationData = {
+                    applicationId: e.id,
+                    assignedWorkers: e.workers,
+                    hostId: workerId, // Asegúrate de tener este dato disponible
+                    lobbyCode: room, // Suponiendo que cada solicitud tiene un código de lobby asociado
+                    maxUsers: e.workers.length,
+                    completeName: completeName,
+                };
+    
+                socket.emit("sendInvitation", invitationData);
+    
+                setInvitationCreated(true);
+                setActualApplication(e);
+                setActualLobbyCode(room);
+    
+                console.log("Invitación enviada a los sockets:", invitationData);
+                // Aquí puedes mostrar una confirmación al usuario de que la invitación ha sido enviada
+            }else{
+                setInvitationModal(true)
+            }
         } catch (error) {
             console.error("Error al enviar la invitación:", error);
         }
@@ -291,6 +307,7 @@ const ManageApplication = ({ socket }) => {
             usersList: usersList,
             actualApplication: actualApplication,
             token: token,
+            // actualLobbyCode: actualLobbyCode 
         })
     }
 
@@ -500,12 +517,12 @@ const ManageApplication = ({ socket }) => {
                                             </div>
                                         </div>
                                         <div className="p-6 pt-3">
-                                            <button
+                                            {/* <button
                                                 onClick={() => handleApplication(application)}
                                                 className="block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                                 type="submit">
                                                 ACEPTAR
-                                            </button>
+                                            </button> */}
 
 
                                             {isCurrentAppInvited ? (
@@ -520,11 +537,13 @@ const ManageApplication = ({ socket }) => {
                                                 </div>
                                             ) : (
                                                 <div>
+
                                                     <button
                                                         onClick={() => createInvitation(application)}
                                                         id={`invitationButton${application.id}`}
                                                         className="block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                                        type="submit">
+                                                        type="submit"
+                                                        >
                                                         INVITAR
                                                     </button>
                                                 </div>
@@ -566,6 +585,47 @@ const ManageApplication = ({ socket }) => {
                                                             </button>
                                                             <button onClick={() => setShowModal(false)} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                                                                 Cancelar
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {invitationModal  && (
+                                            <div className="fixed z-10 inset-0 overflow-y-auto">
+                                                <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                                    <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+                                                        <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                                                    </div>
+
+                                                    <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                                                    <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                                                        <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                                            <div className="sm:flex sm:items-start">
+                                                                <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                                                    {/* Icono de advertencia */}
+                                                                    <svg className="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                                    </svg>
+                                                                </div>
+                                                                <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                                    <h3 className="text-lg leading-6 font-medium text-gray-900">Solicitud en curso</h3>
+                                                                    <div className="mt-2">
+                                                                        <p className="text-sm text-gray-500">
+                                                                            No puedes iniciar una invitacion mientras tienes una solicitud compartida en marcha
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                                            {/* <button onClick={() => updateAppOngoing(application)} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                                                Proceder
+                                                            </button> */}
+                                                            <button onClick={() => setInvitationModal(false)} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                                                Cerrar
                                                             </button>
                                                         </div>
                                                     </div>
@@ -627,7 +687,7 @@ const ManageApplication = ({ socket }) => {
                                                                         onClick={() => handleNodeApplication()}
                                                                         className="block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                                                         type="submit">
-                                                                        ACEPTAR
+                                                                        INICIAR SOLICITUD
                                                                     </button>
                                                                 </div>
                                                                 :

@@ -21,7 +21,7 @@ const ApplicationOngoing = ({ socket }) => {
     const [explanation, setExplanation] = useState('');
     const [, forceUpdate] = useState();
 
-    // console.log(applicationNodeOngoingInfo.workers);
+    console.log(applicationNodeOngoingInfo);
     // { console.log("EXPLANATION: ", explanation) }
 
     useEffect(() => {
@@ -55,8 +55,13 @@ const ApplicationOngoing = ({ socket }) => {
     useEffect(() => {
         socket.emit("register", workerId);
 
+        // socket.emit('requestCurrentText', workerId);
 
-    }, []);
+        socket.on('textUpdate', (updatedText) => {
+            setExplanation(updatedText);
+        });
+
+    }, [socket]);
 
     socket.on('textUpdate', (updatedText) => {
         // console.log(updatedText);
@@ -66,6 +71,7 @@ const ApplicationOngoing = ({ socket }) => {
     });
 
     const handleTextChange = (event) => {
+        console.log("/////", applicationNodeOngoingInfo);
         const newText = event.target.value;
         setExplanation(newText);
         socket.emit('updateText', {
@@ -140,18 +146,19 @@ const ApplicationOngoing = ({ socket }) => {
 
         socket.emit("applicationNodeCompleted", {
             token: token,
-            applicationId: applicationNodeOngoingInfo.id, 
-            workerId: applicationNodeOngoingInfo.workers, 
+            applicationId: applicationNodeOngoingInfo.id,
+            workerId: applicationNodeOngoingInfo.workers,
             applicationExplanation: explanation
         });
     }
 
-    socket.on("applicationNodeCompletedConfirmation", (data) =>{
+    socket.on("applicationNodeCompletedConfirmation", (data) => {
         console.log("COMPLETED? ", data.completed);
 
-        if(data.completed){
+        if (data.completed) {
             dispatch(actions.applicationNodeOngoingCompleted());
 
+            navigate("/");
         }
     })
 
@@ -249,8 +256,8 @@ const ApplicationOngoing = ({ socket }) => {
                                     <textarea value={explanation} onChange={handleTextChange} className='w-full mt-5 bg-gray-400'>
                                     </textarea>
                                 </div>
-                                
-                                
+
+
 
                                 <div className="p-6 pt-3">
                                     <button

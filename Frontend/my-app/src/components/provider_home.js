@@ -14,11 +14,17 @@ const Home = ({ socket }) => {
     const applicationOngoing = useSelector((state) => state.applicationOngoing);
     const applicationNodeOngoing = useSelector((state) => state.applicationNodeOngoing);
 
+    const [imageVisible, setImageVisible] = useState(true);
+
 
     const checkApplicationOngoing = localStorage.getItem('persist:root');
     console.log(applicationNodeOngoing);
 
+
+
     useEffect(() => {
+
+
         async function comprobar() {
 
             if (isWorker) {
@@ -34,7 +40,7 @@ const Home = ({ socket }) => {
                     console.log("Esta la aplicacion en marcha? ", applicationOngoing);
                     console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
 
-                    
+
                     // console.log("SEGURO??? ", applicationNodeOngoing);
 
                 } else {
@@ -50,8 +56,19 @@ const Home = ({ socket }) => {
             console.log("SOCKET HOME: ", socket.id);
 
         });
+
     }, [checkApplicationOngoing]);
 
+
+
+    useEffect(() => {
+        // Configura un temporizador para cambiar la animación
+        const timer = setTimeout(() => {
+            setImageVisible(false);
+        }, 2000); // Duración de la imagen visible antes de comenzar a desvanecerse
+
+        return () => clearTimeout(timer);
+    })
 
     function logout() {
 
@@ -67,76 +84,66 @@ const Home = ({ socket }) => {
     }
 
     return (
-        <main className='min-h-screen items-center justify-center'>
-            <div className='text-center pt-5'>
-                <h1 className='text-5xl font-bold mb-4'>CivicAid</h1>
-            </div>
+        <main className='min-h-screen flex flex-col items-center relative'>
 
-            {isUser ?
-                <div>
-                    <br />
-                    <div className='text-center'>
-                        <NavLink to="/makeApplication">
-                            <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                HACER SOLICITUD
-                            </button>
-                        </NavLink>
-                    </div>
+            {/* {imageVisible ? (
+                <img
+                    src="tu-imagen.jpg"
+                    alt="Descripción de la imagen"
+                    className="rounded-lg shadow-xl animated-entry"
+                />
+            ) : (
+                <img
+                    src="tu-imagen.jpg"
+                    alt="Descripción de la imagen"
+                    className="rounded-lg shadow-xl fade-out"
+                    onAnimationEnd={() => setImageVisible(false)}
+                />
+            )} */}
 
-                    <br />
 
-                    <div className='text-center'>
-                        <NavLink to="/ownApplication">
-                            <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                MOSTRAR SOLICITUDES PROPIAS
-                            </button>
-                        </NavLink>
-                    </div>
-                    <br />
+
+            <div className='z-10'>
+                <div className='text-center pt-5'>
+                    <h1 className='text-5xl font-bold mb-4'>CivicAid ???</h1>
                 </div>
 
-                :
-
-                <div></div>
-            }
-
-            {isWorker ?
-                <div className='text-center'>
-                    <br />
-                    <NavLink to="/manageApplications">
-                        <button
-                            className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                        >
-                            MOSTRAR SOLICITUDES
-                        </button>
-                    </NavLink>
-                </div>
-
-                :
-
-                <div></div>
-            }
-
-            {isAdmin ?
-                <div className='text-center'>
+                {isUser ?
                     <div>
                         <br />
-                        <NavLink to="/manageSigninRequests">
-                            <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                MOSTRAR SOLICITUDES DE REGISTRO
-                            </button>
-                        </NavLink>
+                        <div className='text-center'>
+                            <NavLink to="/makeApplication">
+                                <button
+                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                >
+                                    HACER SOLICITUD
+                                </button>
+                            </NavLink>
+                        </div>
+
+                        <br />
+
+                        <div className='text-center'>
+                            <NavLink to="/ownApplication">
+                                <button
+                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                >
+                                    MOSTRAR SOLICITUDES PROPIAS
+                                </button>
+                            </NavLink>
+                        </div>
+                        <br />
                     </div>
 
-                    <div>
+                    :
+
+                    <div></div>
+                }
+
+                {isWorker ?
+                    <div className='text-center'>
                         <br />
-                        <NavLink to="/assignApplications">
+                        <NavLink to="/manageApplications">
                             <button
                                 className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
                             >
@@ -144,114 +151,144 @@ const Home = ({ socket }) => {
                             </button>
                         </NavLink>
                     </div>
-                </div>
 
-                :
+                    :
 
-                <div></div>
-            }
+                    <div></div>
+                }
 
-            {applicationOngoing ?
-                <div>
-                    <br />
+                {isAdmin ?
                     <div className='text-center'>
-                        <NavLink to="/applicationOngoing">
+                        <div>
+                            <br />
+                            <NavLink to="/manageSigninRequests">
+                                <button
+                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                >
+                                    MOSTRAR SOLICITUDES DE REGISTRO
+                                </button>
+                            </NavLink>
+                        </div>
+
+                        <div>
+                            <br />
+                            <NavLink to="/assignApplications">
+                                <button
+                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                >
+                                    MOSTRAR SOLICITUDES
+                                </button>
+                            </NavLink>
+                        </div>
+                    </div>
+
+                    :
+
+                    <div></div>
+                }
+
+                {applicationOngoing ?
+                    <div>
+                        <br />
+                        <div className='text-center'>
+                            <NavLink to="/applicationOngoing">
+                                <button
+                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                >
+                                    SOLICITUD ACEPTADA
+                                </button>
+                            </NavLink>
+                        </div>
+                    </div>
+
+                    :
+
+                    <div></div>
+                }
+
+                {applicationNodeOngoing ?
+                    <div>
+                        <br />
+                        <div className='text-center'>
+                            <NavLink to="/applicationOngoing">
+                                <button
+                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                >
+                                    SOLICITUD ACEPTADA
+                                </button>
+                            </NavLink>
+                        </div>
+                    </div>
+
+                    :
+
+                    <div></div>
+                }
+
+                {isLoggedIn ?
+                    <div>
+                        <br />
+                        <div className='text-center'>
+                            <NavLink to="/profile">
+                                <button
+                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                >
+                                    PERFIL
+                                </button>
+                            </NavLink>
+                        </div>
+
+                        <br />
+
+                        <div className='text-center'>
                             <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                onClick={() => logout()} className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
                             >
-                                SOLICITUD ACEPTADA
+                                LOGOUT
                             </button>
-                        </NavLink>
-                    </div>
-                </div>
-
-                :
-
-                <div></div>
-            }
-
-            {applicationNodeOngoing ?
-                <div>
-                    <br />
-                    <div className='text-center'>
-                        <NavLink to="/applicationOngoing">
-                            <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                SOLICITUD ACEPTADA
-                            </button>
-                        </NavLink>
-                    </div>
-                </div>
-
-                :
-
-                <div></div>
-            }
-
-            {isLoggedIn ?
-                <div>
-                    <br />
-                    <div className='text-center'>
-                        <NavLink to="/profile">
-                            <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                PERFIL
-                            </button>
-                        </NavLink>
+                        </div>
                     </div>
 
-                    <br />
+                    :
 
-                    <div className='text-center'>
-                        <button
-                            onClick={() => logout()} className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                        >
-                            LOGOUT
-                        </button>
+                    <div>
+                        <div className='text-center'>
+                            <NavLink to="/login">
+                                <button
+                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                >
+                                    MODO CIUIDADANO
+                                </button>
+                            </NavLink>
+                        </div>
+
+                        <br />
+
+                        <div className='text-center'>
+                            <NavLink to="/loginWorker">
+                                <button
+                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                >
+                                    MODO PROFESIONAL
+                                </button>
+                            </NavLink>
+                        </div>
+
+                        <br />
+
+                        <div className='text-center'>
+                            <NavLink to="/loginAdmin">
+                                <button
+                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                                >
+                                    MODO ADMIN
+                                </button>
+                            </NavLink>
+                        </div>
+
                     </div>
-                </div>
-
-                :
-
-                <div>
-                    <div className='text-center'>
-                        <NavLink to="/login">
-                            <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                MODO CIUIDADANO
-                            </button>
-                        </NavLink>
-                    </div>
-
-                    <br />
-
-                    <div className='text-center'>
-                        <NavLink to="/loginWorker">
-                            <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                MODO PROFESIONAL
-                            </button>
-                        </NavLink>
-                    </div>
-
-                    <br />
-
-                    <div className='text-center'>
-                        <NavLink to="/loginAdmin">
-                            <button
-                                className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                MODO ADMIN
-                            </button>
-                        </NavLink>
-                    </div>
-
-                </div>
-            }
+                }
+            </div>
         </main>
     );
 }
