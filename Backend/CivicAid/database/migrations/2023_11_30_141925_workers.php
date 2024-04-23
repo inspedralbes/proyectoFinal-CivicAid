@@ -13,15 +13,18 @@ return new class extends Migration
     {
         Schema::create('workers', function (Blueprint $table) {
             $table->id();
+            $table->string('dni');
             $table->string('name');
             $table->string('surname');
             $table->string('secondSurname');
             $table->string('sector');
+            $table->string('assignedLocation');
+            $table->enum('workerStatus', ['inService', 'available'])->default('available');
+            $table->integer('assignedApplications');
             $table->string('email')->unique();
             $table->string('password');
-    
             $table->timestamps();
-        });
+        }, ['charset' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci']);
     }
 
     /**

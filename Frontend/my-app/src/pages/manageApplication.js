@@ -3,9 +3,9 @@ import { Provider } from 'react-redux';
 import ManageApplications from '../components/provider_manageApplication';
 import { store } from '../components/store';
 
-const Manage = () => (
+const Manage = ({socket}) => (
     <Provider store={store}>
-        <ManageApplications />
+        <ManageApplications socket={socket}/>
     </Provider>
 );
 

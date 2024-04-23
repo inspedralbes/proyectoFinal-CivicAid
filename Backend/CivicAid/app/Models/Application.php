@@ -15,4 +15,9 @@ class Application extends Model
         
         return $this->belongsTo(User::class);
     }
+
+    public function workers()
+    {
+        return $this->belongsToMany(Worker::class, 'assignments', 'applicationId', 'workerId');
+    }
 }

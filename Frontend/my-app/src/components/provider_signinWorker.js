@@ -1,54 +1,142 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, NavLink } from "react-router-dom";
 import Swal from 'sweetalert2';
 // import logo from "../../public/logoPequeñoCivicAid.png"
 
 function SigninForm() {
+    const [dni, setDni] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [secondSurname, setSecondSurname] = useState('');
+    const [sectors, setSectors] = useState([]);
     const [sector, setSector] = useState('');
+    const [locations, setLocations] = useState([]);
+    const [requestedLocation, setRequestedLocation] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        async function fetchProvinces() {
+
+            try {
+                const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listProvinces', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+
+                // Convertimos el objeto en un arreglo utilizando Object.values()
+                const locationsArray = Object.values(data);
+                // Ahora puedes utilizar el método map en locationsArray
+                locationsArray.map(location => {
+                    // Hacer algo con cada ubicación
+                    console.log(location.name);
+                });
+                setLocations(locationsArray)
+
+            } catch (error) {
+                console.error("ESTE ES EL ERROR: ", error);
+            }
+
+        }
+
+        async function fetchSectors() {
+            try {
+                const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listSectors', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                // Convertimos el objeto en un arreglo utilizando Object.values()
+                const sectorsArray = Object.values(data);
+                // console.log(sectorsArray); // Esto imprimirá el arreglo de objetos
+                // Ahora puedes utilizar el método map en locationsArray
+                sectorsArray.map(sector => {
+                    // Hacer algo con cada ubicación
+                    console.log(sector.sector);
+                });
+                setSectors(sectorsArray)
+
+            } catch (error) {
+                console.error("ESTE ES EL ERROR: ", error);
+            }
+
+        }
+
+        fetchProvinces();
+        fetchSectors()
+    }, []);
+
+
+    function validarDNI(dni) {
+        const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+        const numero = dni.substring(0, dni.length - 1);
+        const letra = dni.charAt(dni.length - 1).toUpperCase();
+
+        if (!(/^\d{8}[A-Z]$/i.test(dni))) {
+            // Verifica que el formato sea correcto: 8 números seguidos de una letra
+            return false;
+        }
+
+        const letraCalculada = letras.charAt(parseInt(numero, 10) % 23);
+
+        return letraCalculada === letra;
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
 
-        try {
-            const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signinWorker', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name, surname, secondSurname, sector, email, password }),
-            });
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-            const data = await response.json();
-            if (data.isRegistered) {
-                navigate("/loginWorker")
+        if (validarDNI(dni)) {
+
+            try {
+                const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signinRequest', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ dni, name, surname, secondSurname, sector, requestedLocation, email }),
+                });
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+                const data = await response.json();
+                // if (data.isRegistered) {
+                navigate("/")
                 Swal.fire({
                     position: "bottom-end",
                     icon: "success",
-                    title: "You have successfully registered",
+                    title: "Your request has been succesfully registered",
                     showConfirmButton: false,
                     timer: 3500,
                 });
-            }
+                // }
 
-            setLoading(false);
-        } catch (error) {
+                setLoading(false);
+            } catch (error) {
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "error",
+                    title: "An error occurred while loading",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                setError(error);
+                setLoading(false);
+            }
+        }else{
             Swal.fire({
                 position: "bottom-end",
                 icon: "error",
-                title: "An error occurred while loading",
+                title: "DNI mal amego",
                 showConfirmButton: false,
                 timer: 1500,
             });
@@ -76,7 +164,7 @@ function SigninForm() {
                                                 <img
                                                     className="mx-auto w-48"
                                                     src="logoPequeñoCivicAid.png"
-                                                    alt="jiji" 
+                                                    alt="jiji"
                                                 />
                                             </div>
 
@@ -103,10 +191,40 @@ function SigninForm() {
                                                 </div>
 
                                                 <div className="relative z-0 w-full mb-6 group">
-                                                    <input value={sector} onChange={(event) => setSector(event.target.value)} autoComplete="off" type="text" name="floating_sector" id="floating_sector" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                                    <input value={dni} onChange={(event) => setDni(event.target.value)} autoComplete="off" type="text" name="floating_dni" id="floating_dni" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                                    <label htmlFor="floating_dni" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                        DNI
+                                                    </label>
+                                                </div>
+
+                                                <div className="relative z-0 w-full mb-6 group">
                                                     <label htmlFor="floating_sector" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                         SECTOR
                                                     </label>
+                                                    <br />
+                                                    <select value={sector} onChange={(event) => setSector(event.target.value)}>
+                                                        <option value="">Selecciona una opción</option>
+                                                        {/* Mapear los datos obtenidos para crear opciones */}
+                                                        {sectors.map((sector) => (
+                                                            <option key={sector.id} value={sector.sector}>{sector.sector}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+
+                                                <div className="relative z-0 w-full mb-6 group">
+                                                    <label htmlFor="floating_location" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                        LOCALIZACIÓN
+                                                    </label>
+
+                                                    <br />
+
+                                                    <select value={requestedLocation} onChange={(event) => setRequestedLocation(event.target.value)}>
+                                                        <option value="">Selecciona una opción</option>
+                                                        {/* Mapear los datos obtenidos para crear opciones */}
+                                                        {locations.map((location) => (
+                                                            <option key={location.id} value={location.name}>{location.name}</option>
+                                                        ))}
+                                                    </select>
                                                 </div>
 
                                                 <div className="relative z-0 w-full mb-6 group">
@@ -121,17 +239,9 @@ function SigninForm() {
                                                 </a>
                                                 <br></br><br></br>
 
-
-                                                <div className="relative z-0 w-full mb-6 group">
-                                                    <input value={password} onChange={(event) => setPassword(event.target.value)} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autoComplete="off" type="password" name="floating_password" id="floating_password" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                                    <label htmlFor="floating_password" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                        CONTRASEÑA
-                                                    </label>
-                                                </div>
-
-                                                <a className="text-neutral-500">
+                                                {/* <a className="text-neutral-500">
                                                     8 caracteres, una mayúscula, una minúscula y un número.
-                                                </a>
+                                                </a> */}
 
                                                 <div className="mb-12 mt-10 pb-1 pt-1 text-center">
                                                     <button
@@ -174,11 +284,11 @@ function SigninForm() {
                                             </form>
                                         </div>
                                     </div>
-                                    <div className="bg-gradient-to-r from-violet-400 to-fuchsia-800 flex items-center rounded-b-lg lg:w-6/12 lg:rounded-r-lg lg:rounded-bl-none">
+                                    {/* <div className="bg-gradient-to-r from-violet-400 to-fuchsia-800 flex items-center rounded-b-lg lg:w-6/12 lg:rounded-r-lg lg:rounded-bl-none">
                                         <div className="px-4 py-6 text-white md:mx-auto md:p-12">
                                             <img className="m-auto text-center" src="capoo-blue-cat.gif" />
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>

@@ -40,7 +40,7 @@ const OwnApplication = () => {
         }
 
         fetchApplications();
-    }, [comprobar]); // Añadir workerSector como una dependencia del efecto
+    }, [comprobar]);
 
     return (
         <main className='min-h-screen bg-gray-100 items-center justify-center'>
@@ -85,7 +85,6 @@ const OwnApplication = () => {
                             </div>
                         </div>
                     ))}
-                    {/* CARD */}
                 </div>
 
                 :

@@ -1,3 +1,87 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+}
+
+.animated-entry {
+    animation: fadeInLeft 1s ease-out forwards;
+}
+
+.fade-out {
+    animation: fadeOut 1s ease-out forwards;
+}
+
+img.rounded-lg {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-out, opacity 0.3s ease;
+    cursor: pointer;
+}
+
+img.rounded-lg.zoomed {
+    /* Base transform for scaling */
+    /* transform: scale(1.5); 
+    z-index: 50;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    cursor: zoom-out;
+    max-width: 90%; 
+    max-height: 90%; 
+    overflow: hidden;
+    transition: transform 0.3s ease-out, opacity 0.3s ease;
+    transform-origin: center center;
+    background: rgba(0, 0, 0, 0.5); */
+
+    /* transform: scale(1.5);  */
+    /* z-index: 50; */
+    position: fixed;
+    top: 35%;
+    left: 5%;
+    cursor: zoom-out;
+    max-width: 90%; 
+    max-height: 90%; 
+    overflow: hidden;
+    transition: transform 0.3s ease-out, opacity 0.3s ease;
+    /* transform-origin: center center; */
+    transform-origin: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Smaller devices (phones, tablets) */
+@media (max-width: 768px) {
+    img.rounded-lg.zoomed {
+        transform: scale(1.5) rotate(90deg); /* Smaller scale and rotation for smaller devices */
+        background-color: black;
+    }
+}
+
+/* Larger devices */
+@media (min-width: 769px) {
+    img.rounded-lg.zoomed {
+        transform: scale(2); /* Larger scale for larger devices */
+    }
+}

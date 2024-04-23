@@ -4,9 +4,9 @@ import AppOngoing from '../components/provider_applicationOngoing'
 import { BrowserRouter as Router } from 'react-router-dom';
 
 
-const ApplicationOngoing = () => (
+const ApplicationOngoing = ({socket}) => (
     <Provider store={store}>
-        <AppOngoing />
+        <AppOngoing socket={socket}/>
     </Provider>
 
 );

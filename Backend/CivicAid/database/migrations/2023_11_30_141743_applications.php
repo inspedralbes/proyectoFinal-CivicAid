@@ -16,13 +16,16 @@ return new class extends Migration
             $table->unsignedBigInteger('applicantId');
             $table->string('title');
             $table->string('description');
+            $table->binary('image'); 
             $table->string('sector');
             $table->string('subsector');
             $table->enum('applicationStatus', ['active', 'inactive', 'pending', 'completed'])->default('pending');
+            $table->string('province');
+            $table->string('location');
             $table->date('date');
             $table->timestamps();
 
-        });
+        }, ['charset' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci']);
     }
 
     /**

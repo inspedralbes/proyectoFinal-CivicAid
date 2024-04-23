@@ -4,9 +4,9 @@ import Home from '../components/provider_home'
 import { BrowserRouter as Router } from 'react-router-dom';
 
 
-const App = () => (
+const App = ({socket}) => (
     <Provider store={store}>
-        <Home />
+        <Home socket={socket} />
     </Provider>
 
 );
