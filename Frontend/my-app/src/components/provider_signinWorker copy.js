@@ -146,12 +146,13 @@ function SigninForm() {
     };
 
     return (
-        <div className="overflow-auto flex h-screen justify-center items-center lg:bg-orange-300">
+        <div className="overflow-hidden flex h-screen justify-center items-center lg:bg-orange-300">
             {isLoggedIn ?
                 <p>
                     YA HAS INICIADO SESIÓN
                 </p> :
-                <div className="overflow-auto container h-screen w-full g-6 flex px-5 flex-wrap items-center justify-center lg:flex lg:flex-wrap lg:w-fit lg:rounded-lg md:px-0 text-neutral-800 dark:text-neutral-200 bg-gray-800 shadow-lg dark:bg-neutral-800">
+                <div className="container h-full w-full g-6 flex px-5 flex-wrap items-center justify-center lg:flex lg:flex-wrap lg:w-fit lg:rounded-lg md:px-0 text-neutral-800 dark:text-neutral-200 bg-gray-800 shadow-lg dark:bg-neutral-800">
+
 
                     <div className="h-full p-5 md:mx-6 md:p-12">
                         <div className="text-center">
@@ -160,28 +161,27 @@ function SigninForm() {
                                 src="logoPequeñoCivicAid.png"
                                 alt="jiji"
                             />
-
                         </div>
-                        <form onSubmit={handleSubmit} className='mt-8'>
 
+                        <form onSubmit={handleSubmit} className='mt-5'>
                             <div className="relative z-0 w-full mb-6 group">
-                                <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="off" type="text" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="off" type="text" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
                                 <label htmlFor="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Nombre
+                                    NOMBRE
                                 </label>
                             </div>
 
                             <div className="relative z-0 w-full mb-6 group">
-                                <input value={surname} onChange={(event) => setSurname(event.target.value)} autoComplete="off" type="text" name="floating_surname" id="floating_surname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                <input value={surname} onChange={(event) => setSurname(event.target.value)} autoComplete="off" type="text" name="floating_surname" id="floating_surname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
                                 <label htmlFor="floating_surname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Apellido
+                                    APELLIDO
                                 </label>
                             </div>
 
                             <div className="relative z-0 w-full mb-6 group">
-                                <input value={secondSurname} onChange={(event) => setSecondSurname(event.target.value)} autoComplete="off" type="text" name="floating_secondSurname" id="floating_secondSurname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                <input value={secondSurname} onChange={(event) => setSecondSurname(event.target.value)} autoComplete="off" type="text" name="floating_secondSurname" id="floating_secondSurname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
                                 <label htmlFor="floating_secondSurname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Segundo Apellido
+                                    SEGUNDO APELLIDO
                                 </label>
                             </div>
 
@@ -192,26 +192,11 @@ function SigninForm() {
                                 </label>
                             </div>
 
-                            <div className="relative z-0 w-full mb-1 group">
-                                <input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" type="email" name="floating_email" id="floating_email" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Email
-                                </label>
-                            </div>
-
-                            <a className="text-neutral-500">
-                                (Ej: civicaid@gmail.com).
-                            </a>
-
-
-                            <div className="relative z-0 w-full mt-6 mb-6 group max-w-xs overflow-auto lg:overflow-hidden lg:max-w-fit">
-                                <h3 className='text-white text-[15px] mb-2'>
+                            <div className="relative z-0 w-full mb-6 group">
+                                <label htmlFor="floating_sector" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     SECTOR
-                                </h3>
-                                <select
-                                    value={sector}
-                                    onChange={(event) => setSector(event.target.value)}
-                                    className="w-full px-3 py-2.5 border border-blue-gray-200 rounded-md text-sm text-blue-gray-700 focus:outline-none focus:border-gray-900 disabled:bg-blue-gray-50">
+                                </label>
+                                <select value={sector} onChange={(event) => setSector(event.target.value)}>
                                     <option value="">Selecciona una opción</option>
 
                                     {sectors.map((sector) => (
@@ -220,15 +205,12 @@ function SigninForm() {
                                 </select>
                             </div>
 
-                            <div className="relative z-0 w-full mb-6 group max-w-xs overflow-auto lg:overflow-hidden lg:max-w-fit">
-                                <h3 className='text-white text-[15px] mb-2'>
+                            <div className="relative z-0 w-full mb-6 group">
+                                <label htmlFor="floating_location" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     LOCALIZACIÓN
-                                </h3>
+                                </label>
 
-                                <select
-                                    value={requestedLocation}
-                                    onChange={(event) => setRequestedLocation(event.target.value)}
-                                    className="w-full px-3 py-2.5 border border-blue-gray-200 rounded-md text-sm text-blue-gray-700 focus:outline-none focus:border-gray-900 disabled:bg-blue-gray-50">
+                                <select value={requestedLocation} onChange={(event) => setRequestedLocation(event.target.value)}>
                                     <option value="">Selecciona una opción</option>
 
                                     {locations.map((location) => (
@@ -236,13 +218,19 @@ function SigninForm() {
                                     ))}
                                 </select>
                             </div>
-                            
-                            
-                            {/* <a className="text-neutral-500">
-                                8 caracteres, una mayúscula, una minúscula y un número.
-                            </a> */}
 
-                            <div className=" mt-10 lg:mt-6 pb-1 pt-1 text-center">
+                            <div className="relative z-0 w-full mb-6 group">
+                                <input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" type="email" name="floating_email" id="floating_email" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
+                                <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    EMAIL
+                                </label>
+                            </div>
+
+                            <a className="text-neutral-500">
+                                Tiene que tener '@' y un dominio (Ej: civicaid@gmail.com).
+                            </a>
+
+                            <div className=" mt-10 pb-1 pt-1 text-center">
                                 <button
                                     className="relative bg-gradient-to-r from-orange-400 to-orange-800 mb-3 w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
                                     type="submit" disabled={isLoading}
@@ -263,8 +251,7 @@ function SigninForm() {
                                     )}
                                 </button>
                             </div>
-
-                            <div className="flex items-center justify-between">
+                            <div className="flex mt-5 lg:mt-16 items-center justify-between">
                                 <p className="mb-0 mr-2 text-white">
                                     YA TIENE CUENTA?
                                 </p>

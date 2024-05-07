@@ -74,7 +74,7 @@ const ManageApplication = () => {
         }
         fetchApplications();
         fetchWorkers();
-    }, []); 
+    }, []);
 
 
     const toggleSelectedWorker = (workerId) => {
@@ -142,34 +142,39 @@ const ManageApplication = () => {
         <main className='min-h-screen bg-gray-100 items-center justify-center'>
             {isAdmin ? (
                 <div className='p-5'>
-                    {applicationInfo.map((request, id) => (
-                        <div key={id} className="relative flex w-full max-w-[26rem] p-5 cursor-pointer flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
-                            <div className="p-6">
-                                <div>
-                                    <img 
-                                        src={request.image} 
-                                        alt={request.title} 
-                                        className={`rounded-lg ${zoomedImages[id] ? 'zoomed' : ''}`}
-                                        onClick={() => toggleZoom(id)}
+                    {applicationInfo.map((request, id) => {
+                        if (request.applicationStatus != 'pending') {
+                            return null;
+                        }
+                        return (
+                            <div key={id} className="relative flex w-full max-w-[26rem] p-5 cursor-pointer flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
+                                <div className="p-6">
+                                    <div>
+                                        <img
+                                            src={request.image}
+                                            alt={request.title}
+                                            className={`rounded-lg ${zoomedImages[id] ? 'zoomed' : ''}`}
+                                            onClick={() => toggleZoom(id)}
                                         />
-                                        
-                                </div>
-                                <div onClick={() => setSelectedApplication(request)} >
-                                    <h1 className="block font-sans text-xl antialiased leading-relaxed text-gray-700">
-                                        {request.title}
-                                    </h1>
-                                    <br />
-                                    <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                        {request.description}
-                                    </p>
-                                    <br />
-                                    <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                        SERVICIOS SOLICITADOS: {request.sector}
-                                    </p>
+
+                                    </div>
+                                    <div onClick={() => setSelectedApplication(request)} >
+                                        <h1 className="block font-sans text-xl antialiased leading-relaxed text-gray-700">
+                                            {request.title}
+                                        </h1>
+                                        <br />
+                                        <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                            {request.description}
+                                        </p>
+                                        <br />
+                                        <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                            SERVICIOS SOLICITADOS: {request.sector}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        )
+                    })}
                 </div>
             ) : (
                 <div className="p-10 text-center bg-gray-800 text-white font-bold rounded-lg">
