@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('surname');
             $table->string('secondSurname');
+            $table->binary('profileImage'); 
             $table->string('sector');
             $table->string('assignedLocation');
             $table->enum('workerStatus', ['inService', 'available'])->default('available');

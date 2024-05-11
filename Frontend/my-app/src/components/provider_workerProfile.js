@@ -237,7 +237,7 @@ const UserInfo = () => {
                                                         <th className="px-4">Estado</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody className="divide-y divide-gray-200">
+                                                <tbody className="divide-y divide-gray-200 ">
                                                     {applicationsAssigned.sort((a, b) => {
                                                         const statusPriority = {
                                                             active: 1,
@@ -246,7 +246,7 @@ const UserInfo = () => {
                                                         };
                                                         return statusPriority[a.applicationStatus.toLowerCase()] - statusPriority[b.applicationStatus.toLowerCase()];
                                                     }).map((application, id) => (
-                                                        <tr key={id} onClick={() => handleApplicationModal(application)} className='cursor-pointer'>
+                                                        <tr key={id} onClick={() => handleApplicationModal(application)} className='cursor-pointer hover:bg-gray-700'>
                                                             <td className="px-4 py-8 whitespace-nowrap">{application.id}</td>
                                                             <td className="px-4 py-8 whitespace-nowrap">{application.title}</td>
                                                             <td className="px-4 py-8 whitespace-nowrap">{application.location}</td>
@@ -281,7 +281,8 @@ const UserInfo = () => {
                                                             completed: 3
                                                         };
                                                         return statusPriority[a.applicationStatus.toLowerCase()] - statusPriority[b.applicationStatus.toLowerCase()];
-                                                    }).map((sharedApplication, id) => (<tr key={id} onClick={() => handleApplicationModal(sharedApplication)} className='cursor-pointer'>
+                                                    }).map((sharedApplication, id) => 
+                                                    (<tr key={id} onClick={() => handleApplicationModal(sharedApplication)} className='cursor-pointer hover:bg-gray-700 '>
                                                         <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.id}</td>
                                                         <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.title}</td>
                                                         <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.location}</td>

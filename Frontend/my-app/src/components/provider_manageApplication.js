@@ -77,7 +77,7 @@ const ManageApplication = ({ socket }) => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
-
+                    console.log("APPLICATION INFO: ", data);
                     setApplicationInfo(data)
 
                 } catch (error) {
@@ -165,6 +165,9 @@ const ManageApplication = ({ socket }) => {
         }
     });
 
+    /**
+     * SOCKET PARA RECIBIR LA CANCELACION DE LA INVITACION CUANDO EL ANFITRION CANCELA LA SOLICITUD
+     */
     socket.on("invitationCanceled", (data) => {
         if (receivedInvitations.has(data.applicationId)) {
             const newInvitations = new Map(receivedInvitations);
@@ -172,8 +175,6 @@ const ManageApplication = ({ socket }) => {
             setReceivedInvitations(newInvitations);
 
             setInvitationAccepted(false); // Ponemos en falso para que no se muestre el modal del lobby
-
-
 
             console.log("Invitación eliminada del mapa");
         } else {
@@ -195,10 +196,24 @@ const ManageApplication = ({ socket }) => {
         setCanStartApplication(data.startApplication)
     })
 
+    /**
+     * SOCKET PARA QUE, CUANDO EL ANFITRION DE LA SALA LE DA A ACEPTAR, SE ACTIVE LA SOLICITUD PARA TODOS LOS EMPLEADOS DE LA SALA
+     */
     socket.on("returnAppOngoing", (data) => {
         console.log("EL RETURN: ", data);
 
-        dispatch(actions.applicationNodeOngoing(data.actualApplication))
+        dispatch(actions.applicationNodeOngoing(data.actualApplication)) //Guardamos en Redux la solicitud que hemos aceptado
+
+        // Mostramos un mensaje de éxito
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "La solicitud se ha aceptado correctamente",
+            showConfirmButton: false,
+            timer: 3500,
+        });
+
+        //Redirigimos al empleado
         navigate("/applicationOngoing")
 
         return () => {
@@ -465,54 +480,63 @@ const ManageApplication = ({ socket }) => {
                         <div>
                             {activeTab === "tab1" &&
                                 <div className="p-5 lg:flex lg:flex-wrap lg:p-8 lg:justify-center lg:gap-20 lg:overflow-auto">
-                                    {applicationInfo.map((application, id) => {
-                                        // No renderizar el div si la condición se cumple
-                                        if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed') {
-                                            return null;
-                                        }
-                                        return (
-                                            <div key={id} className="relative w-full lg:w-1/3 p-5 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg mb-4">
-                                                {/* Contenido de la solicitud */}
-                                                <div className="uppercase items-center justify-between">
-                                                    <h5 className="block font-sans text-center text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">{application.title}</h5>
-                                                </div>
-                                                <div className="relative mt-5 overflow-hidden shadow-lg rounded-xl">
-                                                    <img src={application.image} alt="Imagen solicitud" className="w-full object-cover h-48 rounded-t-xl" />
-                                                    <div className="absolute inset-0 w-full h-full to-bg-black-10 bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
-                                                </div>
 
-                                                <div className="p-4">
-                                                    <div>
-                                                        <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                            {application.description}
-                                                        </p>
+                                    {applicationInfo.length === 0 ? (
+                                        <div className='flex items-center justify-center'>
+                                            <h1 className='text-white text-center text-3xl font-bold'>
+                                                No hay solicitudes privadas asignadas en este momento
+                                            </h1>
+                                        </div>
+                                    ) : (
+                                        applicationInfo.map((application, id) => {
+                                            // No renderizar el div si la condición se cumple
+                                            if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed') {
+                                                return null;
+                                            }
 
+                                            return (
+                                                <div key={id} className="relative w-full lg:w-1/3 p-5 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg mb-4">
+                                                    {/* Contenido de la solicitud */}
+                                                    <div className="uppercase items-center justify-between">
+                                                        <h5 className="block font-sans text-center text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">{application.title}</h5>
+                                                    </div>
+                                                    <div className="relative mt-5 overflow-hidden shadow-lg rounded-xl">
+                                                        <img src={application.image} alt="Imagen solicitud" className="w-full object-cover h-48 rounded-t-xl" />
+                                                        <div className="absolute inset-0 w-full h-full to-bg-black-10 bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
                                                     </div>
 
-                                                    <div className='mt-3'>
-                                                        <h3>Localización</h3>
-                                                        <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                            {application.location}
-                                                        </p>
+                                                    <div className="p-4">
+                                                        <div>
+                                                            <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                                                {application.description}
+                                                            </p>
 
-                                                    </div>
+                                                        </div>
 
-                                                    {/* <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                                        <div className='mt-3'>
+                                                            <h3>Localización</h3>
+                                                            <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                                                {application.location}
+                                                            </p>
+
+                                                        </div>
+
+                                                        {/* <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
                                                         {application.applicationStatus}
                                                     </p> */}
-                                                </div>
-                                                <div className="p-6 pt-3">
-                                                    <button
-                                                        onClick={() => handleApplication(application)}
-                                                        className="block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                                        type="submit">
-                                                        ACEPTAR
-                                                    </button>
-                                                </div>
+                                                    </div>
+                                                    <div className="p-6 pt-3">
+                                                        <button
+                                                            onClick={() => handleApplication(application)}
+                                                            className="block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                                            type="submit">
+                                                            ACEPTAR
+                                                        </button>
+                                                    </div>
 
-                                            </div>
-                                        );
-                                    })}
+                                                </div>
+                                            );
+                                        }))}
                                 </div>
                             }
 
@@ -522,61 +546,48 @@ const ManageApplication = ({ socket }) => {
                                     {applicationsNode.map((application, id) => {
                                         const isCurrentAppInvited = receivedInvitations.get(application.id)?.invited ?? false;
                                         const currentAppInvitedLobbyCode = receivedInvitations.get(application.id)?.lobbyCode;
-                                        // No renderizar el div si la condición se cumple
                                         if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed' || application.applicationStatus === 'active') {
                                             return null;
                                         }
                                         return (
-                                            <div key={id} className={`relative w-full lg:w-1/3 p-5 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg mb-4`}>
-                                                {/* Contenido de la solicitud */}
-                                                {/* <div className={`${isCurrentAppInvited ? "animate-pulse absolute inset-0 bg-blue-100 opacity-25 rounded-xl" : "hidden"}`}></div> */}
-                                                <div className="uppercase items-center justify-between">
-                                                    <h5 className="block font-sans text-center text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">{application.title}</h5>
-                                                </div>
-                                                <div className="relative mt-5 overflow-hidden shadow-lg rounded-xl">
-                                                    <img
-                                                        src={application.image}
-                                                        alt={application.image ? "Imagen solicitud" : "Imagen no disponible"}
-                                                        className="w-full object-cover h-48 rounded-t-xl"
-                                                    />
-                                                    <div className="absolute inset-0 w-full h-full to-bg-black-10 bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
-                                                </div>
-                                                <div className="p-4">
-                                                    {/* <div className="flex items-center justify-between mb-3">
-                                                        <h5 className="block font-sans text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">{application.title}</h5>
-                                                    </div> */}
+                                            <div key={id} className="relative w-full lg:w-full lg:flex lg:flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg mb-4">
+                                                <div className="lg:flex lg:w-full">
+                                                    <div className="lg:w-1/2 p-5">
+                                                        <div className="uppercase items-center justify-between">
+                                                            <h5 className="text-xl text-center font-medium leading-snug tracking-normal text-blue-gray-900">{application.title}</h5>
+                                                        </div>
+                                                        <div className="relative mt-5 overflow-hidden shadow-lg rounded-xl">
+                                                            <img
+                                                                src={application.image}
+                                                                alt={application.image ? "Imagen solicitud" : "Imagen no disponible"}
+                                                                className="w-full object-cover h-48 rounded-t-xl"
+                                                            />
+                                                            <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
+                                                        </div>
 
-                                                    {/* <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                        SOLICITANTE: {application.applicantId}
-                                                    </p> */}
-                                                    <div>
-                                                        <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                            {application.description}
-                                                        </p>
-                                                    </div>
-
-                                                    <div className='mt-3'>
-                                                        <h3>Localización</h3>
-                                                        <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                            {application.location}
-                                                        </p>
+                                                        <div className="mt-5 lg:w-full lg:flex lg:flex-col">
+                                                            <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words">
+                                                                {application.description}
+                                                            </div>
+                                                            <div className='mt-3'>
+                                                                <h3>Localización</h3>
+                                                                <p className="text-base font-light leading-relaxed text-gray-700">
+                                                                    {application.location}
+                                                                </p>
+                                                            </div>
+                                                        </div>
 
                                                     </div>
-
-                                                    {/* <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                        {application.applicationStatus}
-                                                    </p> */}
-
-                                                    <div className='mt-5'>
-                                                        <h2 className='mb-2'>COMPAÑEROS ASIGNADOS</h2>
-                                                        <div className="overflow-y-auto max-h-20 lg:h-28 lg:max-h-28 grid grid-cols-2 gap-2">
+                                                    <div className="lg:w-1/2 p-5">
+                                                        <h2 className='mb-5'>COMPAÑEROS ASIGNADOS</h2>
+                                                        <div className="overflow-y-auto max-h-28 lg:h-28 grid grid-cols-2 gap-2">
                                                             {application.workers.map((worker, id) => {
                                                                 if (worker.id === workerId) {
                                                                     return null;
                                                                 }
                                                                 return (
-                                                                    <div key={id} className="relative lg:max-h-11 bg-gray-300 bg-clip-border text-gray-700 text-center shadow-lg p-2 rounded">
-                                                                        <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                                                    <div key={id} className="bg-gray-300 text-center shadow-lg p-2 rounded">
+                                                                        <p className="text-base font-light leading-relaxed text-gray-700">
                                                                             {worker.name}
                                                                         </p>
                                                                     </div>
@@ -585,34 +596,30 @@ const ManageApplication = ({ socket }) => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="p-6 justify-end">
+                                                <div className="w-full p-6">
                                                     {isCurrentAppInvited ? (
-                                                        <div>
-                                                            {/* <p>Has sido invitado a la aplicación {application.id}</p> */}
-                                                            <button
-                                                                onClick={() => acceptInvitation(application.id, currentAppInvitedLobbyCode)}
-                                                                className="block w-full select-none animate-pulse rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                                            >
-                                                                Aceptar Invitación
-                                                            </button>
-                                                        </div>
+                                                        <button
+                                                            onClick={() => acceptInvitation(application.id, currentAppInvitedLobbyCode)}
+                                                            className="w-full animate-pulse rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg"
+                                                        >
+                                                            Aceptar Invitación
+                                                        </button>
                                                     ) : (
-                                                        <div className='justify-end'>
-                                                            <button
-                                                                onClick={() => createInvitation(application)}
-                                                                id={`invitationButton${application.id}`}
-                                                                className="block w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                                                type="submit"
-                                                            >
-                                                                INVITAR
-                                                            </button>
-                                                        </div>
+                                                        <button
+                                                            onClick={() => createInvitation(application)}
+                                                            id={`invitationButton${application.id}`}
+                                                            className="w-full rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg"
+                                                            type="submit"
+                                                        >
+                                                            INVITAR
+                                                        </button>
                                                     )}
                                                 </div>
                                             </div>
                                         );
                                     })}
                                 </div>
+
                             )}
 
                             {showModal && (
@@ -696,8 +703,8 @@ const ManageApplication = ({ socket }) => {
                                 <div className="h-3/6 m-auto fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
                                     <div className="fixed inset-0 bg-gray-500 opacity-75"></div>
 
-                                    <div className="w-11/12 lg:w-9/12 xl:w-7/12 h-5/6 sm:max-w-lg lg:max-w-3xl xl:max-w-4xl z-20 p-5 bg-orange-200 rounded-lg shadow-xl">
-                                        <div className=" pb-5 ">
+                                    <div className="w-11/12 lg:w-9/12 xl:w-7/12 h-5/6 sm:max-w-lg lg:max-w-3xl xl:max-w-4xl z-20 p-5 bg-orange-200 rounded-lg shadow-xl flex flex-col justify-between">
+                                        <div className="">
                                             <h2 className="text-lg text-center font-semibold text-gray-900">SALA DE ESPERA</h2>
                                         </div>
 
@@ -724,30 +731,30 @@ const ManageApplication = ({ socket }) => {
                                             )}
                                         </div>
 
-                                        <div className="flex items-end justify-end px-4 pt-5">
+                                        <div className="px-4 py-5 flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4">
                                             {canStartApplication ? (
-                                                <div className="p-2">
+                                                <div className="w-full sm:flex sm:justify-end">
                                                     <button
                                                         onClick={() => cancelInvitation()}
                                                         type="button"
-                                                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                                        className="w-full sm:w-auto inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                                     >
                                                         Cancelar
                                                     </button>
                                                     <button
                                                         onClick={() => handleNodeApplication()}
-                                                        className="justify-end w-full select-none rounded-lg bg-gray-900 py-3.5 px-7 text-center align-middle font-sans text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                                        className="w-full sm:w-auto inline-flex justify-center rounded-lg bg-gray-900 py-3.5 px-7 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                                         type="submit"
                                                     >
                                                         Iniciar solicitud
                                                     </button>
                                                 </div>
-
                                             ) : (
                                                 <h1 className='m-auto text-center'>ESPERANDO AL ANFITRION ...</h1>
                                             )}
                                         </div>
                                     </div>
+
                                 </div>
 
                             )}

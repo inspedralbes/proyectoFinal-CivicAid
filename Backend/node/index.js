@@ -155,6 +155,7 @@ io.on("connection", (socket) => {
             }
         });
     })
+
     socket.on("acceptInvitation", (data) => {
         console.log("Revisando lobbies para el código:", data.lobbyCode);
 
@@ -183,16 +184,35 @@ io.on("connection", (socket) => {
                         // }
 
                         if (socketId) {
+                            // lobby.users.forEach(user => {
+                            //     if (user.workerId != data.workerId) {
+                            //         io.to(employeeSocketMap[user.workerId].socketId).emit("newUserInLobby", {
+                            //             users: Array.from(lobby.users),
+                            //             startApplication: true,
+                            //         })
+                            //     }
+                            // })
+
                             io.to(socketId).emit("newUserInLobby", {
                                 users: Array.from(lobby.users),
                                 startApplication: true,
                             });
 
-                            console.log("USERS: ", lobby.users);
-                            io.to(socketIdUser).emit("newUserInLobby", {
-                                users: Array.from(lobby.users),
-                                startApplication: false,
-                            });
+                            lobby.users.forEach(user => {
+                                if (user.workerId != lobby.lobbyCreator) {
+                                    io.to(employeeSocketMap[user.workerId].socketId).emit("newUserInLobby", {
+                                        users: Array.from(lobby.users),
+                                        startApplication: false,
+                                    })
+                                }
+                            })
+
+                            // io.to(socketIdUser).emit("newUserInLobby", {
+                            //     users: lobby.users,
+                            //     startApplication: false,
+                            // });
+
+                            console.log("USUARIOS DEL LOBBY: ", lobby.users);
                         } else {
                             console.log("No se encontró el socket ID para el creador del lobby.");
                         }

@@ -309,35 +309,87 @@ const Home = ({ socket }) => {
                 }
 
                 {isAdmin ?
-                    <div className='text-center'>
-                        <div>
-                            <br />
-                            <NavLink to="/manageSigninRequests">
-                                <button
-                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                                >
-                                    MOSTRAR SOLICITUDES DE REGISTRO
-                                </button>
-                            </NavLink>
+                    // <div className='text-center'>
+                    //     <div>
+                    //         <br />
+                    //         <NavLink to="/manageSigninRequests">
+                    //             <button
+                    //                 className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                    //             >
+                    //                 MOSTRAR SOLICITUDES DE REGISTRO
+                    //             </button>
+                    //         </NavLink>
+                    //     </div>
+
+                    //     <div>
+                    //         <br />
+                    //         <NavLink to="/assignApplications">
+                    //             <button
+                    //                 className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                    //             >
+                    //                 MOSTRAR SOLICITUDES
+                    //             </button>
+                    //         </NavLink>
+                    //     </div>
+                    // </div>
+
+                    <div className='w-screen bg-black'>
+
+                        <div className='flex h-[340px] lg:h-full bg-violet-700'>
+                            <div className='h-full w-6/12 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
+                                <NavLink to="/manageSigninRequests">
+                                    <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
+                                        <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                            <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
+                                                SOLICITUDES DE REGISTRO
+                                            </button>
+                                        </div>
+                                        <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                            Gestiona las solicitudes de registro que han dejado los empleados
+                                        </p>
+                                    </div>
+                                </NavLink>
+                                <img src="userButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                            </div>
+
+                            <div className='h-full w-6/12 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
+                                <NavLink to="/assignApplications">
+                                    <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
+                                        <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                            <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
+                                                ASIGNAR SOLICITUDES
+                                            </button>
+                                        </div>
+                                        <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                            Asigna a los empleados las solicitudes que han dejado los usuarios 
+                                        </p>
+                                    </div>
+                                </NavLink>
+                                <img src="workerButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                            </div>
                         </div>
 
-                        <div>
-                            <br />
-                            <NavLink to="/assignApplications">
-                                <button
-                                    className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                                >
-                                    MOSTRAR SOLICITUDES
-                                </button>
+                        <div className='flex text-center h-[250px] bg-fuchsia-950 group relative overflow-hidden'>
+                            <NavLink to="/adminProfile">
+                                <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full absolute">
+                                    <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                        <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
+                                            PERFIL
+                                        </button>
+                                    </div>
+                                    <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                        Gestiona tu perfil
+                                    </p>
+                                </div>
                             </NavLink>
+                            <img src="adminButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
                         </div>
                     </div>
-
                     :
 
                     <div></div>
                 }
-
+                {/* 
                 {applicationOngoing ?
                     <div>
                         <br />
@@ -355,9 +407,9 @@ const Home = ({ socket }) => {
                     :
 
                     <div></div>
-                }
+                } */}
 
-                {applicationNodeOngoing ?
+                {/* {applicationNodeOngoing ?
                     <div>
                         <br />
                         <div className='text-center'>
@@ -374,7 +426,7 @@ const Home = ({ socket }) => {
                     :
 
                     <div></div>
-                }
+                } */}
 
                 {isLoggedIn ?
                     <div>

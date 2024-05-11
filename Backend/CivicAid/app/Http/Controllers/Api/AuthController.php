@@ -29,6 +29,17 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
 
+        $profileImagePath = $request->file('image')->store('usersProfileImages', 'public');
+
+        // Construye la URL del archivo concatenando el path de almacenamiento con el nombre del archivo
+        $baseUrl = config('app.url');
+        $port = ':8000'; // Define el puerto aquí
+
+        $imageUrl = $baseUrl . $port . '/storage/' . $profileImagePath;
+
+        // Almacena la URL en la base de datos
+        $user->profileImage = $imageUrl;
+
         try {
             if ($user->save()) {
                 $message = "Signed in correctly.";
