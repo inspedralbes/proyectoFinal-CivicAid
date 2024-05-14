@@ -507,9 +507,9 @@ const ManageApplication = ({ socket }) => {
 
                                                     <div className="p-4">
                                                         <div>
-                                                            <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                                            <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words">
                                                                 {application.description}
-                                                            </p>
+                                                            </div>
 
                                                         </div>
 

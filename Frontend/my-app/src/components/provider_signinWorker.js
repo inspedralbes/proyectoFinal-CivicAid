@@ -9,6 +9,7 @@ function SigninForm() {
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [secondSurname, setSecondSurname] = useState('');
+    const [profileImage, setProfileImage] = useState('');
     const [sectors, setSectors] = useState([]);
     const [sector, setSector] = useState('');
     const [locations, setLocations] = useState([]);
@@ -17,6 +18,8 @@ function SigninForm() {
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
+    const [previewUrl, setPreviewUrl] = useState('');
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -75,7 +78,18 @@ function SigninForm() {
         fetchSectors()
     }, []);
 
-
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setProfileImage(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewUrl(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    
     function validarDNI(dni) {
         const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
         const numero = dni.substring(0, dni.length - 1);
@@ -95,15 +109,25 @@ function SigninForm() {
         event.preventDefault();
         setLoading(true);
 
+        const formData = new FormData();
+        formData.append('dni', dni);
+        formData.append('name', name);
+        formData.append('surname', surname);
+        formData.append('secondSurname', secondSurname);
+        formData.append('profileImage', profileImage);
+        formData.append('sector', sector);
+        formData.append('requestedLocation', requestedLocation);
+        formData.append('email', email);
+
         if (validarDNI(dni)) {
 
             try {
                 const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signinRequest', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ dni, name, surname, secondSurname, sector, requestedLocation, email }),
+                    // headers: {
+                    //     'Content-Type': 'application/json',
+                    // },
+                    body: formData,
                 });
                 if (!response.ok) {
                     throw new Error(response.statusText);
@@ -114,9 +138,9 @@ function SigninForm() {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "success",
-                    title: "Your request has been succesfully registered",
+                    title: "Tu solicitud se ha enviado correctamente. Un administrador gestionará tu solicitud lo antes posible",
                     showConfirmButton: false,
-                    timer: 3500,
+                    timer: 6000,
                 });
                 // }
 
@@ -146,7 +170,7 @@ function SigninForm() {
     };
 
     return (
-        <div className="overflow-auto flex h-screen justify-center items-center lg:bg-orange-300">
+        <div className="overflow-hidden flex h-screen justify-center items-center lg:bg-orange-300">
             {isLoggedIn ?
                 <p>
                     YA HAS INICIADO SESIÓN
@@ -202,6 +226,12 @@ function SigninForm() {
                             <a className="text-neutral-500">
                                 (Ej: civicaid@gmail.com).
                             </a>
+
+                            <div>
+
+                                <input type='file' name="image" accept="image/*" onChange={handleImageChange} className="" />
+
+                            </div>
 
 
                             <div className="relative z-0 w-full mt-6 mb-6 group max-w-xs overflow-auto lg:overflow-hidden lg:max-w-fit">

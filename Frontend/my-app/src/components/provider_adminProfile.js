@@ -19,7 +19,7 @@ const UserInfo = () => {
     const userId = useSelector((state) => state.data.id);
     const [ownApplications, setOwnApplications] = useState([]);
 
-    const isWorker = useSelector((state) => state.isWorker);
+    const isAdmin = useSelector((state) => state.isAdmin);
     const workerId = useSelector((state) => state.data.id);
     const [applicationsAssigned, setApplicationsAssigned] = useState([]);
     const [sharedApplicationsAssigned, setSharedApplicationsAssigned] = useState([]);
@@ -67,56 +67,54 @@ const UserInfo = () => {
             // }
         }
 
-        async function fetchApplicationsAssigned() {
-            if (isWorker) {
-                setLoading(true)
-                try {
-                    // Primer fetch para obtener las solicitudes sin compartir
-                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listAssignedApplications', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({ workerId }),
-                    });
-                    const data = await response.json();
-                    console.log("La 1", data);
-                    setApplicationsAssigned(data);
+        // async function fetchApplicationsAssigned() {
+        //         setLoading(true)
+        //         try {
+        //             // Primer fetch para obtener las solicitudes sin compartir
+        //             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listAssignedApplications', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json',
+        //                     'Authorization': `Bearer ${token}`,
+        //                 },
+        //                 body: JSON.stringify({ workerId }),
+        //             });
+        //             const data = await response.json();
+        //             console.log("La 1", data);
+        //             setApplicationsAssigned(data);
 
-                    // Segundo fetch para obtener las solicitudes compartidas
-                    const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listWorkersExactApplication', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({ workerId }),
-                    });
-                    const data2 = await response2.json();
-                    console.log("LA 2", data2.applications);
+        //             // Segundo fetch para obtener las solicitudes compartidas
+        //             const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listWorkersExactApplication', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json',
+        //                     'Authorization': `Bearer ${token}`,
+        //                 },
+        //                 body: JSON.stringify({ workerId }),
+        //             });
+        //             const data2 = await response2.json();
+        //             console.log("LA 2", data2.applications);
 
-                    data2.applications.map((application, id) => (
-                        console.log(application)
-                    ))
-                    setSharedApplicationsAssigned(data2.applications);
+        //             data2.applications.map((application, id) => (
+        //                 console.log(application)
+        //             ))
+        //             setSharedApplicationsAssigned(data2.applications);
 
-                } catch (error) {
-                    console.error("ESTE ES EL ERROR: ", error);
-                } finally {
-                    setLoading(false)
+        //         } catch (error) {
+        //             console.error("ESTE ES EL ERROR: ", error);
+        //         } finally {
+        //             setLoading(false)
 
-                }
-            }
-        }
+        //         }
 
-        fetchOwnApplications();
-        fetchApplicationsAssigned();
+        // }
+
+        // fetchOwnApplications();
+        // fetchApplicationsAssigned();
     }, [])
 
 
     function logout() {
-
         dispatch(actions.logout());
         localStorage.setItem('access_token', "0");
         Swal.fire({
@@ -128,14 +126,12 @@ const UserInfo = () => {
         });
 
         navigate("/")
-
-
     }
 
 
     return (
         <div className="overflow-auto h-screen w-screen flex justify-center items-center lg:bg-orange-300">
-            {isWorker ?
+            {isAdmin ?
                 <div className="overflow-auto container h-full w-full lg:w-9/12 lg:rounded-lg bg-gray-800 shadow-lg dark:bg-neutral-800">
                     {/* {isWorker ? */}
                     <div className=" p-4 text-center text-white">
@@ -195,7 +191,7 @@ const UserInfo = () => {
                                                     ></img>
                                                 </div>
                                                 <div className='text-center text-black font-bold'>
-                                                    <h3>ID de usuario: {workerInfo.id}</h3>
+                                                    <h3>ID de administrador: {workerInfo.id}</h3>
                                                 </div>
                                                 <div className="inline text-center px-14">
                                                     <h2 className="text-gray-800 text-3xl font-bold">{workerInfo.name} {workerInfo.surname} {workerInfo.secondSurname}</h2>
@@ -205,15 +201,11 @@ const UserInfo = () => {
                                                 </div>
                                                 <hr className="mt-6"></hr>
                                                 <div className="flex bg-orange-400">
-                                                    <button className="text-center w-1/2 p-4 hover:bg-orange-300 cursor-pointer">
-                                                        CHANGE PASSWORD
-                                                    </button>
-                                                    <div className="border"></div>
                                                     <button
                                                         onClick={() => setShowModal(true)}
-                                                        className="text-center w-1/2 p-4 hover:bg-orange-300 cursor-pointer"
+                                                        className="text-center m-auto w-full p-4 hover:bg-orange-300 cursor-pointer"
                                                     >
-                                                        <p>LOGOUT</p>
+                                                        <p>CERRAR SESIÓN</p>
                                                     </button>
                                                 </div>
                                             </div>
@@ -281,7 +273,7 @@ const UserInfo = () => {
                                                             completed: 3
                                                         };
                                                         return statusPriority[a.applicationStatus.toLowerCase()] - statusPriority[b.applicationStatus.toLowerCase()];
-                                                    }).map((sharedApplication, id) => 
+                                                    }).map((sharedApplication, id) =>
                                                     (<tr key={id} onClick={() => handleApplicationModal(sharedApplication)} className='cursor-pointer hover:bg-gray-700 '>
                                                         <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.id}</td>
                                                         <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.title}</td>

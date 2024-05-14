@@ -8,29 +8,60 @@ function SigninForm() {
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [secondSurname, setSecondSurname] = useState('');
+    const [profileImage, setProfileImage] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
+    const [previewUrl, setPreviewUrl] = useState('');
+
     const navigate = useNavigate();
+
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setProfileImage(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewUrl(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
 
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('surname', surname);
+        formData.append('secondSurname', secondSurname);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('profileImage', profileImage);
+
         try {
             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signIn', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name, surname, secondSurname, email, password }),
+                // headers: {
+                //     'Content-Type': 'application/json',
+                // },
+                body: formData,
             });
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
+
             const data = await response.json();
+            console.log(data);
+
+            if (!response.ok) {
+                console.log(data);
+                throw new Error(response.statusText);
+
+            }
+            
             if (data.isRegistered) {
                 navigate("/login")
                 Swal.fire({
@@ -51,6 +82,9 @@ function SigninForm() {
                 showConfirmButton: false,
                 timer: 1500,
             });
+            
+            console.log(error);
+
             setError(error);
             setLoading(false);
         }
@@ -119,6 +153,12 @@ function SigninForm() {
                             <a className="text-neutral-500">
                                 8 caracteres, una mayúscula, una minúscula y un número.
                             </a>
+
+                            <div>
+
+                                <input type='file' name="image" accept="image/*" onChange={handleImageChange} className="" />
+
+                            </div>
 
                             <div className=" mt-10 pb-1 pt-1 text-center">
                                 <button

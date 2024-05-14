@@ -47,6 +47,7 @@ class AdminController extends Controller
                 'name' => 'required',
                 'surname' => 'required',
                 'secondSurname' => 'required',
+                'profileImage' => 'required', 
                 'sector' => 'required',
                 'assignedLocation' => 'required',
                 'assignedApplications' => 'required',
@@ -56,8 +57,28 @@ class AdminController extends Controller
 
             // Creación del trabajador
             $worker = new Worker;
-            $worker->fill($validated);
+            // $worker->fill($validated);
+            $worker->dni = $request->dni;
+            $worker->name = $request->name;
+            $worker->surname = $request->surname;
+            $worker->secondSurname = $request->secondSurname;
+            $worker->sector = $request->sector;
+            $worker->assignedLocation = $request->assignedLocation;
+            $worker->profileImage = $request->profileImage;
+            $worker->assignedApplications = $request->assignedApplications;
+            $worker->email = $request->email;
             $worker->password = Hash::make($request->password);
+
+            // $profileImagePath = $request->file('profileImage')->store('images', 'public');
+
+            // Construye la URL del archivo concatenando el path de almacenamiento con el nombre del archivo
+            // $baseUrl = config('app.url');
+            // $port = ':8000'; // Define el puerto aquí
+
+            // $imageUrl = $baseUrl . $port . '/storage/' . $profileImagePath;
+
+            // // Almacena la URL en la base de datos
+            // $worker->profileImage = $imageUrl;
 
             // Intentar guardar el trabajador
             if ($worker->save()) {

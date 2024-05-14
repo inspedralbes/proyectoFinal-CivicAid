@@ -20,14 +20,16 @@ use Throwable;
 
 class WorkerSigninRequest extends Controller
 {
-    public function listProvinces(){
+    public function listProvinces()
+    {
 
         $provinces = Province::all();
 
         return response()->json($provinces);
     }
 
-    public function listSectors(){
+    public function listSectors()
+    {
 
         $sectors = Sector::all();
 
@@ -38,18 +40,19 @@ class WorkerSigninRequest extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             // Validación de los datos
             $validatedData = $request->validate([
                 'dni' => 'required',
                 'name' => 'required',
                 'surname' => 'required',
                 'secondSurname' => 'required',
+                'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Permitir solo ciertas extensiones de archivo
                 'sector' => 'required',
                 'requestedLocation' => 'required',
                 'email' => 'required|email|unique:workers_requests',
             ]);
-        
+
             // Creación y guardado de la solicitud
             $workerRequest = new SigninRequest;
             $workerRequest->dni = $request->dni;
@@ -59,32 +62,43 @@ class WorkerSigninRequest extends Controller
             $workerRequest->sector = $request->sector;
             $workerRequest->requestedLocation = $request->requestedLocation;
             $workerRequest->email = $request->email;
-            
+
+            $profileImagePath = $request->file('profileImage')->store('images', 'public');
+
+            // Construye la URL del archivo concatenando el path de almacenamiento con el nombre del archivo
+            $baseUrl = config('app.url');
+            $port = ':' . config('app.port');
+            $imageUrl = $baseUrl . $port . '/storage/' . $profileImagePath;
+
+            // Almacena la URL en la base de datos
+            $workerRequest->profileImage = $imageUrl;
+
             $workerRequest->save();
-        
-            // Envío del email
-            // Log::info('Path to the email view:', [resource_path('views/emails/registration/request.blade.php')]);
-            // try {
-            //     Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
-            //     Mail::to($request->email)->send(new registrationRequestDenied($workerRequest));
-                
-            // } catch (\Throwable $th) {
-            //     return response("DA ERROR SISISI \n". $th);
-            // }
-    
+
+            // Enviar el correo electrónico
+            try {
+                Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
+            } catch (\Exception $exception) {
+                // Registrar el error
+                Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $exception->getMessage());
+
+                // Devolver una respuesta adecuada
+                return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
+            }
+
             // Todo ha ido bien, hacemos commit
             DB::commit();
-        
+
             // Respuesta exitosa
             $message = "Request registered correctly.";
             return response()->json([$message]);
         } catch (\Throwable $e) {
             // Algo ha fallado, hacemos rollback
             DB::rollBack();
-        
+
             // Logueamos el error
             Log::error('Error al procesar la solicitud de registro: ' . $e->getMessage());
-        
+
             // Respondemos con un mensaje de error genérico
             // $errorMessage = 'Error al procesar la solicitud de registro.';
             // return response()->json([$e], 500);

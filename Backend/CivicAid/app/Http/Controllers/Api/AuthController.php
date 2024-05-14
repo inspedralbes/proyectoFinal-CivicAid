@@ -18,6 +18,7 @@ class AuthController extends Controller
             'name' => 'required',
             'surname' => 'required',
             'secondSurname' => 'required',
+            'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Permitir solo ciertas extensiones de archivo
             'email' => 'required|email|unique:users',
             'password' => 'required',
         ]);
@@ -29,7 +30,7 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
 
-        $profileImagePath = $request->file('image')->store('usersProfileImages', 'public');
+        $profileImagePath = $request->file('profileImage')->store('images', 'public');
 
         // Construye la URL del archivo concatenando el path de almacenamiento con el nombre del archivo
         $baseUrl = config('app.url');

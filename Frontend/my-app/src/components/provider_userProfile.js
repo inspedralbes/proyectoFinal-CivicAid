@@ -189,7 +189,7 @@ const UserInfo = () => {
                                                         <div className="flex justify-center px-5 -mt-40 mb-4">
                                                             <img
                                                                 className="h-32 w-32 bg-orange-500 p-2 rounded-full"
-                                                                // src={avatar}
+                                                                src={userInfo.profileImage}
                                                                 alt=""
                                                             ></img>
                                                         </div>
@@ -204,15 +204,15 @@ const UserInfo = () => {
                                                         </div>
                                                         <hr className="mt-6"></hr>
                                                         <div className="flex bg-orange-400">
-                                                            <button className="text-center w-1/2 p-4 hover:bg-orange-300 cursor-pointer">
+                                                            {/* <button className="text-center w-1/2 p-4 hover:bg-orange-300 cursor-pointer">
                                                                 CHANGE PASSWORD
-                                                            </button>
-                                                            <div className="border"></div>
+                                                            </button> */}
+                                                            {/* <div className=""></div> */}
                                                             <button
                                                                 onClick={() => setShowModal(true)}
-                                                                className="text-center w-1/2 p-4 hover:bg-orange-300 cursor-pointer"
+                                                                className="text-center m-auto w-full p-4 hover:bg-orange-300 cursor-pointer"
                                                             >
-                                                                <p>LOGOUT</p>
+                                                                <p>CERRAR SESIÓN</p>
                                                             </button>
                                                         </div>
                                                     </div>
@@ -237,7 +237,7 @@ const UserInfo = () => {
                                                     </thead>
                                                     <tbody className="divide-y divide-gray-200">
                                                         {ownApplications.map((application, id) => (
-                                                            <tr key={id} onClick={() => handleApplicationModal(application)} className='cursor-pointer'>
+                                                            <tr key={id} onClick={() => handleApplicationModal(application)} className='cursor-pointer hover:bg-gray-700'>
                                                                 <td className="px-4 py-8 whitespace-nowrap">{application.id}</td>
                                                                 <td className="px-4 py-8 whitespace-nowrap">{application.title}</td>
                                                                 <td className="px-4 py-8 whitespace-nowrap">{application.location}</td>

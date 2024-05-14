@@ -384,7 +384,17 @@ const Home = ({ socket }) => {
                             </NavLink>
                             <img src="adminButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
                         </div>
+
+                        <div className='text-center'>
+                            <button
+                                onClick={() => logout()} className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
+                            >
+                                LOGOUT
+                            </button>
+                        </div>
                     </div>
+
+                    
                     :
 
                     <div></div>

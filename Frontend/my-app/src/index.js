@@ -16,6 +16,7 @@ import SigninUsuario from './pages/signinUsuario';
 import SigninWorker from './pages/signinWorker';
 import UserProfile from './pages/userProfile';
 import WorkerProfile from './pages/workerProfile';
+import AdminProfile from './pages/adminProfile';
 
 import HacerSolicitud from './pages/makeApplication';
 import GestionarSolicitudes from './pages/manageApplication';
@@ -56,6 +57,7 @@ root.render(
                     <Route path="/signinWorker" element={<SigninWorker />} />
                     <Route path="/profile" element={<UserProfile />} />
                     <Route path="/workerProfile" element={<WorkerProfile />} />
+                    <Route path="/adminProfile" element={<AdminProfile />} />
 
                     <Route path="/makeApplication" element={<HacerSolicitud />} />
                     <Route path="/manageApplications" element={<GestionarSolicitudes socket={socket} />} />
