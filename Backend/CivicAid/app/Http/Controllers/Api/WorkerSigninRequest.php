@@ -10,13 +10,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\registrationRequestEmail;
-use App\Mail\registrationRequestDenied;
+// use App\Mail\registrationRequestDenied;
+use App\Mail\PruebaMail;
 
 use App\Models\Province;
 use App\Models\Sector;
 use App\Models\SigninRequest;
-use PhpParser\Node\Stmt\TryCatch;
-use Throwable;
+// use PhpParser\Node\Stmt\TryCatch;
+// use Throwable;
 
 class WorkerSigninRequest extends Controller
 {
@@ -43,13 +44,13 @@ class WorkerSigninRequest extends Controller
 
             // Validación de los datos
             $validatedData = $request->validate([
-                'dni' => 'required',
+                'dni' => 'required|unique:workers_requests,dni',
                 'name' => 'required',
                 'surname' => 'required',
                 'secondSurname' => 'required',
-                'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Permitir solo ciertas extensiones de archivo
-                'sector' => 'required',
-                'requestedLocation' => 'required',
+                // 'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Permitir solo ciertas extensiones de archivo
+                // 'sector' => 'required',
+                // 'requestedLocation' => 'required',
                 'email' => 'required|email|unique:workers_requests',
             ]);
 
@@ -59,32 +60,34 @@ class WorkerSigninRequest extends Controller
             $workerRequest->name = $request->name;
             $workerRequest->surname = $request->surname;
             $workerRequest->secondSurname = $request->secondSurname;
-            $workerRequest->sector = $request->sector;
-            $workerRequest->requestedLocation = $request->requestedLocation;
+            // $workerRequest->sector = $request->sector;
+            // $workerRequest->requestedLocation = $request->requestedLocation;
             $workerRequest->email = $request->email;
 
-            $profileImagePath = $request->file('profileImage')->store('images', 'public');
+            // $profileImagePath = $request->file('profileImage')->store('images', 'public');
 
             // Construye la URL del archivo concatenando el path de almacenamiento con el nombre del archivo
-            $baseUrl = config('app.url');
-            $port = ':' . config('app.port');
-            $imageUrl = $baseUrl . $port . '/storage/' . $profileImagePath;
+            // $baseUrl = config('app.url');
+            // $port = ':' . config('app.port');
+            // $imageUrl = $baseUrl . $port . '/storage/' . $profileImagePath;
 
             // Almacena la URL en la base de datos
-            $workerRequest->profileImage = $imageUrl;
+            // $workerRequest->profileImage = $imageUrl;
 
             $workerRequest->save();
 
             // Enviar el correo electrónico
-            try {
-                Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
-            } catch (\Exception $exception) {
-                // Registrar el error
-                Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $exception->getMessage());
+            
+            // Log::error('Intentando enviar email a: ' . $request->email);
+            // try {
+            //     Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
+            // } catch (\Exception $exception) {
+            //     // Registrar el error
+            //     Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $exception->getMessage());
 
-                // Devolver una respuesta adecuada
-                return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
-            }
+            //     // Devolver una respuesta adecuada
+            //     return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
+            // }
 
             // Todo ha ido bien, hacemos commit
             DB::commit();

@@ -43,7 +43,7 @@ const LoginForm = () => {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "success",
-                    title: "You have successfully loged in",
+                    title: "Has iniciado sesión correctamente",
                     showConfirmButton: false,
                     timer: 3500,
                 });
@@ -51,7 +51,7 @@ const LoginForm = () => {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "error",
-                    title: "Invalid Credentials",
+                    title: "Credenciales no válidas",
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -63,7 +63,7 @@ const LoginForm = () => {
             Swal.fire({
                 position: "bottom-end",
                 icon: "error",
-                title: "An error occurred while loading",
+                title: "Ha ocurrido un error durante la carga",
                 showConfirmButton: false,
                 timer: 1500,
             });
@@ -83,7 +83,7 @@ const LoginForm = () => {
                             <div className="text-center">
                                 <img
                                     className="mx-auto w-48"
-                                    src="logoPequeñoCivicAid.png"
+                                    src="LogoPrincipal.png"
                                     alt="jiji"
                                 />
                             </div>
@@ -125,7 +125,7 @@ const LoginForm = () => {
                                 </button>
                             </div>
 
-                            <div className="flex p-3 mt-16 m-auto items-center justify-between lg:border-2 lg:rounded">
+                            <div className="flex p-3 mt-16 m-auto items-center justify-between lg:rounded">
                                 <div className='flex w-6/12'>
 
                                     <p className="mr-2 text-white">

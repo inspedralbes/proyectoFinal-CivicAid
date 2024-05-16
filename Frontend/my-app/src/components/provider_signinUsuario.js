@@ -61,13 +61,13 @@ function SigninForm() {
                 throw new Error(response.statusText);
 
             }
-            
+
             if (data.isRegistered) {
                 navigate("/login")
                 Swal.fire({
                     position: "bottom-end",
                     icon: "success",
-                    title: "You have successfully registered",
+                    title: "Te has registrado correctamente",
                     showConfirmButton: false,
                     timer: 3500,
                 });
@@ -78,11 +78,11 @@ function SigninForm() {
             Swal.fire({
                 position: "bottom-end",
                 icon: "error",
-                title: "An error occurred while loading",
+                title: "Ha ocurrido un error durante la carga",
                 showConfirmButton: false,
                 timer: 1500,
             });
-            
+
             console.log(error);
 
             setError(error);
@@ -99,14 +99,18 @@ function SigninForm() {
                 <div className="container h-full w-full g-6 flex px-5 flex-wrap items-center justify-center lg:flex lg:flex-wrap lg:w-fit lg:rounded-lg md:px-0 text-neutral-800 dark:text-neutral-200 bg-gray-800 shadow-lg dark:bg-neutral-800">
 
                     <div className="h-full p-5 md:mx-6 md:p-12">
-                        <div className="text-center">
-                            <img
-                                className="mx-auto w-48"
-                                src="logoPequeñoCivicAid.png"
-                                alt="jiji"
-                            />
+                        <NavLink to="/">
 
-                        </div>
+                            <div className="text-center">
+                                <img
+                                    className="mx-auto w-48"
+                                    src="LogoPrincipal.png"
+                                    alt="jiji"
+                                />
+
+                            </div>
+                        </NavLink>
+
                         <form onSubmit={handleSubmit} className='mt-8'>
 
                             <div className="relative z-0 w-full mb-6 group">
@@ -154,13 +158,41 @@ function SigninForm() {
                                 8 caracteres, una mayúscula, una minúscula y un número.
                             </a>
 
-                            <div>
-
+                            <div className='lg:pt-5'>
                                 <input type='file' name="image" accept="image/*" onChange={handleImageChange} className="" />
-
                             </div>
 
-                            <div className=" mt-10 pb-1 pt-1 text-center">
+                            {/* <div className="relative">
+                                <input
+                                    type="file"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="hidden"
+                                    id="profile-image-upload"
+                                />
+                                <label
+                                    htmlFor="profile-image-upload"
+                                    className="cursor-pointer block w-32 h-32 rounded-full bg-gray-200 border-4 border-gray-300 flex items-center justify-center hover:bg-gray-300"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-12 w-12 text-gray-400"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                        />
+                                    </svg>
+                                </label>
+                            </div> */}
+
+                            <div className=" mt-10 pb-1 pt-1 lg:p-0 lg:pt-8 text-center">
                                 <button
                                     className="relative bg-gradient-to-r from-orange-400 to-orange-800 mb-3 w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
                                     type="submit" disabled={isLoading}
@@ -182,9 +214,9 @@ function SigninForm() {
                                 </button>
                             </div>
 
-                            <div className="flex mt-5 lg:mt-16 items-center justify-between">
+                            <div className="flex mt-5 lg:mt-10 items-center justify-between">
                                 <p className="mb-0 mr-2 text-white">
-                                    YA TIENE CUENTA?
+                                    YA TIENES CUENTA?
                                 </p>
                                 <NavLink to="/login">
                                     <button
@@ -193,7 +225,7 @@ function SigninForm() {
                                     >
                                         <div className="absolute inset-0 w-3 bg-orange-400 transition-all duration-[500ms] ease-out group-hover:w-full"></div>
                                         <span className="relative text-white group-hover:text-black ">
-                                            LOGEARSE
+                                            INICIAR SESIÓN
                                         </span>
                                     </button>
                                 </NavLink>

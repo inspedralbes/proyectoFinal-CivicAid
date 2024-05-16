@@ -65,7 +65,7 @@ const LoginForm = () => {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "success",
-                    title: "You have successfully loged in",
+                    title: "Has iniciado sesión correctamente",
                     showConfirmButton: false,
                     timer: 3500,
                 });
@@ -73,7 +73,7 @@ const LoginForm = () => {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "error",
-                    title: "Invalid Credentials",
+                    title: "Credenciales no válidas",
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -85,7 +85,7 @@ const LoginForm = () => {
             Swal.fire({
                 position: "bottom-end",
                 icon: "error",
-                title: "An error occurred while loading",
+                title: "Ha ocurrido un error durante la carga",
                 showConfirmButton: false,
                 timer: 1500,
             });
@@ -94,26 +94,25 @@ const LoginForm = () => {
     }
 
     return (
-        <div className="overflow-auto flex h-screen justify-center items-center min-h-screen bg-image-all bg-cover bg-no-repeat bg-center bg-fixed">
+        <div className="overflow-auto flex h-screen justify-center items-center min-h-screen bg-image-all bg-cover bg-no-repeat bg-center bg-fixed lg:bg-orange-300">
             {isWorker ?
                 <p>
                     YA ESTAS LOGEADO
                 </p> :
                 <div className="g-6 flex h-full flex-wrap items-center justify-center">
-                    <div className="w-full mb-14 rounded-lg bg-gray-800 shadow-lg dark:bg-neutral-800">
-                        <div className="p-20">
+                    <div className="w-full h-full lg:h-4/5 mb-14 lg:rounded-lg bg-gray-800 shadow-lg dark:bg-neutral-800">
+                        <div className="p-10 lg:p-20">
                             <NavLink to="/">
                                 <div className="text-center">
                                     <img
-                                        className="m-auto w-74"
-                                        src="logoPequeñoCivicAid.png"
+                                        className="lg:w-6/12 lg:mx-auto"
+                                        src="LogoPrincipal.png"
                                         alt="logo" />
                                 </div>
                             </NavLink>
 
-                            <br></br>
-                            <br></br>
-                            <form className="mt-5" onSubmit={handleSubmit} autoComplete="off">
+                   
+                            <form className="mt-10" onSubmit={handleSubmit} autoComplete="off">
 
                                 <div className="relative z-0 w-full mb-6 group">
                                     <input value={dni} autoComplete="off" onChange={(event) => setDni(event.target.value)} type="text" name="floating_dni" id="floating_dni" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required autoFocus />
