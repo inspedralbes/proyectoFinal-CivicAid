@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\SigninRequest;
 use App\Models\Worker;
@@ -27,6 +28,70 @@ class AdminController extends Controller
         return response()->json($requests, 200);
     }
 
+    public function listAcceptedSignInRequests(Request $request)
+    {
+        $adminId = $request->adminId;
+
+        $acceptedRequests = Worker::where('approvedBy', $adminId)->get();
+
+        return response()->json($acceptedRequests, 200);
+    }
+
+    public function listAssignedApplicationsWorkers(Request $request)
+{
+    // Verifica que adminId está presente en la solicitud
+    if (!$request->has('adminId')) {
+        return response()->json(['error' => 'Falta el parámetro adminId'], 400);
+    }
+
+    $adminId = $request->adminId;
+
+    try {
+        // Obtener los IDs de las aplicaciones asignadas al admin
+        $assignments = Assignment::where('adminId', $adminId)->pluck('applicationId');
+
+        // Si no hay assignments, devuelve un mensaje adecuado
+        if ($assignments->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron aplicaciones asignadas'], 200);
+        }
+
+        // Obtener las aplicaciones cuyos IDs están en la lista de assignments
+        $assignedApplications = Application::whereIn('id', $assignments)->get();
+
+        // Obtener los trabajadores asignados a estas aplicaciones
+        $assignedWorkers = Worker::whereIn('id', function($query) use ($assignments) {
+            $query->select('workerId')
+                  ->from('assignments')
+                  ->whereIn('applicationId', $assignments);
+        })->get();
+
+        // Agrupar los trabajadores por aplicaciónId
+        $workersByApplication = [];
+        foreach ($assignedWorkers as $worker) {
+            $assignment = Assignment::where('workerId', $worker->id)->first();
+            $applicationId = $assignment->applicationId;
+            if (!isset($workersByApplication[$applicationId])) {
+                $workersByApplication[$applicationId] = [];
+            }
+            $workersByApplication[$applicationId][] = $worker;
+        }
+
+        // Añadir los trabajadores a las aplicaciones
+        foreach ($assignedApplications as $application) {
+            $application->workers = $workersByApplication[$application->id] ?? [];
+        }
+
+        return response()->json($assignedApplications, 200);
+    } catch (\Exception $e) {
+        // Registra el error para su depuración
+        Log::error('Error en listAssignedApplications:', ['error' => $e->getMessage()]);
+
+        // Devuelve un mensaje de error controlado
+        return response()->json(['error' => 'Error en la solicitud'], 500);
+    }
+}
+
+
     public function updateRequestStatus(Request $request, $id)
     {
         $application = SigninRequest::findOrFail($id);
@@ -44,10 +109,11 @@ class AdminController extends Controller
             // Validación de la solicitud
             $validated = $request->validate([
                 'dni' => 'required',
+                'approvedBy' => 'required',
                 'name' => 'required',
                 'surname' => 'required',
                 'secondSurname' => 'required',
-                'profileImage' => 'required', 
+                'profileImage' => 'required',
                 'sector' => 'required',
                 'assignedLocation' => 'required',
                 'assignedApplications' => 'required',
@@ -59,6 +125,7 @@ class AdminController extends Controller
             $worker = new Worker;
             // $worker->fill($validated);
             $worker->dni = $request->dni;
+            $worker->approvedBy = $request->approvedBy;
             $worker->name = $request->name;
             $worker->surname = $request->surname;
             $worker->secondSurname = $request->secondSurname;
@@ -115,17 +182,20 @@ class AdminController extends Controller
     public function assignApplication(Request $request)
     {
         $request->validate([
+            'adminId' => 'required',
             'applicationId' => 'required',
             'workerIds' => 'required|array',
             'applicationStatus' => 'required',
         ]);
 
+        $adminId = $request->adminId;
         $applicationId = $request->applicationId;
         $workerIds = $request->workerIds;
 
         try {
             foreach ($workerIds as $workerId) {
                 $assignment = new Assignment();
+                $assignment->adminId = $adminId;
                 $assignment->applicationId = $applicationId;
                 $assignment->workerId = $workerId;
                 $assignment->save();

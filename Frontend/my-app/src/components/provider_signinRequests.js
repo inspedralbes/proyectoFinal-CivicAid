@@ -12,6 +12,7 @@ const ManageSigninRequest = () => {
     const [isLoading, setLoading] = useState(false);
     const token = localStorage.getItem('access_token');
 
+    const adminId = useSelector((state) => state.data.id);
     const isAdmin = useSelector((state) => state.isAdmin);
     const [requestInfo, setRequestInfo] = useState([]);
     const checkAppOngoing = useSelector((state) => state.applicationOngoing);
@@ -37,8 +38,6 @@ const ManageSigninRequest = () => {
                     const data = await response.json();
                     console.log(data);
                     setRequestInfo(data);
-
-                    
 
                 } catch (error) {
                     console.error("ESTE ES EL ERROR: ", error);
@@ -89,6 +88,7 @@ const ManageSigninRequest = () => {
         const password = generatePassword(12); // Generar contraseña de 12 caracteres
  
         const formData = new FormData();
+        formData.append('approvedBy', adminId);
         formData.append('dni', e.dni);
         formData.append('name', e.name);
         formData.append('surname', e.surname);
@@ -116,6 +116,8 @@ const ManageSigninRequest = () => {
                 },
                 body: formData,
             });
+
+            
 
             setSelectedRequest(false);
 
@@ -149,6 +151,19 @@ const ManageSigninRequest = () => {
                         timer: 1500,
                     });
                 }
+
+                // Volvemos a actualizar el listado de las solicitudes haciendo otra vez el fetch
+                const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listRequests', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ assignedLocation }),
+                });
+                const data2 = await response2.json();
+                console.log("EL 2??:", data2);
+                setRequestInfo(data2);
             } else {
                 console.error('Error al enviar la solicitud:', response.statusText);
             }
@@ -156,7 +171,7 @@ const ManageSigninRequest = () => {
             Swal.fire({
                 position: "bottom-end",
                 icon: "success",
-                title: "Ha ido todo correctamente",
+                title: "La solicitud se ha aceptado correctamente",
                 showConfirmButton: false,
                 timer: 1500,
             });

@@ -12,6 +12,7 @@ const ManageApplication = () => {
     const [isLoading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const token = localStorage.getItem('access_token');
+    const adminId = useSelector((state) => state.data.id);
 
     const isAdmin = useSelector((state) => state.isAdmin);
     const assignedLocation = useSelector((state) => state.data.assignedLocation);
@@ -118,7 +119,7 @@ const ManageApplication = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ applicationId: selectedApplication.id, workerIds: selectedWorkers, applicationStatus }),
+                body: JSON.stringify({ adminId, applicationId: selectedApplication.id, workerIds: selectedWorkers, applicationStatus }),
             });
 
             const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplicationsLocation', {

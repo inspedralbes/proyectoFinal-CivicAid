@@ -176,7 +176,7 @@ function SigninForm() {
                     YA HAS INICIADO SESIÓN
                 </p> :
                 <div className="g-6 flex h-full flex-wrap items-center justify-center">
-                    <div className="overflow-auto w-full h-screen lg:rounded-lg p-10 pt-2 bg-gray-800 shadow-lg dark:bg-neutral-800">
+                    <div className="overflow-auto w-full h-screen lg:rounded-lg p-10 lg:pb-0 pt-2 bg-gray-800 shadow-lg dark:bg-neutral-800">
                         <NavLink to="/">
                             <div className="text-center">
                                 <img
@@ -296,91 +296,7 @@ function SigninForm() {
                                 </div>
                             </div>
 
-                            {/* <div className="relative z-0 w-full mb-6 group">
-                                <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="off" type="text" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                <label htmlFor="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Nombre
-                                </label>
-                            </div>
-
-                            <div className="relative z-0 w-full mb-6 group">
-                                <input value={surname} onChange={(event) => setSurname(event.target.value)} autoComplete="off" type="text" name="floating_surname" id="floating_surname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                <label htmlFor="floating_surname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Apellido
-                                </label>
-                            </div>
-
-                            <div className="relative z-0 w-full mb-6 group">
-                                <input value={secondSurname} onChange={(event) => setSecondSurname(event.target.value)} autoComplete="off" type="text" name="floating_secondSurname" id="floating_secondSurname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                <label htmlFor="floating_secondSurname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Segundo Apellido
-                                </label>
-                            </div>
-
-                            <div className="relative z-0 w-full mb-6 group">
-                                <input value={dni} onChange={(event) => setDni(event.target.value)} autoComplete="off" type="text" name="floating_dni" id="floating_dni" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
-                                <label htmlFor="floating_dni" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    DNI
-                                </label>
-                            </div>
-
-                            <div className="relative z-0 w-full mb-1 group">
-                                <input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" type="email" name="floating_email" id="floating_email" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Email
-                                </label>
-                            </div>
-
-                            <a className="text-neutral-500">
-                                (Ej: civicaid@gmail.com).
-                            </a>
-
-                            <div>
-
-                                <input type='file' name="image" accept="image/*" onChange={handleImageChange} className="" />
-
-                            </div>
-
-
-                            <div className="relative z-0 w-full mt-6 mb-6 group max-w-xs overflow-auto lg:overflow-hidden lg:max-w-fit">
-                                <h3 className='text-white text-[15px] mb-2'>
-                                    SECTOR
-                                </h3>
-                                <select
-                                    value={sector}
-                                    onChange={(event) => setSector(event.target.value)}
-                                    className="w-full px-3 py-2.5 border border-blue-gray-200 rounded-md text-sm text-blue-gray-700 focus:outline-none focus:border-gray-900 disabled:bg-blue-gray-50">
-                                    <option value="">Selecciona una opción</option>
-
-                                    {sectors.map((sector) => (
-                                        <option key={sector.id} value={sector.sector}>{sector.sector}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="relative z-0 w-full mb-6 group max-w-xs overflow-auto lg:overflow-hidden lg:max-w-fit">
-                                <h3 className='text-white text-[15px] mb-2'>
-                                    LOCALIZACIÓN
-                                </h3>
-
-                                <select
-                                    value={requestedLocation}
-                                    onChange={(event) => setRequestedLocation(event.target.value)}
-                                    className="w-full px-3 py-2.5 border border-blue-gray-200 rounded-md text-sm text-blue-gray-700 focus:outline-none focus:border-gray-900 disabled:bg-blue-gray-50">
-                                    <option value="">Selecciona una opción</option>
-
-                                    {locations.map((location) => (
-                                        <option key={location.id} value={location.name}>{location.name}</option>
-                                    ))}
-                                </select>
-                            </div> */}
-
-
-                            {/* <a className="text-neutral-500">
-                                8 caracteres, una mayúscula, una minúscula y un número.
-                            </a> */}
-
-                            <div className="text-center pt-2">
+                            <div className="text-center">
                                 <button
                                     className="relative bg-gradient-to-r from-orange-400 to-orange-800 mb-3 w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
                                     type="submit" disabled={isLoading}
@@ -402,7 +318,7 @@ function SigninForm() {
                                 </button>
                             </div>
 
-                            <div className="flex items-center justify-end pt-4">
+                            <div className="flex items-center justify-end pt-4 lg:pt-1">
                                 <p className="mb-0 mr-2 text-white">
                                     YA TIENE CUENTA?
                                 </p>

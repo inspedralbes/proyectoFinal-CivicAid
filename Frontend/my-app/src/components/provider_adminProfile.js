@@ -14,9 +14,12 @@ const UserInfo = () => {
     const [showModal, setShowModal] = useState(false);
     const [showApplicationModal, setShowApplicationModal] = useState(false);
     const [applicationModalInfo, setApplicationModalInfo] = useState([]);
+    const [acceptedSignInRequests, setAcceptedSignInRequests] = useState([]);
+    const [assignedApplications, setAssignedApplications] = useState([]);
+    const [requestModal, setRequestModal] = useState(null);
 
     const isUser = useSelector((state) => state.isUser);
-    const userId = useSelector((state) => state.data.id);
+    const adminId = useSelector((state) => state.data.id);
     const [ownApplications, setOwnApplications] = useState([]);
 
     const isAdmin = useSelector((state) => state.isAdmin);
@@ -43,74 +46,56 @@ const UserInfo = () => {
     };
 
     useEffect(() => {
-        async function fetchOwnApplications() {
-            // if (isUser) {
-            //     setLoading(true)
-            //     try {
-            //         const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listOwnApplications', {
-            //             method: 'POST',
-            //             headers: {
-            //                 'Content-Type': 'application/json',
-            //                 'Authorization': `Bearer ${token}`,
-            //             },
-            //             body: JSON.stringify({ userId }),
-            //         });
-            //         const data = await response.json();
-            //         console.log(data);
-            //         setOwnApplications(data)
-            //     } catch (error) {
-            //         console.error("ESTE ES EL ERROR: ", error);
-            //     } finally {
-            //         setLoading(false)
+        async function acceptedRequests() {
+            if (isAdmin) {
+                setLoading(true)
+                try {
+                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listAcceptedSignInRequests', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ adminId }),
+                    });
+                    const data = await response.json();
+                    console.log(data);
+                    setAcceptedSignInRequests(data)
 
-            //     }
-            // }
+                } catch (error) {
+                    console.error("ESTE ES EL ERROR: ", error);
+                } finally {
+                    setLoading(false)
+                }
+            }
         }
 
-        // async function fetchApplicationsAssigned() {
-        //         setLoading(true)
-        //         try {
-        //             // Primer fetch para obtener las solicitudes sin compartir
-        //             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listAssignedApplications', {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                     'Authorization': `Bearer ${token}`,
-        //                 },
-        //                 body: JSON.stringify({ workerId }),
-        //             });
-        //             const data = await response.json();
-        //             console.log("La 1", data);
-        //             setApplicationsAssigned(data);
+        async function assignedApplications() {
+            if (isAdmin) {
+                setLoading(true)
+                try {
+                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listAssignedApplicationsWorkers', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ adminId }),
+                    });
+                    const data = await response.json();
+                    console.log(data);
+                    setAssignedApplications(data)
 
-        //             // Segundo fetch para obtener las solicitudes compartidas
-        //             const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listWorkersExactApplication', {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                     'Authorization': `Bearer ${token}`,
-        //                 },
-        //                 body: JSON.stringify({ workerId }),
-        //             });
-        //             const data2 = await response2.json();
-        //             console.log("LA 2", data2.applications);
+                } catch (error) {
+                    console.error("ESTE ES EL ERROR: ", error);
+                } finally {
+                    setLoading(false)
+                }
+            }
+        }
 
-        //             data2.applications.map((application, id) => (
-        //                 console.log(application)
-        //             ))
-        //             setSharedApplicationsAssigned(data2.applications);
-
-        //         } catch (error) {
-        //             console.error("ESTE ES EL ERROR: ", error);
-        //         } finally {
-        //             setLoading(false)
-
-        //         }
-
-        // }
-
-        // fetchOwnApplications();
-        // fetchApplicationsAssigned();
+        acceptedRequests();
+        assignedApplications();
     }, [])
 
 
@@ -145,7 +130,7 @@ const UserInfo = () => {
 
                                 <li className={`w-6/12 my-auto list-none`}>
                                     <button onClick={() => handleTabClick("tab2")} className={`text-gray-300 text-xl hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 font-medium cursor-pointer ${activeTab === "tab2" ? "active bg-gray-700" : ""}`}>
-                                        Solicitudes asignadas
+                                        Tus solicitudes aceptadas
                                     </button>
                                 </li>
 
@@ -217,34 +202,27 @@ const UserInfo = () => {
                                     <div className="mt-5">
                                         <div className="">
                                             {/* Tabla de Solicitudes No Compartidas */}
-                                            <h2 className="text-xl font-semibold mb-3">Solicitudes No Compartidas</h2>
+                                            <h2 className="text-xl font-semibold mb-3">Solicitudes de registro</h2>
                                             <table className="table-auto w-full border-collapse border border-t-0 border-b-0 border-r-0 border-l-0 border-gray-200 mb-6">
                                                 <thead>
                                                     <tr>
                                                         <th className="px-4">ID</th>
-                                                        <th className="px-4">Título</th>
-                                                        <th className="px-4">Ubicación</th>
+                                                        <th className="px-4">DNI</th>
+                                                        <th className="px-4">Nombre</th>
+                                                        <th className="px-4">Ubicación asignada</th>
                                                         <th className="px-4">Sector</th>
-                                                        <th className="px-4">Fecha</th>
-                                                        <th className="px-4">Estado</th>
+                                                        {/* <th className="px-4">Fecha</th>
+                                                        <th className="px-4">Estado</th> */}
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200 ">
-                                                    {applicationsAssigned.sort((a, b) => {
-                                                        const statusPriority = {
-                                                            active: 1,
-                                                            inactive: 2,
-                                                            completed: 3
-                                                        };
-                                                        return statusPriority[a.applicationStatus.toLowerCase()] - statusPriority[b.applicationStatus.toLowerCase()];
-                                                    }).map((application, id) => (
-                                                        <tr key={id} onClick={() => handleApplicationModal(application)} className='cursor-pointer hover:bg-gray-700'>
-                                                            <td className="px-4 py-8 whitespace-nowrap">{application.id}</td>
-                                                            <td className="px-4 py-8 whitespace-nowrap">{application.title}</td>
-                                                            <td className="px-4 py-8 whitespace-nowrap">{application.location}</td>
-                                                            <td className="px-4 py-8 whitespace-nowrap">{application.sector}</td>
-                                                            <td className="px-4 py-8 whitespace-nowrap">{application.date}</td>
-                                                            <td className="px-4 py-8 whitespace-nowrap uppercase">{application.applicationStatus}</td>
+                                                    {acceptedSignInRequests.map((request, id) => (
+                                                        <tr key={id} onClick={() => setRequestModal(request)} className='cursor-pointer hover:bg-gray-700'>
+                                                            <td className="px-4 py-8 whitespace-nowrap">{request.id}</td>
+                                                            <td className="px-4 py-8 whitespace-nowrap">{request.dni}</td>
+                                                            <td className="px-4 py-8 whitespace-nowrap">{request.name} {request.surname}</td>
+                                                            <td className="px-4 py-8 whitespace-nowrap">{request.assignedLocation}</td>
+                                                            <td className="px-4 py-8 whitespace-nowrap">{request.sector}</td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
@@ -266,21 +244,14 @@ const UserInfo = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200">
-                                                    {sharedApplicationsAssigned.sort((a, b) => {
-                                                        const statusPriority = {
-                                                            active: 1,
-                                                            inactive: 2,
-                                                            completed: 3
-                                                        };
-                                                        return statusPriority[a.applicationStatus.toLowerCase()] - statusPriority[b.applicationStatus.toLowerCase()];
-                                                    }).map((sharedApplication, id) =>
-                                                    (<tr key={id} onClick={() => handleApplicationModal(sharedApplication)} className='cursor-pointer hover:bg-gray-700 '>
-                                                        <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.id}</td>
-                                                        <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.title}</td>
-                                                        <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.location}</td>
-                                                        <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.sector}</td>
-                                                        <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.date}</td>
-                                                        <td className="px-4 py-8 whitespace-nowrap uppercase">{sharedApplication.applicationStatus}</td>
+                                                    {assignedApplications.map((application, id) =>
+                                                    (<tr key={id} onClick={() => handleApplicationModal(application)} className='cursor-pointer hover:bg-gray-700 '>
+                                                        <td className="px-4 py-8 whitespace-nowrap">{application.id}</td>
+                                                        <td className="px-4 py-8 whitespace-nowrap">{application.title}</td>
+                                                        <td className="px-4 py-8 whitespace-nowrap">{application.location}</td>
+                                                        <td className="px-4 py-8 whitespace-nowrap">{application.sector}</td>
+                                                        <td className="px-4 py-8 whitespace-nowrap">{application.date}</td>
+                                                        <td className="px-4 py-8 whitespace-nowrap uppercase">{application.applicationStatus}</td>
                                                     </tr>
                                                     ))}
                                                 </tbody>
@@ -292,12 +263,6 @@ const UserInfo = () => {
                         }
 
                     </div>
-
-
-
-                    {/* } */}
-
-                    {/* </div> */}
 
                     {showModal && (
                         <div className="fixed z-10 inset-0 overflow-y-auto ease-in-out">
@@ -346,27 +311,67 @@ const UserInfo = () => {
                     )}
 
                     {showApplicationModal && (
-                        <div className="fixed inset-0 z-50 overflow-y-auto ease-in-out">
-                            <div className="flex items-center justify-center min-h-screen p-4 text-center">
+                        <div className="fixed inset-0 z-50 overflow-y-hidden ease-in-out">
+                            <div className="flex items-center justify-center min-h-screen text-center">
                                 <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
 
-                                <div className="inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                                <div className="inline-block w-full max-w-lg p-6  overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                                     <div className="relative overflow-hidden shadow-lg rounded-xl">
                                         <img src={applicationModalInfo.image} alt="Imagen representativa" className="w-full object-cover h-48 rounded-t-xl" />
                                         <div className="absolute inset-0 bg-gradient-to-t from-transparent to-black opacity-50"></div>
                                     </div>
-                                    <div className="px-6 py-4">
+                                    <div className=" px-6 py-4">
                                         <h3 className="text-lg font-semibold text-gray-900">{applicationModalInfo.title}</h3>
                                         <div>
 
                                             {applicationModalInfo.description}
                                         </div>
-                                        <ul className="mt-5 space-y-2">
-                                            <li className="text-sm text-gray-500"><strong>Localización:</strong> {applicationModalInfo.location}</li>
-                                            <li className="text-sm text-gray-500"><strong>Sector:</strong> {applicationModalInfo.sector}</li>
-                                            <li className="text-sm text-gray-500"><strong>Fecha:</strong> {applicationModalInfo.date}</li>
-                                            <li className="text-sm text-gray-500"><strong>Estado:</strong> <span className='uppercase'>{applicationModalInfo.applicationStatus}</span></li>
-                                        </ul>
+                                        <div className="mt-4 flex flex-wrap bg-gray-200 p-4 rounded-lg shadow-inner">
+                                            <div className="w-full sm:w-1/2 px-2 mb-4">
+                                                <div className="text-sm text-gray-700">
+                                                    <strong className="block text-gray-900">Localización:</strong>
+                                                    {applicationModalInfo.location}
+                                                </div>
+                                            </div>
+                                            <div className="w-full sm:w-1/2 px-2 mb-4">
+                                                <div className="text-sm text-gray-700">
+                                                    <strong className="block text-gray-900">Sector:</strong>
+                                                    {applicationModalInfo.sector}
+                                                </div>
+                                            </div>
+                                            <div className="w-full sm:w-1/2 px-2 mb-4">
+                                                <div className="text-sm text-gray-700">
+                                                    <strong className="block text-gray-900">Fecha:</strong>
+                                                    {applicationModalInfo.date}
+                                                </div>
+                                            </div>
+                                            <div className="w-full sm:w-1/2 px-2 mb-4">
+                                                <div className="text-sm text-gray-700">
+                                                    <strong className="block text-gray-900">Estado:</strong>
+                                                    <span className="uppercase">{applicationModalInfo.applicationStatus}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-5">
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Empleados asignados:</h3>
+                                            {applicationModalInfo.workers.length > 0 ? (
+                                                <div className="space-y-2">
+                                                    {applicationModalInfo.workers.map((worker, id) => (
+                                                        <div key={id} className="flex items-center p-2 bg-gray-50 rounded-md shadow-sm">
+                                                            <img src={worker.profileImage} alt={`${worker.name} ${worker.surname}`} className="w-10 h-10 rounded-full mr-3" />
+                                                            <div className="text-sm text-gray-700">
+                                                                <p className="font-medium text-gray-900">{worker.name} {worker.surname}</p>
+                                                                <p className="text-gray-600">{worker.sector}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p className="text-sm text-gray-500">No hay empleados asignados.</p>
+                                            )}
+                                        </div>
+
                                     </div>
                                     <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
 
@@ -374,6 +379,44 @@ const UserInfo = () => {
                                             Cerrar
                                         </button>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Modal */}
+                    {requestModal && (
+                        <div className="fixed inset-0 z-50 overflow-y-auto lg:mt-5">
+                            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                {/* Overlay */}
+                                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setRequestModal(null)}></div>
+
+                                {/* Modal container */}
+                                <div className="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+                                    <div className='flex justify-between items-start p-4 border-b'>
+                                        <h3 className="text-lg leading-6 font-medium text-gray-900">Detalles de la solicitud</h3>
+                                        <div className='cursor-pointer p-2 rounded-md text-gray-400 hover:text-gray-600' onClick={() => setRequestModal(null)}>
+                                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white p-6">
+                                        <div className="flex items-center space-x-4 mb-4">
+                                            <img className="h-24 w-24 bg-orange-500 p-2 rounded-full" src={requestModal.profileImage} alt="" />
+                                            <div className="space-y-1 font-medium">
+                                                <div>{requestModal.name} {requestModal.surname} {requestModal.secondSurname}</div>
+                                                <p className="text-sm text-gray-500">{requestModal.email}</p>
+                                            </div>
+                                        </div>
+                                        <ul className="list-none space-y-2">
+                                            <li><strong>DNI:</strong> {requestModal.dni}</li>
+                                            <li><strong>Sector:</strong> {requestModal.sector}</li>
+                                            <li><strong>Requested Location:</strong> {requestModal.requestedLocation}</li>
+                                        </ul>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -408,6 +451,8 @@ const UserInfo = () => {
                     </div>
                 </div>
             }
+
+
         </div >
     );
 };
