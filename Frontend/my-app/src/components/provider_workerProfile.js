@@ -122,7 +122,7 @@ const UserInfo = () => {
         Swal.fire({
             position: "bottom-end",
             icon: "info",
-            title: "You have successfully loged out",
+            title: "Has cerrado sesión correctamente",
             showConfirmButton: false,
             timer: 1500,
         });
@@ -173,10 +173,10 @@ const UserInfo = () => {
                                 {activeTab === "tab1" && (
                                     <div className="mt-5 flex items-center justify-center">
                                         <div className="mt-5 container border-4 border-orange-500 bg-orange-300 rounded-lg md:w-[600px] w-full md:shadow-lg transform duration-200 easy-in-out">
-                                            <div className="h-32 overflow-hidden" >
-                                                {/* <img className="w-full" 
-                                                            src={banner} 
-                                                            alt="Banner Img" /> */}
+                                            <div className="h-32 w-full overflow-hidden">
+                                                <img className="w-full h-full object-cover"
+                                                    src="profileBanner.jpg"
+                                                    alt="Banner Img" />
                                             </div>
                                             <div className="bg-orange-200">
                                                 <NavLink to="/" className="h-[20px] w-[20px] block pt-5 ml-5">
@@ -281,7 +281,7 @@ const UserInfo = () => {
                                                             completed: 3
                                                         };
                                                         return statusPriority[a.applicationStatus.toLowerCase()] - statusPriority[b.applicationStatus.toLowerCase()];
-                                                    }).map((sharedApplication, id) => 
+                                                    }).map((sharedApplication, id) =>
                                                     (<tr key={id} onClick={() => handleApplicationModal(sharedApplication)} className='cursor-pointer hover:bg-gray-700 '>
                                                         <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.id}</td>
                                                         <td className="px-4 py-8 whitespace-nowrap">{sharedApplication.title}</td>

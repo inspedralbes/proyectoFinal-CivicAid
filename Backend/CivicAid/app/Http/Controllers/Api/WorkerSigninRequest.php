@@ -48,9 +48,9 @@ class WorkerSigninRequest extends Controller
                 'name' => 'required',
                 'surname' => 'required',
                 'secondSurname' => 'required',
-                // 'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Permitir solo ciertas extensiones de archivo
-                // 'sector' => 'required',
-                // 'requestedLocation' => 'required',
+                'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Permitir solo ciertas extensiones de archivo
+                'sector' => 'required',
+                'requestedLocation' => 'required',
                 'email' => 'required|email|unique:workers_requests',
             ]);
 
@@ -60,19 +60,19 @@ class WorkerSigninRequest extends Controller
             $workerRequest->name = $request->name;
             $workerRequest->surname = $request->surname;
             $workerRequest->secondSurname = $request->secondSurname;
-            // $workerRequest->sector = $request->sector;
-            // $workerRequest->requestedLocation = $request->requestedLocation;
+            $workerRequest->sector = $request->sector;
+            $workerRequest->requestedLocation = $request->requestedLocation;
             $workerRequest->email = $request->email;
 
-            // $profileImagePath = $request->file('profileImage')->store('images', 'public');
+            $profileImagePath = $request->file('profileImage')->store('images', 'public');
 
             // Construye la URL del archivo concatenando el path de almacenamiento con el nombre del archivo
-            // $baseUrl = config('app.url');
-            // $port = ':' . config('app.port');
-            // $imageUrl = $baseUrl . $port . '/storage/' . $profileImagePath;
+            $baseUrl = config('app.url');
+            $port = ':8000';
+            $imageUrl = $baseUrl . $port . '/storage/' . $profileImagePath;
 
             // Almacena la URL en la base de datos
-            // $workerRequest->profileImage = $imageUrl;
+            $workerRequest->profileImage = $imageUrl;
 
             $workerRequest->save();
 

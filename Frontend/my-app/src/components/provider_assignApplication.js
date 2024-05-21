@@ -100,7 +100,7 @@ const ManageApplication = () => {
         if (!selectedApplication || selectedWorkers.length === 0) {
             Swal.fire({
                 icon: 'error',
-                title: 'Oops...',
+                title: 'Error al asignar la solicitud.',
                 text: 'Debe seleccionar una solicitud y al menos un trabajador',
             });
             return;
@@ -109,43 +109,60 @@ const ManageApplication = () => {
         setLoading(true);
 
         try {
+            setSelectedApplication(false)
             const applicationStatus = 'inactive';
+
             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/assignApplication/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    applicationId: selectedApplication.id,
-                    workerIds: selectedWorkers,
-                    applicationStatus
-                }),
+                body: JSON.stringify({ applicationId: selectedApplication.id, workerIds: selectedWorkers, applicationStatus }),
             });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplicationsLocation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ assignedLocation }),
+            });
+            const data2 = await response2.json();
+            console.log(data2);
+            setApplicationInfo(data2)
+
+
+            // if (!response.ok) {
+            //     throw new Error('Network response was not ok');
+            // }
 
             Swal.fire({
+                position: "bottom-end",
                 icon: 'success',
-                title: 'Asignación Exitosa',
+                title: 'La solicitud se ha asignado correctamente',
                 showConfirmButton: false,
                 timer: 1500,
             });
-            setSelectedApplication(null);
+            // setSelectedApplication(null);
             setSelectedWorkers([]); // Limpia los trabajadores seleccionados
         } catch (error) {
             console.error('Error en la solicitud:', error);
             Swal.fire({
+                position: "bottom-end",
                 icon: 'error',
-                title: 'Error en la solicitud',
+                title: 'Error al asignar la solicitud',
                 text: error.toString(),
             });
         } finally {
             setLoading(false);
         }
     };
+
+    const closeModal = async () => {
+        setSelectedWorkers()
+    }
 
     return (
         <main className="h-screen overflow-auto flex justify-center items-center lg:bg-orange-300">
@@ -173,41 +190,41 @@ const ManageApplication = () => {
 
                         :
 
-                        <div className="p-5 lg:flex lg:flex-wrap lg:p-8 lg:justify-center lg:gap-20 lg:overflow-auto">
+                        <div className="p-5 lg:flex lg:flex-wrap lg:p-8 lg:justify-center lg:gap-20  lg:overflow-auto">
                             {applicationInfo.map((request, id) => {
-                                if (request.applicationStatus != 'pending') {
-                                    return null;
+                                if (request.applicationStatus === 'pending') {
+                                    return (
+                                        <div key={id} onClick={() => setSelectedApplication(request)} className="relative w-full lg:w-1/3 p-5 flex-col rounded-xl bg-white cursor-pointer bg-clip-border text-gray-700 shadow-lg mb-4">
+                                            <div className="uppercase items-center justify-between">
+                                                <h5 className="block font-sans text-center text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">{request.title}</h5>
+                                            </div>
+
+                                            <div className="relative mt-5 overflow-hidden shadow-lg rounded-xl">
+                                                <img className='mx-auto' src={request.image} alt={request.title} />
+                                                <div className="absolute inset-0 w-full h-full to-bg-black-10 bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
+                                            </div>
+
+                                            <div className="p-4">
+                                                <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words">
+                                                    {request.description}
+                                                </div>
+                                                <div className='mt-3'>
+                                                    <h3>Localización</h3>
+                                                    <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                                        {request.location}
+                                                    </p>
+                                                </div>
+                                                <div className='mt-3'>
+                                                    <h3>SECTOR SOLICITADO</h3>
+                                                    <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                                        {request.sector}, {request.subsector}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
                                 }
-                                return (
-                                    <div key={id} onClick={() => setSelectedApplication(request)} className="relative w-full lg:w-1/3 p-5 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg mb-4">
-                                        <div className="uppercase items-center justify-between">
-                                            <h5 className="block font-sans text-center text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">{request.title}</h5>
-                                        </div>
-
-                                        <div className="relative mt-5 overflow-hidden shadow-lg rounded-xl">
-                                            <img src={request.image} alt={request.title} />
-                                            <div className="absolute inset-0 w-full h-full to-bg-black-10 bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
-                                        </div>
-
-                                        <div className="p-4">
-                                            <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words">
-                                                {request.description}
-                                            </div>
-                                            <div className='mt-3'>
-                                                <h3>Localización</h3>
-                                                <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                    {request.location}
-                                                </p>
-                                            </div>
-                                            <div className='mt-3'>
-                                                <h3>SECTOR SOLICITADO</h3>
-                                                <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                    {request.sector}, {request.subsector}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
+                                return null;
                             })}
                         </div>
                     }
@@ -273,12 +290,15 @@ const ManageApplication = () => {
                         </div>
                         <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse justify-between">
                             <div>
-                                <button onClick={() => acceptRequest(selectedApplication)} type="button" className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-300 text-base font-medium text-black hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                    ACEPTAR
-                                </button>
-                                <button onClick={() => setSelectedApplication(selectedApplication)} type="button" className="w-full mt-2 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                    DENEGAR
-                                </button>
+                                {selectedWorkers.length >= 1 ?
+                                    <button onClick={() => acceptRequest(selectedApplication)} type="button" className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-300 text-base font-medium text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                        ACEPTAR
+                                    </button>
+                                    :
+                                    
+                                    <div></div>
+                            }
+
                             </div>
                         </div>
                     </div>

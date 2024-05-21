@@ -77,32 +77,32 @@ const LoginForm = () => {
                 <p>
                     YA ESTAS LOGEADO
                 </p> :
-                <div className="container  h-full w-full g-6 flex px-5 flex-wrap items-center justify-center lg:h-fit lg:flex lg:flex-wrap lg:w-fit lg:rounded-lg md:px-0 text-neutral-800 dark:text-neutral-200 bg-gray-800 shadow-lg dark:bg-neutral-800">
-                    <div className="h-full p-5 md:mx-6 md:p-12">
+                <div className="g-6 flex h-full flex-wrap items-center justify-center">
+                    <div className="w-full h-screen lg:h-4/6 mb-14 lg:rounded-lg p-10 bg-gray-800 shadow-lg dark:bg-neutral-800">
                         <NavLink to="/">
                             <div className="text-center">
                                 <img
-                                    className="mx-auto w-48"
+                                    className="m-auto w-4/5 lg:w-6/12"
                                     src="LogoPrincipal.png"
-                                    alt="jiji"
+                                    alt="logo"
                                 />
                             </div>
                         </NavLink>
 
-                        <form className=" mt-10" onSubmit={handleSubmit} autoComplete="off">
+                        <form className="pt-12" onSubmit={handleSubmit} autoComplete="off">
 
                             <div className="relative z-0 w-full mb-6 group">
-                                <input value={email} autoComplete="off" onChange={(event) => setEmail(event.target.value)} type="email" name="floating_email" id="floating_email" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required autoFocus />
+                                <input value={email} autoComplete="off" onChange={(event) => setEmail(event.target.value)} type="email" name="floating_email" id="floating_email" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required autoFocus />
                                 <label htmlFor="floating_email" className="font-bold text-xl peer-focus:font-medium absolute text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
                             </div>
 
                             <div className="relative z-0 w-full mb-6 group">
-                                <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" name="floating_password" id="floating_password" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" name="floating_password" id="floating_password" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
                                 <label htmlFor="floating_password" className="font-bold text-xl peer-focus:font-medium absolute text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contraseña</label>
                             </div>
-                            <br></br>
 
-                            <div className="text-center mt-5">
+
+                            <div className="text-center pt-5">
                                 <button
                                     className="relative bg-gradient-to-r from-orange-400 to-orange-800 mb-3 w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
                                     type="submit" disabled={isLoading}
@@ -125,23 +125,21 @@ const LoginForm = () => {
                                 </button>
                             </div>
 
-                            <div className="flex p-3 mt-16 m-auto items-center justify-between lg:rounded">
-                                <div className='flex w-6/12'>
-
-                                    <p className="mr-2 text-white">
-                                        NO TIENES CUENTA?
-                                    </p>
-                                </div>
-
-                                <div className='flex w-6/12'>
-                                    <NavLink to="/signin">
-                                        <button className="group relative h-10 w-36 border-2 overflow-hidden rounded-lg bg-transparent uppercase font-bold text-lg shadow" data-te-ripple-init data-te-ripple-color="light">
+                            <div className="flex items-center justify-end pt-12">
+                                {/* <div className='flex w-6/12'> */}
+                                <p className="mr-2 text-white">
+                                    NO TIENES CUENTA?
+                                </p>
+                                {/* </div> */}
+                                {/* <div className='flex w-6/12'> */}
+                                <NavLink to="/signin">
+                                    <button className="group relative h-10 w-36 border-2 overflow-hidden rounded-lg bg-transparent uppercase font-bold text-lg shadow" data-te-ripple-init data-te-ripple-color="light">
                                         <div className="absolute inset-0 w-3 bg-orange-400 transition-all duration-[500ms] ease-out group-hover:w-full"></div>
-                                            <span className="relative text-white group-hover:text-black ">REGISTRARSE</span>
-                                        </button>
-                                    </NavLink>
+                                        <span className="relative text-white group-hover:text-black ">REGISTRARSE</span>
+                                    </button>
+                                </NavLink>
 
-                                </div>
+                                {/* </div> */}
                             </div>
 
                         </form>

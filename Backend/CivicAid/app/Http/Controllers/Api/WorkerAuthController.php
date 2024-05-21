@@ -17,6 +17,7 @@ class WorkerAuthController extends Controller
     {
         $request->validate([
             'id' => 'required',
+            'approvedBy' => 'required',
             'name' => 'required',
             'surname' => 'required',
             'secondSurname' => 'required',
@@ -28,6 +29,7 @@ class WorkerAuthController extends Controller
 
         $worker = new Worker;
         $worker->id = $request->id;
+        $worker->approvedBy = $request->approvedBy;
         $worker->name = $request->name;
         $worker->surname = $request->surname;
         $worker->secondSurname = $request->secondSurname;
@@ -68,7 +70,7 @@ class WorkerAuthController extends Controller
         ]);
 
         $user = Worker::where('email', $credentials['email'])->where('dni', $credentials['dni'])->first();
-
+        
         if ($user && Hash::check($credentials['password'], $user->password)) {
             $token = $user->createToken('token')->plainTextToken;
 

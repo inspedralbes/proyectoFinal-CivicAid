@@ -89,7 +89,7 @@ function SigninForm() {
             reader.readAsDataURL(file);
         }
     };
-    
+
     function validarDNI(dni) {
         const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
         const numero = dni.substring(0, dni.length - 1);
@@ -170,25 +170,133 @@ function SigninForm() {
     };
 
     return (
-        <div className="overflow-hidden flex h-screen justify-center items-center lg:bg-orange-300">
+        <div className="overflow-y-auto overflow-hidden flex h-screen justify-center items-center lg:bg-orange-300">
             {isLoggedIn ?
                 <p>
                     YA HAS INICIADO SESIÓN
                 </p> :
-                <div className="overflow-auto container h-screen w-full g-6 flex px-5 flex-wrap items-center justify-center lg:flex lg:flex-wrap lg:w-fit lg:rounded-lg md:px-0 text-neutral-800 dark:text-neutral-200 bg-gray-800 shadow-lg dark:bg-neutral-800">
+                <div className="g-6 flex h-full flex-wrap items-center justify-center">
+                    <div className="overflow-auto w-full h-screen lg:rounded-lg p-10 pt-2 bg-gray-800 shadow-lg dark:bg-neutral-800">
+                        <NavLink to="/">
+                            <div className="text-center">
+                                <img
+                                    className="m-auto w-4/5 lg:w-6/12"
+                                    src="LogoPrincipal.png"
+                                    alt="logo"
+                                />
+                            </div>
+                        </NavLink>
+                        <form className="pt-5 lg:w-full" onSubmit={handleSubmit} autoComplete="off">
 
-                    <div className="h-full p-5 md:mx-6 md:p-12">
-                        <div className="text-center">
-                            <img
-                                className="mx-auto w-48"
-                                src="logoPequeñoCivicAid.png"
-                                alt="jiji"
-                            />
-
-                        </div>
-                        <form onSubmit={handleSubmit} className='mt-8'>
+                            <div className="lg:flex lg:space-x-6">
+                                <div className="lg:w-1/2">
+                                    <div className="relative z-0 w-full mb-6 group">
+                                        <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="off" type="text" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
+                                        <label htmlFor="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Nombre
+                                        </label>
+                                    </div>
+                                    <div className="relative z-0 w-full mb-6 group">
+                                        <input value={surname} onChange={(event) => setSurname(event.target.value)} autoComplete="off" type="text" name="floating_surname" id="floating_surname" className="block pt-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
+                                        <label htmlFor="floating_surname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Apellido
+                                        </label>
+                                    </div>
+                                </div>
+                                <div className="lg:w-1/2">
+                                    <div className="relative z-0 w-full mb-6 group">
+                                        <input value={secondSurname} onChange={(event) => setSecondSurname(event.target.value)} autoComplete="off" type="text" name="floating_secondSurname" id="floating_secondSurname" className="block pt-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
+                                        <label htmlFor="floating_secondSurname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Segundo Apellido
+                                        </label>
+                                    </div>
+                                    <div className="relative z-0 w-full mb-4 group">
+                                        <input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" type="email" name="floating_email" id="floating_email" className="block pt-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
+                                        <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Email
+                                        </label>
+                                        <a className="text-neutral-500">
+                                            (Ej: civicaid@gmail.com).
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div className="relative z-0 w-full mb-6 group">
+                                <input value={dni} onChange={(event) => setDni(event.target.value)} autoComplete="off" type="text" name="floating_dni" id="floating_dni" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
+                                <label htmlFor="floating_dni" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    DNI
+                                </label>
+                            </div>
+
+                            <div className="mt-5 border-2 border-dashed p-6 rounded-lg shadow bg-gray-700">
+                                <h3 className="text-lg font-semibold text-white mb-4">Imagen de perfil</h3>
+                                <div className="flex flex-col sm:flex-row items-center justify-center w-full">
+                                    {!previewUrl ? (
+                                        <label className="relative cursor-pointer bg-gradient-to-r from-gray-400 to-gray-600 text-white font-semibold py-4 px-6 rounded-lg shadow-lg hover:bg-gradient-to-l hover:from-orange-600 hover:to-orange-400 transition duration-300 ease-in-out flex flex-col items-center justify-center">
+                                            <svg className="w-8 h-8 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                            </svg>
+                                            <span className="text-base leading-normal">Seleccionar imagen</span>
+                                            <input type='file' name="image" accept="image/*" onChange={handleImageChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                                        </label>
+                                    ) : (
+                                        <div className="flex flex-col items-center sm:flex-row justify-center">
+                                            <img src={previewUrl} alt="Vista previa" className="w-32 h-32 rounded-full mt-2 object-cover" />
+                                            <label className="relative cursor-pointer bg-gradient-to-r from-gray-600 to-gray-600 text-white font-semibold py-4 px-6 mt-4 sm:mt-0 sm:ml-4 rounded-lg shadow-lg hover:bg-gradient-to-l hover:from-orange-600 hover:to-orange-400 transition duration-300 ease-in-out flex flex-col items-center justify-center">
+                                                <svg className="w-8 h-8 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                </svg>
+                                                <span className="text-base text-center leading-normal">Seleccionar imagen diferente</span>
+                                                <input type='file' name="image" accept="image/*" onChange={handleImageChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                                            </label>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="relative z-0 w-full mt-6 mb-6 group max-w-xs lg:max-w-fit">
+                                <h3 className="text-white text-[15px] mb-2 font-semibold">
+                                    SECTOR
+                                </h3>
+                                <div className="relative">
+                                    <select
+                                        value={sector}
+                                        onChange={(event) => setSector(event.target.value)}
+                                        className="block w-full appearance-none bg-gray-700 border border-gray-600 text-white py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-gray-600 focus:border-orange-500">
+                                        <option className="font-bold" value="">Selecciona una opción</option>
+                                        {sectors.map((sector) => (
+                                            <option key={sector.id} value={sector.sector}>{sector.sector}</option>
+                                        ))}
+                                    </select>
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 10l5 5 5-5H7z" /></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div className="relative z-0 w-full mb-6 group max-w-xs lg:max-w-fit">
+                                <h3 className="text-white text-[15px] mb-2 font-semibold">
+                                    LOCALIZACIÓN
+                                </h3>
+                                <div className="relative">
+                                    <select
+                                        value={requestedLocation}
+                                        onChange={(event) => setRequestedLocation(event.target.value)}
+                                        className="block w-full appearance-none bg-gray-700 border border-gray-600 text-white py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-gray-600 focus:border-orange-500">
+                                        <option className='font-bold' value="">Selecciona una opción</option>
+                                        {locations.map((location) => (
+                                            <option key={location.id} value={location.name}>{location.name}</option>
+                                        ))}
+                                    </select>
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 10l5 5 5-5H7z" /></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* <div className="relative z-0 w-full mb-6 group">
                                 <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="off" type="text" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
                                 <label htmlFor="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Nombre
@@ -265,14 +373,14 @@ function SigninForm() {
                                         <option key={location.id} value={location.name}>{location.name}</option>
                                     ))}
                                 </select>
-                            </div>
-                            
-                            
+                            </div> */}
+
+
                             {/* <a className="text-neutral-500">
                                 8 caracteres, una mayúscula, una minúscula y un número.
                             </a> */}
 
-                            <div className=" mt-10 lg:mt-6 pb-1 pt-1 text-center">
+                            <div className="text-center pt-2">
                                 <button
                                     className="relative bg-gradient-to-r from-orange-400 to-orange-800 mb-3 w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
                                     type="submit" disabled={isLoading}
@@ -294,7 +402,7 @@ function SigninForm() {
                                 </button>
                             </div>
 
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-end pt-4">
                                 <p className="mb-0 mr-2 text-white">
                                     YA TIENE CUENTA?
                                 </p>

@@ -91,108 +91,96 @@ function SigninForm() {
     };
 
     return (
-        <div className="overflow-hidden flex h-screen justify-center items-center lg:bg-orange-300">
+        <div className="overflow-y-auto overflow-hidden flex h-screen justify-center items-center lg:bg-orange-300">
             {isLoggedIn ?
                 <p>
-                    YA HAS INICIADO SESIÓN
+                    YA ESTAS LOGEADO
                 </p> :
-                <div className="container h-full w-full g-6 flex px-5 flex-wrap items-center justify-center lg:flex lg:flex-wrap lg:w-fit lg:rounded-lg md:px-0 text-neutral-800 dark:text-neutral-200 bg-gray-800 shadow-lg dark:bg-neutral-800">
-
-                    <div className="h-full p-5 md:mx-6 md:p-12">
+                <div className="g-6 flex h-full flex-wrap items-center justify-center">
+                    <div className="overflow-auto w-full h-screen lg:rounded-lg p-10 pt-2 bg-gray-800 shadow-lg dark:bg-neutral-800">
                         <NavLink to="/">
-
                             <div className="text-center">
                                 <img
-                                    className="mx-auto w-48"
+                                    className="m-auto w-4/5 lg:w-6/12"
                                     src="LogoPrincipal.png"
-                                    alt="jiji"
+                                    alt="logo"
                                 />
-
                             </div>
                         </NavLink>
 
-                        <form onSubmit={handleSubmit} className='mt-8'>
+                        <form className="pt-5 lg:w-full" onSubmit={handleSubmit} autoComplete="off">
 
-                            <div className="relative z-0 w-full mb-6 group">
-                                <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="off" type="text" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                <label htmlFor="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Nombre
-                                </label>
+                            <div className="lg:flex lg:space-x-6">
+                                <div className="lg:w-1/2">
+                                    <div className="relative z-0 w-full mb-6 group">
+                                        <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="off" type="text" name="floating_username" id="floating_username" className="block pt-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
+                                        <label htmlFor="floating_username" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Nombre
+                                        </label>
+                                    </div>
+                                    <div className="relative z-0 w-full mb-6 group">
+                                        <input value={surname} onChange={(event) => setSurname(event.target.value)} autoComplete="off" type="text" name="floating_surname" id="floating_surname" className="block pt-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
+                                        <label htmlFor="floating_surname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Apellido
+                                        </label>
+                                    </div>
+                                </div>
+                                <div className="lg:w-1/2">
+                                    <div className="relative z-0 w-full mb-6 group">
+                                        <input value={secondSurname} onChange={(event) => setSecondSurname(event.target.value)} autoComplete="off" type="text" name="floating_secondSurname" id="floating_secondSurname" className="block pt-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
+                                        <label htmlFor="floating_secondSurname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Segundo Apellido
+                                        </label>
+                                    </div>
+                                    <div className="relative z-0 w-full mb-6 group">
+                                        <input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" type="email" name="floating_email" id="floating_email" className="block pt-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
+                                        <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                            Email
+                                        </label>
+                                        <a className="text-neutral-500">
+                                            (Ej: civicaid@gmail.com).
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="relative z-0 w-full mb-6 group">
-                                <input value={surname} onChange={(event) => setSurname(event.target.value)} autoComplete="off" type="text" name="floating_surname" id="floating_surname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                <label htmlFor="floating_surname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Apellido
-                                </label>
-                            </div>
-
-                            <div className="relative z-0 w-full mb-6 group">
-                                <input value={secondSurname} onChange={(event) => setSecondSurname(event.target.value)} autoComplete="off" type="text" name="floating_secondSurname" id="floating_secondSurname" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                <label htmlFor="floating_secondSurname" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Segundo Apellido
-                                </label>
-                            </div>
-
-                            <div className="relative z-0 w-full mb-6 group">
-                                <input value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="off" type="email" name="floating_email" id="floating_email" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
-                                <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Email
-                                </label>
-                            </div>
-
-                            <a className="text-neutral-500">
-                                (Ej: civicaid@gmail.com).
-                            </a>
-                            <br></br><br></br>
-
-
-                            <div className="relative z-0 w-full mb-6 group">
-                                <input value={password} onChange={(event) => setPassword(event.target.value)} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autoComplete="off" type="password" name="floating_password" id="floating_password" className="block pt-4 px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " required />
+                                <input value={password} onChange={(event) => setPassword(event.target.value)} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" autoComplete="off" type="password" name="floating_password" id="floating_password" className="block pt-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-white focus:outline-none focus:ring-0 focus:border-orange-600 peer" placeholder=" " required />
                                 <label htmlFor="floating_password" className="peer-focus:font-medium absolute text-xl text-white dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 font-bold peer-focus:text-white peer-focus:dark:text-white peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     CONTRASEÑA
                                 </label>
+                                <a className="text-neutral-500">
+                                    8 caracteres, una mayúscula, una minúscula y un número.
+                                </a>
                             </div>
 
-                            <a className="text-neutral-500">
-                                8 caracteres, una mayúscula, una minúscula y un número.
-                            </a>
-
-                            <div className='lg:pt-5'>
-                                <input type='file' name="image" accept="image/*" onChange={handleImageChange} className="" />
+                            <div className="mt-5 border-2 border-dashed p-6 rounded-lg shadow bg-gray-700">
+                                <h3 className="text-lg font-semibold text-white mb-4">Imagen de perfil</h3>
+                                <div className="flex flex-col sm:flex-row items-center justify-center w-full">
+                                    {!previewUrl ? (
+                                        <label className="relative cursor-pointer bg-gradient-to-r from-gray-400 to-gray-600 text-white font-semibold py-4 px-6 rounded-lg shadow-lg hover:bg-gradient-to-l hover:from-orange-600 hover:to-orange-400 transition duration-300 ease-in-out flex flex-col items-center justify-center">
+                                            <svg className="w-8 h-8 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                            </svg>
+                                            <span className="text-base leading-normal">Seleccionar imagen</span>
+                                            <input type='file' name="image" accept="image/*" onChange={handleImageChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                                        </label>
+                                    ) : (
+                                        <div className="flex flex-col items-center sm:flex-row justify-center">
+                                            <img src={previewUrl} alt="Vista previa" className="w-32 h-32 rounded-full mt-2 object-cover" />
+                                            <label className="relative cursor-pointer bg-gradient-to-r from-gray-600 to-gray-600 text-white font-semibold py-4 px-6 mt-4 sm:mt-0 sm:ml-4 rounded-lg shadow-lg hover:bg-gradient-to-l hover:from-orange-600 hover:to-orange-400 transition duration-300 ease-in-out flex flex-col items-center justify-center">
+                                                <svg className="w-8 h-8 mb-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                </svg>
+                                                <span className="text-base text-center leading-normal">Seleccionar imagen diferente</span>
+                                                <input type='file' name="image" accept="image/*" onChange={handleImageChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                                            </label>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
-                            {/* <div className="relative">
-                                <input
-                                    type="file"
-                                    name="image"
-                                    accept="image/*"
-                                    onChange={handleImageChange}
-                                    className="hidden"
-                                    id="profile-image-upload"
-                                />
-                                <label
-                                    htmlFor="profile-image-upload"
-                                    className="cursor-pointer block w-32 h-32 rounded-full bg-gray-200 border-4 border-gray-300 flex items-center justify-center hover:bg-gray-300"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-12 w-12 text-gray-400"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                        />
-                                    </svg>
-                                </label>
-                            </div> */}
-
-                            <div className=" mt-10 pb-1 pt-1 lg:p-0 lg:pt-8 text-center">
+                            <div className="text-center pt-5">
                                 <button
                                     className="relative bg-gradient-to-r from-orange-400 to-orange-800 mb-3 w-full rounded px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
                                     type="submit" disabled={isLoading}
@@ -214,7 +202,7 @@ function SigninForm() {
                                 </button>
                             </div>
 
-                            <div className="flex mt-5 lg:mt-10 items-center justify-between">
+                            <div className="flex items-center justify-end pt-10">
                                 <p className="mb-0 mr-2 text-white">
                                     YA TIENES CUENTA?
                                 </p>
@@ -224,16 +212,19 @@ function SigninForm() {
                                         data-te-ripple-init data-te-ripple-color="light"
                                     >
                                         <div className="absolute inset-0 w-3 bg-orange-400 transition-all duration-[500ms] ease-out group-hover:w-full"></div>
-                                        <span className="relative text-white group-hover:text-black ">
+                                        <span className="relative text-white group-hover:text-black">
                                             INICIAR SESIÓN
                                         </span>
                                     </button>
                                 </NavLink>
                             </div>
+
                         </form>
+
                     </div>
                 </div>
             }
+
         </div>
     )
 }

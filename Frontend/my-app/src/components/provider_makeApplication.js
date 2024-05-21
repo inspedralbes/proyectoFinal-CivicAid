@@ -192,7 +192,7 @@ const MakeApplication = () => {
                 console.log('La solicitud se ha hecho correctamente');
                 // navigate("/")
                 Swal.fire({
-                    position: "center",
+                    position: "bottom-end",
                     icon: "error",
                     title: "La solicitud no se enviado correctamente. Por favor, vuelve a intentarlo",
                     html: "Recuerda rellenar los campos correctamente",
@@ -205,11 +205,11 @@ const MakeApplication = () => {
 
             console.log(data);
             Swal.fire({
-                position: "center",
+                position: "bottom-end",
                 icon: "success",
-                title: "The application completed correctly",
+                title: "La solicitud se ha completado correctamente. Un administrador gestionará tu solicitud lo antes posible.",
                 showConfirmButton: false,
-                timer: 3500,
+                timer: 10000,
             });
             navigate("/")
 
@@ -360,7 +360,7 @@ const MakeApplication = () => {
                                     </label>
                                     :
                                     <div className="flex flex-col items-center sm:flex-row justify-center">
-                                        <img src={previewUrl} alt="Vista previa" className="max-w-64 lg:max-w-32 lg:max-h-48 lg:px-3 mt-2 rounded" />
+                                        <img src={previewUrl} alt="Vista previa" className="max-w-64 lg:max-w-32 lg:max-h-32 lg:px-3 mt-2 lg:rounded-lg" />
                                         <label className="lg:h-full flex flex-col items-center px-4 py-6 mt-4 ml-0 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-gray-400 hover:text-white transition-colors duration-300 ease-in-out">
                                             <svg className="w-8 h-8 mb-2 sm:mb-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -380,19 +380,20 @@ const MakeApplication = () => {
                             {locationCorrect ? (
                                 <p className="text-gray-600">{location}</p>
                             ) : (
-                                <div>
+                                <div className="relative mt-3">
                                     <input
                                         value={manualLocation}
                                         onChange={(e) => setManualLocation(e.target.value)}
                                         type="text"
                                         placeholder="Introduce la ubicación manualmente"
-                                        className="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                        className="form-input block w-full px-4 py-2 rounded-md border border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 transition duration-300 ease-in-out"
                                         required
                                     />
                                 </div>
+
                             )}
 
-                            <div className="fixed max-w-full mt-4">
+                            <div className="block max-w-full mt-4">
                                 <h2 className="text-md font-medium text-gray-800 text-center">¿Es correcto?</h2>
                                 <div className="flex justify-center items-center mt-2">
 
@@ -463,14 +464,17 @@ const MakeApplication = () => {
                     {locationCorrect ? (
                         <p className="text-gray-600">{location}</p>
                     ) : (
-                        <input
-                            value={manualLocation}
-                            onChange={(e) => setManualLocation(e.target.value)}
-                            type="text"
-                            placeholder="Introduce la ubicación manualmente"
-                            className="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            required
-                        />
+                        <div className="relative mt-3">
+                            <input
+                                value={manualLocation}
+                                onChange={(e) => setManualLocation(e.target.value)}
+                                type="text"
+                                placeholder="Introduce la ubicación manualmente"
+                                className="form-input block w-full px-4 py-2 rounded-md border border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 transition duration-300 ease-in-out"
+                                required
+                            />
+                        </div>
+
                     )}
 
                     <div className="mt-4 -z-50 max-h-48">

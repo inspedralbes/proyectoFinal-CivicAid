@@ -122,11 +122,11 @@ const Home = ({ socket }) => {
 
     return (
         <main className='min-h-screen lg:h-screen lg:overflow-hidden lg:bg-gray-800 flex flex-col items-center relative'>
-            <div className='z-10 lg:flex lg:h-full'>
+            <div className='z-10 lg:flex lg:h-full lg:w-full'>
                 <div className='w-full lg:w-5/12 lg:h-5/6 lg:m-auto bg-gray-700 lg:shadow-lg lg:rounded-lg'>
                     <div className='lg:mt-5 lg:h-full'>
                         {/* Logo removido para enfocar en el carrusel */}
-                        <img src='logoPrincipal.png' className='h-28 w-full mb-2 lg:h-1/6 lg:w-6/12 lg:m-auto lg:rounded-lg' alt="Logo Principal" />
+                        <img src="logoPrincipal.png" className='h-28 w-full mb-2 lg:h-1/6 lg:w-6/12 lg:m-auto lg:rounded-lg' alt="Logo Principal" />
 
                         <div className="hidden lg:block relative lg:mt-5 lg:h-3/5 lg:mx-auto lg:w-11/12 lg:border-2 rounded-lg overflow-hidden">
                             {images.map((img, index) => (
@@ -145,8 +145,7 @@ const Home = ({ socket }) => {
                                 {images.map((_, index) => (
                                     <div
                                         key={index}
-                                        className={`w-2 h-2 mx-2 rounded-full bg-gray-300 ${index === currentImage ? 'bg-gray-600' : ''
-                                            }`}
+                                        className={`w-2 h-2 mx-2 rounded-full bg-gray-300 ${index === currentImage ? 'bg-gray-600' : ''}`}
                                     >
                                     </div>
                                 ))}
@@ -161,6 +160,109 @@ const Home = ({ socket }) => {
                     </div>
                 </div>
 
+                {isWorker ?
+                    <div className='lg:bg-orange-600 lg:w-6/12'>
+                        {applicationOngoing || applicationNodeOngoing ?
+
+                            <div className='w-screen lg:w-full lg:h-full bg-black'>
+
+                                <div className='flex h-[340px] lg:h-3/6 bg-violet-700'>
+                                    <div className='h-full w-6/12 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
+                                        <NavLink to="/manageApplications">
+                                            <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
+                                                <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                                    <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
+                                                        MOSTRAR SOLICITUDES ASIGNADAS
+                                                    </button>
+                                                </div>
+                                                <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                                    Comprueba las solicitudes que los administradores te han asignado
+                                                </p>
+                                            </div>
+                                        </NavLink>
+                                        <img src="manageApplicationsButtonImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                                    </div>
+
+                                    <div className='h-full w-6/12 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
+                                        <NavLink to="/applicationOngoing">
+                                            <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
+                                                <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                                    <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
+                                                        SOLICITUD ACTIVA
+                                                    </button>
+                                                </div>
+                                                <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                                    Gestiona la ultima solicitud que aceptaste
+                                                </p>
+                                            </div>
+                                        </NavLink>
+                                        <img src="applicationOngoingButtonImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                                    </div>
+                                </div>
+
+                                <div className='flex text-center h-[250px] lg:h-3/6 bg-fuchsia-950 group relative overflow-hidden'>
+                                    <NavLink to="/workerProfile">
+                                        <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full absolute">
+                                            <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                                <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
+                                                    PERFIL
+                                                </button>
+                                            </div>
+                                            <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                                Gestiona tu perfil y haz un seguimiento del estado de tus solicitudes
+                                            </p>
+                                        </div>
+                                    </NavLink>
+                                    <img src="profileButtonImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                                </div>
+                            </div>
+
+                            :
+                            <div className='w-screen lg:w-full lg:h-full bg-black'>
+
+                                <div className=' h-[340px] lg:h-full bg-violet-700'>
+                                    <div className='h-full w-full lg:h-3/6 overflow-hidden aspect-video bg-violet-500 cursor-pointer relative group border-b-4 '>
+                                        <NavLink to="/manageApplications">
+                                            <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
+                                                <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                                    <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
+                                                        MOSTRAR SOLICITUDES ASIGNADAS
+                                                    </button>
+                                                </div>
+                                                <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                                    Comprueba las solicitudes que los administradores te han asignado
+                                                </p>
+                                            </div>
+                                        </NavLink>
+                                        <img src="manageApplicationsButtonImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                                    </div>
+
+                                    <div className='h-full w-full lg:h-3/6 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group '>
+                                        <NavLink to="/workerProfile">
+                                            <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
+                                                <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                                    <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
+                                                        PERFIL
+                                                    </button>
+                                                </div>
+                                                <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
+                                                    Gestiona tu perfil y haz un seguimiento del estado de tus solicitudes
+                                                </p>
+                                            </div>
+                                        </NavLink>
+                                        <img src="profileButtonImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+
+                    :
+
+                    <div></div>
+
+                }
 
                 {isLoggedIn ?
 
@@ -223,10 +325,10 @@ const Home = ({ socket }) => {
                 }
 
 
-                {isUser ?
-                    <div className='w-screen lg:h-full lg:w-6/12 bg-yellow-300'>
-                        <div className=' h-[340px] lg:h-full lg:w-full'>
-                            <div className='h-full lg:w-full lg:h-3/6 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
+                {isUser ? (
+                    <div className='w-full lg:w-6/12 lg:h-full bg-yellow-300'>
+                        <div className='h-full lg:flex lg:flex-col'>
+                            <div className='lg:flex-1 overflow-hidden bg-orange-400 cursor-pointer relative group'>
                                 <NavLink to="/makeApplication">
                                     <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
                                         <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
@@ -242,7 +344,7 @@ const Home = ({ socket }) => {
                                 <img src="userButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
                             </div>
 
-                            <div className='h-full w-full lg:flex-1 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group '>
+                            <div className='lg:flex-1 overflow-hidden bg-orange-200 cursor-pointer relative group'>
                                 <NavLink to="/profile">
                                     <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
                                         <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
@@ -255,125 +357,20 @@ const Home = ({ socket }) => {
                                         </p>
                                     </div>
                                 </NavLink>
-                                <img src="workerButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                                <img src="profileButtonImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
                             </div>
                         </div>
                     </div>
-                    :
-
+                ) : (
                     <div></div>
-                }
+                )}
 
-                {isWorker ?
-                    <div>
-                        {applicationOngoing || applicationNodeOngoing ?
 
-                            <div className='w-screen lg:w-full lg:h-full bg-black'>
-
-                                <div className='flex h-[340px] lg:h-full bg-violet-700'>
-                                    <div className='h-full w-6/12 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
-                                        <NavLink to="/manageApplications">
-                                            <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
-                                                <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
-                                                    <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
-                                                        MOSTRAR SOLICITUDES ASIGNADAS
-                                                    </button>
-                                                </div>
-                                                <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
-                                                    Comprueba las solicitudes que los administradores te han asignado
-                                                </p>
-                                            </div>
-                                        </NavLink>
-                                        <img src="userButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
-                                    </div>
-
-                                    <div className='h-full w-6/12 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
-                                        <NavLink to="/applicationOngoing">
-                                            <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
-                                                <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
-                                                    <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
-                                                        SOLICITUD ACTIVA
-                                                    </button>
-                                                </div>
-                                                <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
-                                                    Gestiona la ultima solicitud que aceptaste
-                                                </p>
-                                            </div>
-                                        </NavLink>
-                                        <img src="workerButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
-                                    </div>
-                                </div>
-
-                                <div className='flex text-center h-[250px] bg-fuchsia-950 group relative overflow-hidden'>
-                                    <NavLink to="/workerProfile">
-                                        <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full absolute">
-                                            <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
-                                                <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
-                                                    PERFIL
-                                                </button>
-                                            </div>
-                                            <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
-                                                Gestiona tu perfil y haz un seguimiento del estado de tus solicitudes
-                                            </p>
-                                        </div>
-                                    </NavLink>
-                                    <img src="adminButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
-                                </div>
-                            </div>
-
-                            :
-                            <div className='w-screen lg:w-full lg:h-full bg-black'>
-
-                                <div className=' h-[340px] bg-violet-700'>
-                                    <div className='h-full w-full overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group border-b-4 '>
-                                        <NavLink to="/manageApplications">
-                                            <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
-                                                <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
-                                                    <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
-                                                        MOSTRAR SOLICITUDES ASIGNADAS
-                                                    </button>
-                                                </div>
-                                                <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
-                                                    Comprueba las solicitudes que los administradores te han asignado
-                                                </p>
-                                            </div>
-                                        </NavLink>
-                                        <img src="userButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
-                                    </div>
-
-                                    <div className='h-full w-full overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group '>
-                                        <NavLink to="/workerProfile">
-                                            <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
-                                                <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
-                                                    <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
-                                                        PERFIL
-                                                    </button>
-                                                </div>
-                                                <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
-                                                    Gestiona tu perfil y haz un seguimiento del estado de tus solicitudes
-                                                </p>
-                                            </div>
-                                        </NavLink>
-                                        <img src="workerButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
-                                    </div>
-                                </div>
-                            </div>
-
-                        }
-                    </div>
-
-                    :
-
-                    <div></div>
-
-                }
 
                 {isAdmin ?
-
-                    <div className='w-screen bg-black'>
-
-                        <div className='flex h-[340px] lg:h-full bg-violet-700'>
-                            <div className='h-full w-6/12 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
+                    <div className='w-screen bg-yellow-300 lg:w-6/12 '>
+                        <div className='flex h-[340px] lg:h-3/6 lg:w-full  '>
+                            <div className='h-full w-6/12 lg:flex-1 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
                                 <NavLink to="/manageSigninRequests">
                                     <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
                                         <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
@@ -386,10 +383,10 @@ const Home = ({ socket }) => {
                                         </p>
                                     </div>
                                 </NavLink>
-                                <img src="userButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                                <img src="signinRequestsImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
                             </div>
 
-                            <div className='h-full w-6/12 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
+                            <div className='h-full w-6/12 lg:flex-1  overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group'>
                                 <NavLink to="/assignApplications">
                                     <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
                                         <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
@@ -402,16 +399,16 @@ const Home = ({ socket }) => {
                                         </p>
                                     </div>
                                 </NavLink>
-                                <img src="workerButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                                <img src="assignApplicationsImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
                             </div>
                         </div>
 
-                        <div className='flex text-center h-[250px] bg-fuchsia-950 group relative overflow-hidden'>
+                        <div className='lg:h-3/6 text-center h-[250px] bg-fuchsia-950 group relative overflow-hidden'>
                             <NavLink to="/adminProfile">
                                 <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full absolute">
                                     <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
                                         <button className='py-3 px-6 bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg transition-all duration-300'>
-                                            PERFIL
+                                            Perfil
                                         </button>
                                     </div>
                                     <p className='mt-4 text-white text-center transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
@@ -419,16 +416,9 @@ const Home = ({ socket }) => {
                                     </p>
                                 </div>
                             </NavLink>
-                            <img src="adminButtonImage.png" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
+                            <img src="profileButtonImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
                         </div>
 
-                        <div className='text-center'>
-                            <button
-                                onClick={() => logout()} className='bg-blue-500 text-white p-2 rounded hover:bg-blue-700'
-                            >
-                                LOGOUT
-                            </button>
-                        </div>
                     </div>
 
 

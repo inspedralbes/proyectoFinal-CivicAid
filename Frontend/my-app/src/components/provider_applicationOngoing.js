@@ -216,7 +216,7 @@ const ApplicationOngoing = ({ socket }) => {
 
                                 :
 
-                                <div className="relative bg-white lg:bg-gray-800 lg:rounded-xl lg:text-white  text-gray-700 shadow-lg overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row lg:w-10/12 lg:m-auto h-screen w-full">
+                                <div className="relative bg-white lg:bg-gray-800 lg:text-white  text-gray-700 overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row lg:w-full lg:h-full lg:m-auto h-screen w-full">
                                     <div className="lg:w-5/12 lg:mx-auto lg:mt-5 lg:border-r-2 lg:pr-28">
                                         <div className="flex justify-between items-center">
                                             <h5 className="text-xl m-auto font-medium uppercase tracking-normal text-blue-gray-900">
@@ -230,7 +230,7 @@ const ApplicationOngoing = ({ socket }) => {
                                         </div>
 
                                         <div className="px-6 py-2 pb-5 lg:p-0 lg:mt-5 border-b-2 lg:border-0 border-gray-800">
-                                            <h2 className="text-lg font-semibold">Descripción</h2>
+                                            {/* <h2 className="text-lg font-semibold">Descripción</h2> */}
                                             <p className="text-base font-light break-words">
                                                 {applicationFetch.description}
                                             </p>
