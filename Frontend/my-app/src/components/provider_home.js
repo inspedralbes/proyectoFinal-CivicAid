@@ -37,17 +37,22 @@ const Home = ({ socket }) => {
     useEffect(() => {
 
         async function estoVa() {
-            const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplications', {
-                method: 'GET',
-                // headers: {
-                //     'Content-Type': 'application/json',
-                // },
-                // body: JSON.stringify({ email, password }),
-            });
+            try {
+                const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplications', {
+                    method: 'GET',
+                    mode: 'no-cors'
+                    // headers: {
+                    //     'Content-Type': 'application/json',
+                    // },
+                    // body: JSON.stringify({ email, password }),
+                });
+    
+                const data = await response.json();
+                console.log(data);
 
-            const data = await response.json();
-
-            console.log(data);
+            } catch (error) {
+                console.log("No se ha podido listar las solicitudes: ", error);
+            }
 
         }
 

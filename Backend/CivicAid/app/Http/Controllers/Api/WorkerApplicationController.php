@@ -97,7 +97,7 @@ class WorkerApplicationController extends Controller
             $applications = Application::whereIn('id', $multipleWorkerApps)
                 ->where('applicationStatus', 'inactive') 
                 ->with(['workers' => function ($query) {
-                    $query->select('workers.id', 'name'); // Asegúrate de ajustar los campos seleccionados según tu modelo y necesidades
+                    $query->select('workers.id', 'name', 'surname');
                 }])
                 ->get();
 

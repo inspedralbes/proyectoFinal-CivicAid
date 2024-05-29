@@ -77,19 +77,34 @@ class WorkerSigninRequest extends Controller
             $workerRequest->save();
 
             // Enviar el correo electrónico
-            
-            // Log::error('Intentando enviar email a: ' . $request->email);
+
+            Log::error('Intentando enviar email a: ' . $request->email);
+
+            try {
+                Mail::raw('This is a test email using Gmail SMTP from Laravel.', function ($message) {
+                    $message->to('carlosgomezfuentes2003@gmail.com')->subject('Test Email');
+                });
+
+                // Mail::send('emails.pruebaMail', [], function ($message) {
+                //     $message->to('carlosgomezfuentes2003@gmail.com')->subject('Test Email');
+                // });
+            } catch (\Throwable $th) {
+                // Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage()  . ' Stack trace: ' . $th->getTraceAsString());
+                Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage() . ' Stack trace: ' . $th->getTraceAsString());
+
+                return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
+            }
+
+
             // try {
             //     Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
             // } catch (\Exception $exception) {
             //     // Registrar el error
             //     Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $exception->getMessage());
 
-            //     // Devolver una respuesta adecuada
             //     return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
             // }
 
-            // Todo ha ido bien, hacemos commit
             DB::commit();
 
             // Respuesta exitosa
@@ -99,10 +114,8 @@ class WorkerSigninRequest extends Controller
             // Algo ha fallado, hacemos rollback
             DB::rollBack();
 
-            // Logueamos el error
             Log::error('Error al procesar la solicitud de registro: ' . $e->getMessage());
 
-            // Respondemos con un mensaje de error genérico
             // $errorMessage = 'Error al procesar la solicitud de registro.';
             // return response()->json([$e], 500);
             return response("DA ERROR EN CONTROLADOR", $e);

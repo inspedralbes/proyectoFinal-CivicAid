@@ -58,27 +58,28 @@ const ManageSigninRequest = () => {
 
     function generatePassword(length = 10) {
         // Definir los caracteres que se usarán para generar la contraseña
-        const charset = {
-            lowercase: "abcdefghijklmnopqrstuvwxyz",
-            uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            numbers: "0123456789",
-            symbols: "!@#$%^&*()_+-=[]{}|;':,.<>/?"
-        };
+        // const charset = {
+        //     lowercase: "abcdefghijklmnopqrstuvwxyz",
+        //     uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        //     numbers: "0123456789",
+        //     symbols: "!@#$%^&*()_+-=[]{}|;':,.<>/?"
+        // };
 
-        // Asegurarse de que la contraseña incluya al menos un carácter de cada tipo
-        const allTypes = Object.keys(charset).map(type => charset[type]);
-        let password = allTypes.map(type => type[Math.floor(Math.random() * type.length)]).join('');
+        // // Asegurarse de que la contraseña incluya al menos un carácter de cada tipo
+        // const allTypes = Object.keys(charset).map(type => charset[type]);
+        // let password = allTypes.map(type => type[Math.floor(Math.random() * type.length)]).join('');
 
-        // Completar la longitud de la contraseña con caracteres aleatorios de todos los tipos
-        const allChars = allTypes.join('');
-        for (let i = password.length; i < length; i++) {
-            password += allChars[Math.floor(Math.random() * allChars.length)];
-        }
+        // // Completar la longitud de la contraseña con caracteres aleatorios de todos los tipos
+        // const allChars = allTypes.join('');
+        // for (let i = password.length; i < length; i++) {
+        //     password += allChars[Math.floor(Math.random() * allChars.length)];
+        // }
 
-        // Mezclar la contraseña para que los caracteres obligatorios no estén al inicio
-        password = password.split('').sort(() => Math.random() - 0.5).join('');
+        // // Mezclar la contraseña para que los caracteres obligatorios no estén al inicio
+        // password = password.split('').sort(() => Math.random() - 0.5).join('');
 
-        console.log("ESTA ES LA PASSWORD: ", password);
+        // console.log("ESTA ES LA PASSWORD: ", password);
+        let password = "Cm12345-";
         return password;
     }
 
@@ -285,7 +286,7 @@ const ManageSigninRequest = () => {
                                 <ul className="list-none space-y-2">
                                     <li><strong>DNI:</strong> {selectedRequest.dni}</li>
                                     <li><strong>Sector:</strong> {selectedRequest.sector}</li>
-                                    <li><strong>Requested Location:</strong> {selectedRequest.requestedLocation}</li>
+                                    <li><strong>Localización solicitada:</strong> {selectedRequest.requestedLocation}</li>
                                 </ul>
                             </div>
 

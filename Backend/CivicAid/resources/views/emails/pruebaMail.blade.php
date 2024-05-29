@@ -1,12 +1,12 @@
-@component('mail::message')
-# Confirmación de Registro
+<!DOCTYPE html>
+<html>
 
-¡Hola !
+<head>
+    <title>Test Email</title>
+</head>
 
-Gracias por registrarte en nuestro sitio. Tu cuenta ha sido creada exitosamente.
+<body>
+    <p>This is a test email using Gmail SMTP from Laravel.</p>
+</body>
 
-¡Bienvenido a nuestra comunidad!
-
-Saludos,
-{{ config('app.name') }}
-@endcomponent
+</html>

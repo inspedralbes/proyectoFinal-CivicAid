@@ -550,72 +550,78 @@ const ManageApplication = ({ socket }) => {
                                             return null;
                                         }
                                         return (
-                                            <div key={id} className="relative w-full lg:w-full lg:flex lg:flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg mb-4">
-                                                <div className="lg:flex lg:w-full">
-                                                    <div className="lg:w-1/2 p-5">
-                                                        <div className="uppercase items-center justify-between">
-                                                            <h5 className="text-xl text-center font-medium leading-snug tracking-normal text-blue-gray-900">{application.title}</h5>
-                                                        </div>
-                                                        <div className="relative mt-5 overflow-hidden shadow-lg rounded-xl">
-                                                            <img
-                                                                src={application.image}
-                                                                alt={application.image ? "Imagen solicitud" : "Imagen no disponible"}
-                                                                className="w-full object-cover h-48 rounded-t-xl"
-                                                            />
-                                                            <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
-                                                        </div>
+                                            <div key={id} className="relative w-full lg:w-3/4 xl:w-2/3 mx-auto flex flex-col rounded-xl bg-white shadow-lg mb-8 overflow-hidden">
+                                                <div className="lg:flex lg:flex-row">
 
-                                                        <div className="mt-5 lg:w-full lg:flex lg:flex-col">
-                                                            <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words">
+                                                    <div className="lg:w-1/2 p-5 flex flex-col justify-between">
+                                                        <div>
+                                                            <div className="uppercase items-center justify-between mb-5">
+                                                                <h5 className="text-2xl text-center font-semibold text-blue-gray-900">{application.title}</h5>
+                                                            </div>
+                                                            <div className="relative overflow-hidden shadow-lg rounded-xl">
+                                                                <img
+                                                                    src={application.image}
+                                                                    alt={application.image ? "Imagen solicitud" : "Imagen no disponible"}
+                                                                    className="w-full lg:h-64 object-cover rounded-xl"
+                                                                />
+                                                                <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="mt-5">
+                                                            <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words mb-3">
                                                                 {application.description}
                                                             </div>
-                                                            <div className='mt-3'>
-                                                                <h3>Localización</h3>
+                                                            <div className="mt-5">
+                                                                <h3 className="font-semibold text-gray-800">Localización</h3>
                                                                 <p className="text-base font-light leading-relaxed text-gray-700">
                                                                     {application.location}
                                                                 </p>
                                                             </div>
                                                         </div>
-
                                                     </div>
-                                                    <div className="lg:w-1/2 p-5">
-                                                        <h2 className='mb-5'>COMPAÑEROS ASIGNADOS</h2>
-                                                        <div className="overflow-y-auto max-h-28 lg:h-28 grid grid-cols-2 gap-2">
-                                                            {application.workers.map((worker, id) => {
-                                                                if (worker.id === workerId) {
-                                                                    return null;
-                                                                }
-                                                                return (
-                                                                    <div key={id} className="bg-gray-300 text-center shadow-lg p-2 rounded">
-                                                                        <p className="text-base font-light leading-relaxed text-gray-700">
-                                                                            {worker.name}
-                                                                        </p>
-                                                                    </div>
-                                                                )
-                                                            })}
+
+                                                    <div className="lg:w-1/2 p-5 bg-gray-300 flex flex-col justify-between rounded-r-xl">
+                                                        <div>
+                                                            <h2 className="mb-5 text-xl font-semibold text-gray-800">Compañeros Asignados</h2>
+                                                            <div className="overflow-y-auto max-h-48 grid grid-cols-2 gap-4">
+                                                                {application.workers.map((worker, id) => {
+                                                                    if (worker.id === workerId) {
+                                                                        return null;
+                                                                    }
+                                                                    return (
+                                                                        <div key={id} className="bg-white text-center shadow-lg p-2 rounded-lg">
+                                                                            <p className="text-base font-light text-gray-700">
+                                                                                {worker.name} {worker.surname}
+                                                                            </p>
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        </div>
+                                                        <div className="mt-5">
+                                                            {isCurrentAppInvited ? (
+                                                                <button
+                                                                    onClick={() => acceptInvitation(application.id, currentAppInvitedLobbyCode)}
+                                                                    className="w-full animate-pulse rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg"
+                                                                >
+                                                                    Aceptar Invitación
+                                                                </button>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => createInvitation(application)}
+                                                                    id={`invitationButton${application.id}`}
+                                                                    className="w-full rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
+                                                                    type="submit"
+                                                                >
+                                                                    Invitar
+                                                                </button>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="w-full p-6">
-                                                    {isCurrentAppInvited ? (
-                                                        <button
-                                                            onClick={() => acceptInvitation(application.id, currentAppInvitedLobbyCode)}
-                                                            className="w-full animate-pulse rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg"
-                                                        >
-                                                            Aceptar Invitación
-                                                        </button>
-                                                    ) : (
-                                                        <button
-                                                            onClick={() => createInvitation(application)}
-                                                            id={`invitationButton${application.id}`}
-                                                            className="w-full rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg"
-                                                            type="submit"
-                                                        >
-                                                            INVITAR
-                                                        </button>
-                                                    )}
-                                                </div>
                                             </div>
+
+
                                         );
                                     })}
                                 </div>
@@ -700,26 +706,22 @@ const ManageApplication = ({ socket }) => {
                             )}
 
                             {(invitationCreated || invitationAccepted) && (
-                                <div className="h-3/6 m-auto fixed z-10 inset-0 overflow-y-auto flex items-center justify-center">
-                                    <div className="fixed inset-0 bg-gray-500 opacity-75"></div>
-
-                                    <div className="w-11/12 lg:w-9/12 xl:w-7/12 h-5/6 sm:max-w-lg lg:max-w-3xl xl:max-w-4xl z-20 p-5 bg-orange-200 rounded-lg shadow-xl flex flex-col justify-between">
-                                        <div className="">
-                                            <h2 className="text-lg text-center font-semibold text-gray-900">SALA DE ESPERA</h2>
+                                <div className="fixed inset-0 z-10 flex items-center justify-center bg-gray-900 bg-opacity-75 overflow-y-auto">
+                                    <div className="relative w-11/12 lg:w-9/12 lg:h-3/6 xl:w-7/12 h-5/6 sm:max-w-lg lg:max-w-3xl xl:max-w-4xl p-6 bg-white rounded-lg shadow-xl flex flex-col justify-between">
+                                        <div className='border-b-2 pb-2'>
+                                            <h2 className="text-2xl font-bold text-center text-gray-900 ">SALA DE ESPERA</h2>
                                         </div>
 
-                                        <div className="p-2 min-h-fit max-h-80 lg:min-h-44 border-b-2 border-orange-400 overflow-y-auto">
+                                        <div className="p-4 min-h-fit max-h-80 lg:min-h-44 border-gray-200 overflow-y-auto">
                                             {Array.isArray(usersList) && usersList.length > 0 ? (
-                                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                                     {usersList.map((user, id) => {
                                                         if (!user || user.workerId === workerId) {
                                                             return null;
                                                         }
                                                         return (
-                                                            <div key={id} className="relative bg-gray-300 bg-clip-border text-gray-700 text-center shadow-lg p-2 rounded transition-all fade-in-element">
-                                                                <p className="font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                                    {user.completeName}
-                                                                </p>
+                                                            <div key={id} className="bg-gray-300 text-center shadow-lg p-3 rounded-lg transition-all fade-in-element">
+                                                                <p className="text-lg font-medium text-gray-700">{user.completeName}</p>
                                                             </div>
                                                         );
                                                     })}
@@ -731,9 +733,9 @@ const ManageApplication = ({ socket }) => {
                                             )}
                                         </div>
 
-                                        <div className="px-4 py-5 flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4">
+                                        <div className="px-4 py-3 flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 border-t-2">
                                             {canStartApplication ? (
-                                                <div className="w-full sm:flex sm:justify-end">
+                                                <div className="w-full sm:flex sm:justify-end space-x-4">
                                                     <button
                                                         onClick={() => cancelInvitation()}
                                                         type="button"
@@ -743,21 +745,21 @@ const ManageApplication = ({ socket }) => {
                                                     </button>
                                                     <button
                                                         onClick={() => handleNodeApplication()}
-                                                        className="w-full sm:w-auto inline-flex justify-center rounded-lg bg-gray-900 py-3.5 px-7 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                                        className="w-full sm:w-auto inline-flex justify-center rounded-lg bg-gray-900 py-3.5 px-7 text-sm font-bold uppercase text-white shadow-md transition-all hover:bg-gray-700 focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                                         type="submit"
                                                     >
                                                         Iniciar solicitud
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <h1 className='m-auto text-center'>ESPERANDO AL ANFITRION ...</h1>
+                                                <h1 className="m-auto text-center text-lg font-semibold">ESPERANDO AL ANFITRION ...</h1>
                                             )}
                                         </div>
                                     </div>
-
                                 </div>
-
                             )}
+
+
 
                         </div>
                     }

@@ -205,15 +205,11 @@ const UserInfo = () => {
                                                 </div>
                                                 <hr className="mt-6"></hr>
                                                 <div className="flex bg-orange-400">
-                                                    <button className="text-center w-1/2 p-4 hover:bg-orange-300 cursor-pointer">
-                                                        CHANGE PASSWORD
-                                                    </button>
-                                                    <div className="border"></div>
                                                     <button
                                                         onClick={() => setShowModal(true)}
-                                                        className="text-center w-1/2 p-4 hover:bg-orange-300 cursor-pointer"
+                                                        className="text-center m-auto w-full p-4 hover:bg-orange-300 cursor-pointer"
                                                     >
-                                                        <p>LOGOUT</p>
+                                                        <p>CERRAR SESIÓN</p>
                                                     </button>
                                                 </div>
                                             </div>

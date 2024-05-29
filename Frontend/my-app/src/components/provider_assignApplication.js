@@ -191,33 +191,41 @@ const ManageApplication = () => {
 
                         :
 
-                        <div className="p-5 lg:flex lg:flex-wrap lg:p-8 lg:justify-center lg:gap-20  lg:overflow-auto">
+                        <div className="p-5 lg:flex lg:flex-wrap lg:p-8 lg:justify-center lg:gap-8 lg:overflow-auto">
                             {applicationInfo.map((request, id) => {
                                 if (request.applicationStatus === 'pending') {
                                     return (
-                                        <div key={id} onClick={() => setSelectedApplication(request)} className="relative w-full lg:w-1/3 p-5 flex-col rounded-xl bg-white cursor-pointer bg-clip-border text-gray-700 shadow-lg mb-4">
-                                            <div className="uppercase items-center justify-between">
-                                                <h5 className="block font-sans text-center text-xl antialiased font-medium leading-snug tracking-normal text-blue-gray-900">{request.title}</h5>
+                                        <div
+                                            key={id}
+                                            onClick={() => setSelectedApplication(request)}
+                                            className="relative w-full lg:w-1/3 p-5 flex flex-col rounded-xl bg-white cursor-pointer shadow-lg mb-8 transition-transform transform hover:scale-105"
+                                        >
+                                            <div className="uppercase items-center justify-between mb-4">
+                                                <h5 className="font-sans text-center text-2xl font-semibold text-blue-gray-900">{request.title}</h5>
                                             </div>
 
-                                            <div className="relative mt-5 overflow-hidden shadow-lg rounded-xl">
-                                                <img className='mx-auto' src={request.image} alt={request.title} />
-                                                <div className="absolute inset-0 w-full h-full to-bg-black-10 bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
+                                            <div className="relative mt-2 overflow-hidden shadow-lg rounded-xl">
+                                                <img
+                                                    className="w-full h-48 object-cover rounded-xl"
+                                                    src={request.image}
+                                                    alt={request.title}
+                                                />
+                                                <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                                             </div>
 
                                             <div className="p-4">
-                                                <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words">
+                                                <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words mb-4">
                                                     {request.description}
                                                 </div>
-                                                <div className='mt-3'>
-                                                    <h3>Localización</h3>
-                                                    <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                                <div className="mt-3">
+                                                    <h3 className="font-semibold text-gray-800">Localización</h3>
+                                                    <p className="text-base font-light text-gray-700">
                                                         {request.location}
                                                     </p>
                                                 </div>
-                                                <div className='mt-3'>
-                                                    <h3>SECTOR SOLICITADO</h3>
-                                                    <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
+                                                <div className="mt-3">
+                                                    <h3 className="font-semibold text-gray-800">Sector Solicitado</h3>
+                                                    <p className="text-base font-light text-gray-700">
                                                         {request.sector}, {request.subsector}
                                                     </p>
                                                 </div>
@@ -228,6 +236,7 @@ const ManageApplication = () => {
                                 return null;
                             })}
                         </div>
+
                     }
 
                 </div>
@@ -270,24 +279,32 @@ const ManageApplication = () => {
                             <p className="mt-2 text-sm text-gray-500">Localización: {selectedApplication.location}</p>
                         </div>
                         <div className="px-4 py-2">
-                            {workersList.map((worker, id) => {
-                                return worker.sector === selectedApplication.sector ? (
-                                    <div key={id} className="bg-gray-200 p-4 mb-4 rounded-lg flex flex-col">
-                                        <label className="inline-flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                className="form-checkbox h-5 w-5 text-gray-600"
-                                                checked={selectedWorkers.includes(worker.id)}
-                                                onChange={() => toggleSelectedWorker(worker.id)}
-                                            />
-                                            <span className="ml-2 text-gray-700">{worker.name} {worker.surname} | {worker.dni}</span>
-                                        </label>
-                                        <div className="text-sm mt-2 text-gray-500">
-                                            ESTADO: {worker.workerStatus} <br></br> SOLICITUDES ASIGNADAS: {worker.assignedApplications}
-                                        </div>
-                                    </div>
-                                ) : null;
-                            })}
+                            {workersList && workersList.length > 0 ? (
+                                workersList.filter(worker => worker.sector === selectedApplication.sector).length > 0 ? (
+                                    workersList.map((worker, id) => {
+                                        return worker.sector === selectedApplication.sector ? (
+                                            <div key={id} className="bg-gray-200 p-4 mb-4 rounded-lg flex flex-col">
+                                                <label className="inline-flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="form-checkbox h-5 w-5 text-gray-600"
+                                                        checked={selectedWorkers.includes(worker.id)}
+                                                        onChange={() => toggleSelectedWorker(worker.id)}
+                                                    />
+                                                    <span className="ml-2 text-gray-700">{worker.name} {worker.surname} | {worker.dni}</span>
+                                                </label>
+                                                <div className="text-sm mt-2 text-gray-500">
+                                                    ESTADO: {worker.workerStatus} <br /> SOLICITUDES ASIGNADAS: {worker.assignedApplications}
+                                                </div>
+                                            </div>
+                                        ) : null;
+                                    })
+                                ) : (
+                                    <div className="text-gray-700">No hay empleados en este sector.</div>
+                                )
+                            ) : (
+                                <div className="text-gray-700">No hay empleados disponibles.</div>
+                            )}
                         </div>
                         <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse justify-between">
                             <div>
@@ -296,9 +313,9 @@ const ManageApplication = () => {
                                         ACEPTAR
                                     </button>
                                     :
-                                    
+
                                     <div></div>
-                            }
+                                }
 
                             </div>
                         </div>

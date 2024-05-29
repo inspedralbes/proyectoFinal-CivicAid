@@ -3,12 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+// use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Log;
 // use Symfony\Component\Mime\Email;
 
 class registrationRequestEmail extends Mailable
@@ -28,7 +28,7 @@ class registrationRequestEmail extends Mailable
         return $this->markdown('emails.registration.request')
             ->subject('Your Registration Request is Being Processed')
             ->with([
-                'name' => $this->user->name,
+                'name' => $this->user,
             ]);
     }
 

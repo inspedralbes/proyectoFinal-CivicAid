@@ -42,9 +42,14 @@ const MakeApplication = () => {
                 },
             });
             const data = await response.json();
-            setLocation(data.address.road + ", " + data.address.village);
-            setProvince(data.address.province);
 
+            const road = data.address.road || '';
+            const village = data.address.village || data.address.town || data.address.city || '';
+            const location = road + (village ? ", " + village : '');
+
+            setLocation(location);
+            setProvince(data.address.province || '');
+            
             setLoading(false);
 
             console.log("ESTA ES LA CALLE: ", data);
@@ -309,38 +314,38 @@ const MakeApplication = () => {
                                     </optgroup>
 
                                     <optgroup label="Protección Civil">
-                                        <option value="Asistencia en desastres naturales:Protección civil">Asistencia en desastres naturales</option>
-                                        <option value="Evacuación de zonas de riesgo:Protección civil">Evacuación de zonas de riesgo</option>
-                                        <option value="Coordinación de servicios de emergencia:Protección civil">Coordinación de servicios de emergencia</option>
+                                        <option value="Asistencia en desastres naturales:Protección Civil">Asistencia en desastres naturales</option>
+                                        <option value="Evacuación de zonas de riesgo:Protección Civil">Evacuación de zonas de riesgo</option>
+                                        <option value="Coordinación de servicios de emergencia:Protección Civil">Coordinación de servicios de emergencia</option>
                                     </optgroup>
 
                                     <optgroup label="Servicios de Agua y Saneamiento">
-                                        <option value="Reparación de fugas de agua:Servicios de agua y saneamiento">Reparación de fugas de agua</option>
-                                        <option value="Mantenimiento de redes de alcantarillado:Servicios de agua y saneamiento">Mantenimiento de redes de alcantarillado</option>
-                                        <option value="Suministro de agua potable en emergencias:Servicios de agua y saneamiento">Suministro de agua potable en emergencias</option>
+                                        <option value="Reparación de fugas de agua:Servicios de Agua y Saneamiento">Reparación de fugas de agua</option>
+                                        <option value="Mantenimiento de redes de alcantarillado:Servicios de Agua y Saneamiento">Mantenimiento de redes de alcantarillado</option>
+                                        <option value="Suministro de agua potable en emergencias:Servicios de Agua y Saneamiento">Suministro de agua potable en emergencias</option>
                                     </optgroup>
 
                                     <optgroup label="Servicios de Electricidad">
-                                        <option value="Reparación de averías eléctricas:Servicios de electricidad">Reparación de averías eléctricas</option>
-                                        <option value="Restauración del suministro eléctrico tras cortes:Servicios de electricidad">Restauración del suministro eléctrico tras cortes</option>
+                                        <option value="Reparación de averías eléctricas:Servicios de Electricidad">Reparación de averías eléctricas</option>
+                                        <option value="Restauración del suministro eléctrico tras cortes:Servicios de Electricidad">Restauración del suministro eléctrico tras cortes</option>
                                     </optgroup>
 
                                     <optgroup label="Recogida de Residuos y Limpieza Urbana">
-                                        <option value="Recogida de basura:Recogida de residuos y limpieza urbana">Recogida de basura</option>
-                                        <option value="Servicios de limpieza viaria y de espacios públicos:Recogida de residuos y limpieza urbana">Servicios de limpieza viaria y de espacios públicos</option>
-                                        <option value="Recogida de residuos especiales:Recogida de residuos y limpieza urbana">Recogida de residuos especiales</option>
+                                        <option value="Recogida de basura:Recogida de Residuos y Limpieza Urbana">Recogida de basura</option>
+                                        <option value="Servicios de limpieza viaria y de espacios públicos:Recogida de Residuos y Limpieza Urbana">Servicios de limpieza viaria y de espacios públicos</option>
+                                        <option value="Recogida de residuos especiales:Recogida de Residuos y Limpieza Urbana">Recogida de residuos especiales</option>
                                     </optgroup>
 
                                     <optgroup label="Servicios Sociales">
-                                        <option value="Asistencia social y de apoyo a personas vulnerables:Servicios sociales">Asistencia social y de apoyo a personas vulnerables</option>
-                                        <option value="Centros de acogida y albergues:Servicios sociales">Centros de acogida y albergues</option>
-                                        <option value="Programas de asistencia alimentaria y de vivienda:Servicios sociales">Programas de asistencia alimentaria y de vivienda</option>
+                                        <option value="Asistencia social y de apoyo a personas vulnerables:Servicios Sociales">Asistencia social y de apoyo a personas vulnerables</option>
+                                        <option value="Centros de acogida y albergues:Servicios Sociales">Centros de acogida y albergues</option>
+                                        <option value="Programas de asistencia alimentaria y de vivienda:Servicios Sociales">Programas de asistencia alimentaria y de vivienda</option>
                                     </optgroup>
 
                                     <optgroup label="Servicios de Recogida de Poda y Residuos Verdes">
-                                        <option value="Recogida de poda y residuos vegetales:Servicios de recogida de poda y residuos verdes">Recogida de poda y residuos vegetales</option>
-                                        <option value="Gestión de parques y jardines:Servicios de recogida de poda y residuos verdes">Gestión de parques y jardines</option>
-                                        <option value="Reciclaje y compostaje de residuos orgánicos:Servicios de recogida de poda y residuos verdes">Reciclaje y compostaje de residuos orgánicos</option>
+                                        <option value="Recogida de poda y residuos vegetales:Servicios de Recogida de Poda y Residuos Verdes">Recogida de poda y residuos vegetales</option>
+                                        <option value="Gestión de parques y jardines:Servicios de Recogida de Poda y Residuos Verdes">Gestión de parques y jardines</option>
+                                        <option value="Reciclaje y compostaje de residuos orgánicos:Servicios de Recogida de Poda y Residuos Verdes">Reciclaje y compostaje de residuos orgánicos</option>
                                     </optgroup>
                                 </select>
                             </div>

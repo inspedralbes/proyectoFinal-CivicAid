@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('surname');
             $table->string('secondSurname');
-            $table->binary('profileImage'); 
+            $table->binary('profileImage')->nullable(); 
             $table->string('sector');
             $table->string('requestedLocation');
             $table->string('email')->unique();
