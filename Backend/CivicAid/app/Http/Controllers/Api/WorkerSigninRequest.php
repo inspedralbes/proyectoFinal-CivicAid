@@ -69,7 +69,7 @@ class WorkerSigninRequest extends Controller
             // Construye la URL del archivo concatenando el path de almacenamiento con el nombre del archivo
             $baseUrl = config('app.url');
             $port = ':8000';
-            $imageUrl = $baseUrl . $port . '/storage/' . $profileImagePath;
+            $imageUrl = $baseUrl . '/storage/' . $profileImagePath;
 
             // Almacena la URL en la base de datos
             $workerRequest->profileImage = $imageUrl;
@@ -80,20 +80,20 @@ class WorkerSigninRequest extends Controller
 
             Log::error('Intentando enviar email a: ' . $request->email);
 
-            try {
-                Mail::raw('This is a test email using Gmail SMTP from Laravel.', function ($message) {
-                    $message->to('carlosgomezfuentes2003@gmail.com')->subject('Test Email');
-                });
+            // try {
+            //     Mail::raw('This is a test email using Gmail SMTP from Laravel.', function ($message) {
+            //         $message->to('carlosgomezfuentes2003@gmail.com')->subject('Test Email');
+            //     });
 
-                // Mail::send('emails.pruebaMail', [], function ($message) {
-                //     $message->to('carlosgomezfuentes2003@gmail.com')->subject('Test Email');
-                // });
-            } catch (\Throwable $th) {
-                // Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage()  . ' Stack trace: ' . $th->getTraceAsString());
-                Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage() . ' Stack trace: ' . $th->getTraceAsString());
+            //     // Mail::send('emails.pruebaMail', [], function ($message) {
+            //     //     $message->to('carlosgomezfuentes2003@gmail.com')->subject('Test Email');
+            //     // });
+            // } catch (\Throwable $th) {
+            //     // Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage()  . ' Stack trace: ' . $th->getTraceAsString());
+            //     Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage() . ' Stack trace: ' . $th->getTraceAsString());
 
-                return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
-            }
+            //     return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
+            // }
 
 
             // try {
