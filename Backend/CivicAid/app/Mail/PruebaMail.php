@@ -8,29 +8,22 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-// use Illuminate\Support\Facades\Log;
-// use Symfony\Component\Mime\Email;
 
-class registrationRequestEmail extends Mailable
+class PruebaMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
-
-    public function __construct($user)
+    /**
+     * Create a new message instance.
+     */
+    public function __construct()
     {
-        $this->user = $user;
+        //
     }
-
     public function build()
-    {
-
-        return $this->markdown('emails.registration.request')
-            ->subject('Your Registration Request is Being Processed')
-            ->with([
-                'name' => $this->user,
-            ]);
-    }
+{
+    return $this->markdown('emails.pruebaMail');
+}
 
     /**
      * Get the message envelope.
@@ -38,7 +31,7 @@ class registrationRequestEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Registration Request Email',
+            subject: 'Prueba Mail',
         );
     }
 
@@ -48,7 +41,7 @@ class registrationRequestEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.registration.request',
+            view: 'view.name',
         );
     }
 

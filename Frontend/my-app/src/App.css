@@ -2,28 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes fadeInLeft {
+@keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateX(-20px);
+        transform: translateY(10px);
     }
-
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateY(0);
     }
 }
 
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-        transform: translateX(0);
-    }
-
-    to {
-        opacity: 0;
-        transform: translateX(20px);
-    }
+.fade-in-element {
+    animation: fadeIn 0.5s ease-out forwards;
 }
 
 .animated-entry {
@@ -32,6 +23,22 @@
 
 .fade-out {
     animation: fadeOut 1s ease-out forwards;
+}
+
+.img-citizen {
+    position: absolute;
+    top: 0;
+    left: -100%; /* Comienza fuera del botón */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    transition: left 0.5s ease-in-out;
+    z-index: 0; /* Asegúrate de que esté detrás del texto y del SVG */
+}
+
+.button-container:hover .img-citizen {
+    left: 0; /* Desliza hacia la posición central al hacer hover */
 }
 
 img.rounded-lg {

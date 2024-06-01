@@ -14,7 +14,7 @@ class SectorsSeeder extends Seeder
     public function run(): void
     {
         $sectors = [
-            'Servicios Médicos', 'Bomberos', 'Policía', 'Protección Civil', 'Servicios de Agua y Saneamiento', 'Servicios de Electricidad', 'Recogida de Residuos y Limpieza Urbana', 'Servicios de Recogida de Poda y Residuos Verdes'
+            'Servicios Médicos', 'Bomberos', 'Policía', 'Protección Civil', 'Servicios de Agua y Saneamiento', 'Servicios de Electricidad', 'Recogida de Residuos y Limpieza Urbana', 'Servicios de Recogida de Poda y Residuos Verdes', 'Servicios Sociales'
         ];
 
         foreach ($sectors as $sector) {

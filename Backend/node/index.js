@@ -133,6 +133,29 @@ io.on("connection", (socket) => {
         });
     });
 
+    socket.on("cancelInvitation", (data) => {
+        const usersList = data.usersList;
+        const hostId = data.hostId;
+        const applicationId = data.applicationId;
+        console.log(data);
+
+        usersList.forEach(user => {
+            const employeeSocketInfo = employeeSocketMap[user.id];
+
+            if (employeeSocketInfo && employeeSocketInfo.socketId && user.id !== hostId) {
+                // La información del socket existe y tiene un socketId, y el usuario no es el anfitrión
+                console.log(employeeSocketInfo);
+                io.to(employeeSocketInfo.socketId).emit("invitationCanceled", {
+                    message: "Invitación cancelada",
+                    applicationId,
+                });
+            } else {
+                // La información del socket no existe, no tiene socketId, o es el anfitrión
+                console.log(user.id + " No existe en el socketMap, no tiene socketId o es el anfitrión");
+            }
+        });
+    })
+
     socket.on("acceptInvitation", (data) => {
         console.log("Revisando lobbies para el código:", data.lobbyCode);
 
@@ -161,16 +184,35 @@ io.on("connection", (socket) => {
                         // }
 
                         if (socketId) {
+                            // lobby.users.forEach(user => {
+                            //     if (user.workerId != data.workerId) {
+                            //         io.to(employeeSocketMap[user.workerId].socketId).emit("newUserInLobby", {
+                            //             users: Array.from(lobby.users),
+                            //             startApplication: true,
+                            //         })
+                            //     }
+                            // })
+
                             io.to(socketId).emit("newUserInLobby", {
                                 users: Array.from(lobby.users),
                                 startApplication: true,
                             });
 
-                            console.log("USERS: ", lobby.users);
-                            io.to(socketIdUser).emit("newUserInLobby", {
-                                users: Array.from(lobby.users),
-                                startApplication: false,
-                            });
+                            lobby.users.forEach(user => {
+                                if (user.workerId != lobby.lobbyCreator) {
+                                    io.to(employeeSocketMap[user.workerId].socketId).emit("newUserInLobby", {
+                                        users: Array.from(lobby.users),
+                                        startApplication: false,
+                                    })
+                                }
+                            })
+
+                            // io.to(socketIdUser).emit("newUserInLobby", {
+                            //     users: lobby.users,
+                            //     startApplication: false,
+                            // });
+
+                            console.log("USUARIOS DEL LOBBY: ", lobby.users);
                         } else {
                             console.log("No se encontró el socket ID para el creador del lobby.");
                         }

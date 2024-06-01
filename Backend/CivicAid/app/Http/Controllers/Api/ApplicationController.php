@@ -45,7 +45,7 @@ class ApplicationController extends Controller
             $baseUrl = config('app.url');
             $port = ':8000'; // Define el puerto aquí
 
-            $imageUrl = $baseUrl . $port . '/storage/' . $imagePath;
+            $imageUrl = $baseUrl . '/storage/' . $imagePath;
 
             // Almacena la URL en la base de datos
             $application->image = $imageUrl;

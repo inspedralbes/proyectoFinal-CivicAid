@@ -10,24 +10,27 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\registrationRequestEmail;
-use App\Mail\registrationRequestDenied;
+// use App\Mail\registrationRequestDenied;
+use App\Mail\PruebaMail;
 
 use App\Models\Province;
 use App\Models\Sector;
 use App\Models\SigninRequest;
-use PhpParser\Node\Stmt\TryCatch;
-use Throwable;
+// use PhpParser\Node\Stmt\TryCatch;
+// use Throwable;
 
 class WorkerSigninRequest extends Controller
 {
-    public function listProvinces(){
+    public function listProvinces()
+    {
 
         $provinces = Province::all();
 
         return response()->json($provinces);
     }
 
-    public function listSectors(){
+    public function listSectors()
+    {
 
         $sectors = Sector::all();
 
@@ -38,18 +41,19 @@ class WorkerSigninRequest extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             // Validación de los datos
             $validatedData = $request->validate([
-                'dni' => 'required',
+                'dni' => 'required|unique:workers_requests,dni',
                 'name' => 'required',
                 'surname' => 'required',
                 'secondSurname' => 'required',
+                'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Permitir solo ciertas extensiones de archivo
                 'sector' => 'required',
                 'requestedLocation' => 'required',
                 'email' => 'required|email|unique:workers_requests',
             ]);
-        
+
             // Creación y guardado de la solicitud
             $workerRequest = new SigninRequest;
             $workerRequest->dni = $request->dni;
@@ -59,33 +63,59 @@ class WorkerSigninRequest extends Controller
             $workerRequest->sector = $request->sector;
             $workerRequest->requestedLocation = $request->requestedLocation;
             $workerRequest->email = $request->email;
-            
+
+            $profileImagePath = $request->file('profileImage')->store('images', 'public');
+
+            // Construye la URL del archivo concatenando el path de almacenamiento con el nombre del archivo
+            $baseUrl = config('app.url');
+            $port = ':8000';
+            $imageUrl = $baseUrl . '/storage/' . $profileImagePath;
+
+            // Almacena la URL en la base de datos
+            $workerRequest->profileImage = $imageUrl;
+
             $workerRequest->save();
-        
-            // Envío del email
-            // Log::info('Path to the email view:', [resource_path('views/emails/registration/request.blade.php')]);
+
+            // Enviar el correo electrónico
+
+            Log::error('Intentando enviar email a: ' . $request->email);
+
+            // try {
+            //     Mail::raw('This is a test email using Gmail SMTP from Laravel.', function ($message) {
+            //         $message->to('carlosgomezfuentes2003@gmail.com')->subject('Test Email');
+            //     });
+
+            //     // Mail::send('emails.pruebaMail', [], function ($message) {
+            //     //     $message->to('carlosgomezfuentes2003@gmail.com')->subject('Test Email');
+            //     // });
+            // } catch (\Throwable $th) {
+            //     // Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage()  . ' Stack trace: ' . $th->getTraceAsString());
+            //     Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage() . ' Stack trace: ' . $th->getTraceAsString());
+
+            //     return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
+            // }
+
+
             // try {
             //     Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
-            //     Mail::to($request->email)->send(new registrationRequestDenied($workerRequest));
-                
-            // } catch (\Throwable $th) {
-            //     return response("DA ERROR SISISI \n". $th);
+            // } catch (\Exception $exception) {
+            //     // Registrar el error
+            //     Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $exception->getMessage());
+
+            //     return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
             // }
-    
-            // Todo ha ido bien, hacemos commit
+
             DB::commit();
-        
+
             // Respuesta exitosa
             $message = "Request registered correctly.";
             return response()->json([$message]);
         } catch (\Throwable $e) {
             // Algo ha fallado, hacemos rollback
             DB::rollBack();
-        
-            // Logueamos el error
+
             Log::error('Error al procesar la solicitud de registro: ' . $e->getMessage());
-        
-            // Respondemos con un mensaje de error genérico
+
             // $errorMessage = 'Error al procesar la solicitud de registro.';
             // return response()->json([$e], 500);
             return response("DA ERROR EN CONTROLADOR", $e);

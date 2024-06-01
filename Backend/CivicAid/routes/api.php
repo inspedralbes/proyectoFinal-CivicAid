@@ -10,16 +10,6 @@ use App\Http\Controllers\Api\WorkerSigninRequest;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\WorkerApplicationController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -51,6 +41,8 @@ Route::post('/updateRequestStatus/{id}', [AdminController::class, 'updateRequest
 Route::post('/listApplicationsLocation', [AdminController::class, 'listApplicationsLocation']); 
 Route::post('/listWorkers', [AdminController::class, 'listWorkers']); 
 Route::post('/assignApplication', [AdminController::class, 'assignApplication']); 
+Route::post('/listAcceptedSignInRequests', [AdminController::class, 'listAcceptedSignInRequests']); 
+Route::post('/listAssignedApplicationsWorkers', [AdminController::class, 'listAssignedApplicationsWorkers']); 
 
 Route::post('/listAssignedApplications', [WorkerApplicationController::class, 'listAssignedApplications']); 
 Route::post('/checkOngoingApp', [WorkerApplicationController::class, 'checkOngoingApp']); 

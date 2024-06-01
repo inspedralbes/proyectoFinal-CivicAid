@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('workers', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('approvedBy');
             $table->string('dni');
             $table->string('name');
             $table->string('surname');
             $table->string('secondSurname');
+            $table->string('profileImage')->nullable(); 
             $table->string('sector');
             $table->string('assignedLocation');
             $table->enum('workerStatus', ['inService', 'available'])->default('available');
@@ -24,6 +26,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->timestamps();
+
+            $table->foreign('approvedBy')->references('id')->on('admins');
+
         }, ['charset' => 'utf8mb4', 'collation' => 'utf8mb4_unicode_ci']);
     }
 

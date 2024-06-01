@@ -17,9 +17,11 @@ class WorkerAuthController extends Controller
     {
         $request->validate([
             'id' => 'required',
+            'approvedBy' => 'required',
             'name' => 'required',
             'surname' => 'required',
             'secondSurname' => 'required',
+            'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Permitir solo ciertas extensiones de archivo
             'sector' => 'required',
             'email' => 'required|email|unique:workers',
             'password' => 'required',
@@ -27,6 +29,7 @@ class WorkerAuthController extends Controller
 
         $worker = new Worker;
         $worker->id = $request->id;
+        $worker->approvedBy = $request->approvedBy;
         $worker->name = $request->name;
         $worker->surname = $request->surname;
         $worker->secondSurname = $request->secondSurname;
@@ -34,6 +37,17 @@ class WorkerAuthController extends Controller
         $worker->assignedLocation = $request->assignedLocation;
         $worker->email = $request->email;
         $worker->password = Hash::make($request->password);
+
+        $profileImagePath = $request->file('profileImage')->store('images', 'public');
+
+        // Construye la URL del archivo concatenando el path de almacenamiento con el nombre del archivo
+        $baseUrl = config('app.url');
+        $port = ':8000'; // Define el puerto aquí
+
+        $imageUrl = $baseUrl . '/storage/' . $profileImagePath;
+
+        // Almacena la URL en la base de datos
+        $worker->profileImage = $imageUrl;
 
 
         try {
@@ -56,7 +70,7 @@ class WorkerAuthController extends Controller
         ]);
 
         $user = Worker::where('email', $credentials['email'])->where('dni', $credentials['dni'])->first();
-
+        
         if ($user && Hash::check($credentials['password'], $user->password)) {
             $token = $user->createToken('token')->plainTextToken;
 
