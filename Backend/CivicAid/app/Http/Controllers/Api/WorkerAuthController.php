@@ -44,7 +44,7 @@ class WorkerAuthController extends Controller
         $baseUrl = config('app.url');
         $port = ':8000'; // Define el puerto aquí
 
-        $imageUrl = $baseUrl . $port . '/storage/' . $profileImagePath;
+        $imageUrl = $baseUrl . '/storage/' . $profileImagePath;
 
         // Almacena la URL en la base de datos
         $worker->profileImage = $imageUrl;
