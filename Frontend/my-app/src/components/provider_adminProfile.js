@@ -2,8 +2,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actions } from './store';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
-// import moment from 'moment';
-// import { useTranslation } from 'react-i18next';
 import Swal from "sweetalert2";
 
 const UserInfo = () => {
@@ -33,10 +31,10 @@ const UserInfo = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const [activeTab, setActiveTab] = useState("tab1"); // initialize active tab to tab1
+    const [activeTab, setActiveTab] = useState("tab1");
 
     const handleTabClick = (tab) => {
-        setActiveTab(tab); // update active tab based on the tab clicked
+        setActiveTab(tab);
     };
 
     const handleApplicationModal = (application) => {
@@ -118,7 +116,6 @@ const UserInfo = () => {
         <div className="overflow-auto h-screen w-screen flex justify-center items-center lg:bg-orange-300">
             {isAdmin ?
                 <div className="overflow-auto container h-full w-full lg:w-9/12 lg:rounded-lg bg-gray-800 shadow-lg dark:bg-neutral-800">
-                    {/* {isWorker ? */}
                     <div className=" p-4 text-center text-white">
                         <nav className="backdrop-filter backdrop-blur-l bg-opacity-30 border-b-4 border-orange-600 p-4">
                             <div className="flex">
@@ -130,7 +127,7 @@ const UserInfo = () => {
 
                                 <li className={`w-6/12 my-auto list-none`}>
                                     <button onClick={() => handleTabClick("tab2")} className={`text-gray-300 text-xl hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 font-medium cursor-pointer ${activeTab === "tab2" ? "active bg-gray-700" : ""}`}>
-                                        Tus solicitudes aceptadas
+                                        Solicitudes gestionadas
                                     </button>
                                 </li>
 
@@ -155,9 +152,9 @@ const UserInfo = () => {
                                     <div className="mt-5 flex items-center justify-center">
                                         <div className="mt-5 container border-4 border-orange-500 bg-orange-300 rounded-lg md:w-[600px] w-full md:shadow-lg transform duration-200 easy-in-out">
                                             <div className="h-32 overflow-hidden" >
-                                                {/* <img className="w-full" 
-                                                            src={banner} 
-                                                            alt="Banner Img" /> */}
+                                                <img className="w-full h-full object-cover"
+                                                    src="profileBanner.jpg"
+                                                    alt="Banner Img" />
                                             </div>
                                             <div className="bg-orange-200">
                                                 <NavLink to="/" className="h-[20px] w-[20px] block pt-5 ml-5">
@@ -167,14 +164,6 @@ const UserInfo = () => {
                                                         </svg>
                                                     </button>
                                                 </NavLink>
-                                                <div className="h-16 overflow-hidden"></div>
-                                                <div className="flex justify-center px-5 -mt-40 mb-4">
-                                                    <img
-                                                        className="h-32 w-32 bg-orange-500 p-2 rounded-full"
-                                                        src={workerInfo.profileImage}
-                                                        alt=""
-                                                    ></img>
-                                                </div>
                                                 <div className='text-center text-black font-bold'>
                                                     <h3>ID de administrador: {workerInfo.id}</h3>
                                                 </div>
@@ -202,7 +191,7 @@ const UserInfo = () => {
                                     <div className="mt-5">
                                         <div className="">
                                             {/* Tabla de Solicitudes No Compartidas */}
-                                            <h2 className="text-xl font-semibold mb-3">Solicitudes de registro</h2>
+                                            <h2 className="text-xl font-semibold mb-3">Solicitudes de registro aprovadas</h2>
                                             <table className="table-auto w-full border-collapse border border-t-0 border-b-0 border-r-0 border-l-0 border-gray-200 mb-6">
                                                 <thead>
                                                     <tr>
@@ -211,8 +200,6 @@ const UserInfo = () => {
                                                         <th className="px-4">Nombre</th>
                                                         <th className="px-4">Ubicación asignada</th>
                                                         <th className="px-4">Sector</th>
-                                                        {/* <th className="px-4">Fecha</th>
-                                                        <th className="px-4">Estado</th> */}
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200 ">
@@ -231,7 +218,7 @@ const UserInfo = () => {
 
                                         <div className="mt-10">
                                             {/* Tabla de Solicitudes Compartidas */}
-                                            <h2 className="text-xl font-semibold mb-3">Solicitudes Compartidas</h2>
+                                            <h2 className="text-xl font-semibold mb-3">Solicitudes Asignadas</h2>
                                             <table className="table-auto w-full border-collapse border border-t-0 border-b-0 border-r-0 border-l-0 border-gray-200 mb-6">
                                                 <thead>
                                                     <tr>
@@ -275,7 +262,6 @@ const UserInfo = () => {
 
                                 <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                        {/* <div className=""> */}
                                         <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12">
                                             {/* Icono de advertencia */}
                                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -295,7 +281,6 @@ const UserInfo = () => {
                                                 </p>
                                             </div>
                                         </div>
-                                        {/* </div> */}
                                     </div>
                                     <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                                         <button onClick={() => logout()} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
@@ -427,23 +412,19 @@ const UserInfo = () => {
                 <div>
                     <div className="p-10 text-center bg-gray-800 text-white font-bold rounded-lg">
                         <p className="mb-6 text-lg lg:text-2xl sm:px-16 xl:px-48 dark:text-gray-400">
-                            {/* {t('profileNotLoggedIn')} */}
                             NO HAS INICIADO SESIÓN
                         </p>
                         <p className="mb-6 text-lg lg:text-2xl sm:px-16 xl:px-48 dark:text-gray-400">
-                            {/* {t('userNotLoggedError')} */}
                             Debes iniciar sesión para poder acceder a esta parte de la página
                         </p>
                         <div className='flex justify-center uppercase'>
                             <div className='mr-2'>
                                 <NavLink to="/login" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-purple-800 rounded-lg hover:bg-purple-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                                    {/* {t('logIn')} */}
                                     INICIAR SESIÓN
                                 </NavLink>
                             </div>
                             <div className='ml-2'>
                                 <NavLink to="/signin" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-white bg-purple-800 rounded-lg hover:bg-purple-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                                    {/* {t('signIn')} */}
                                     REGISTRARSE
                                 </NavLink>
                             </div>

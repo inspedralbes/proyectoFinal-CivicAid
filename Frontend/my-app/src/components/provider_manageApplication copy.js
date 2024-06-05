@@ -24,7 +24,6 @@ const ManageApplication = () => {
     useEffect(() => {
         async function fetchApplications() {
 
-            console.log("SOLICITUD EN MARCHA:", applicationOngoingInfo);
             if (isWorker) {
                 try {
                     const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listAssignedApplications', {
@@ -36,7 +35,6 @@ const ManageApplication = () => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
-                    console.log("ASSIGNED: ", data);
 
                     setApplicationInfo(data)
 
@@ -50,7 +48,6 @@ const ManageApplication = () => {
 
 
     const handleApplication = async (e) => {
-        // e.preventDefault(e);
         setLoading(true);
 
         if (checkAppOngoing) {
@@ -71,8 +68,6 @@ const ManageApplication = () => {
 
                 const data = await response.json();
 
-                console.log(data);
-
             } catch (error) {
                 console.error("ESTE ES EL ERROR: ", error);
             }
@@ -85,7 +80,6 @@ const ManageApplication = () => {
 
 
     const updateAppOngoing = async (e) => {
-        // e.preventDefault(e);
         setLoading(true);
         setShowModal(false);
 
@@ -102,7 +96,6 @@ const ManageApplication = () => {
                 body: JSON.stringify({ applicationStatus }),
             });
             const data = await response.json();
-            console.log("PRIMER STATUS: ", data);
 
         } catch (error) {
             console.error("ERROR EN EL PRIMER FETCH: ", error);
@@ -120,7 +113,6 @@ const ManageApplication = () => {
                 body: JSON.stringify({ applicationStatus }),
             });
             const data2 = await response2.json();
-            console.log("SEGUNDO STATUS: ", data2);
 
             navigate("/");
             dispatch(actions.applicationOngoing(e))

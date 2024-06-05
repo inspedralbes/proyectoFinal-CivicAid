@@ -36,7 +36,6 @@ const LoginForm = () => {
 
             const data = await response.json();
 
-            console.log("DATA DEL LOGIN: ", data);
             if (data.isLoggedIn) {
 
                 // Verificar si la variable "applicationOngoingInfo" tiene valor o no
@@ -46,10 +45,7 @@ const LoginForm = () => {
                     const applicationOngoingInfo = parsedData.applicationOngoingInfo;
                     const applicationOngoing = parsedData.applicationOngoing;
 
-                    console.log("Esta la aplicacion en marcha? ", applicationOngoing);
-                    console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
                     dispatch(actions.checkAppOngoing());
-                    console.log("Y ahora? ", applicationOngoing);
 
                 } else {
                     console.log('La variable del Local Storage está vacía');
@@ -60,7 +56,6 @@ const LoginForm = () => {
                 localStorage.setItem('access_token', data[0]);
                 navigate("/")
 
-                console.log(data[1].sector);
 
                 Swal.fire({
                     position: "bottom-end",
@@ -101,7 +96,6 @@ const LoginForm = () => {
                 </p> :
                 <div className="g-6 flex h-full flex-wrap items-center justify-center">
                     <div className="w-full h-screen lg:h-3/4 mb-14 lg:rounded-lg p-10 bg-gray-800 shadow-lg dark:bg-neutral-800">
-                        {/* <div className=""> */}
                         <NavLink to="/">
                             <div className="text-center">
                                 <img
@@ -165,7 +159,6 @@ const LoginForm = () => {
                             </div>
 
                         </form>
-                        {/* </div> */}
                     </div>
                 </div>
             }

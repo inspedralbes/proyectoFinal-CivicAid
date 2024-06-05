@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, NavLink } from "react-router-dom";
 import Swal from 'sweetalert2';
-// import logo from "../../public/logoPequeñoCivicAid.png"
 
 function SigninForm() {
     const [dni, setDni] = useState('');
@@ -34,11 +33,9 @@ function SigninForm() {
                 });
                 const data = await response.json();
 
-                // Convertimos el objeto en un arreglo utilizando Object.values()
                 const locationsArray = Object.values(data);
-                // Ahora puedes utilizar el método map en locationsArray
+
                 locationsArray.map(location => {
-                    // Hacer algo con cada ubicación
                     console.log(location.name);
                 });
                 setLocations(locationsArray)
@@ -58,10 +55,9 @@ function SigninForm() {
                     },
                 });
                 const data = await response.json();
-                // Convertimos el objeto en un arreglo utilizando Object.values()
+
                 const sectorsArray = Object.values(data);
-                // console.log(sectorsArray); // Esto imprimirá el arreglo de objetos
-                // Ahora puedes utilizar el método map en locationsArray
+
                 sectorsArray.map(sector => {
                     // Hacer algo con cada ubicación
                     console.log(sector.sector);
@@ -124,32 +120,27 @@ function SigninForm() {
             try {
                 const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signinRequest', {
                     method: 'POST',
-                    // headers: {
-                    //     'Content-Type': 'application/json',
-                    // },
                     body: formData,
                 });
                 if (!response.ok) {
                     throw new Error(response.statusText);
                 }
                 const data = await response.json();
-                // if (data.isRegistered) {
                 navigate("/")
                 Swal.fire({
                     position: "bottom-end",
                     icon: "success",
-                    title: "Tu solicitud se ha enviado correctamente. Un administrador gestionará tu solicitud lo antes posible",
+                    title: "Tu solicitud se ha enviado correctamente. Un administrador gestionará tu solicitud lo antes posible.",
                     showConfirmButton: false,
                     timer: 6000,
                 });
-                // }
 
                 setLoading(false);
             } catch (error) {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "error",
-                    title: "An error occurred while loading",
+                    title: "Ha ocurrido un error durante la carga",
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -160,7 +151,7 @@ function SigninForm() {
             Swal.fire({
                 position: "bottom-end",
                 icon: "error",
-                title: "DNI mal amego",
+                title: "DNI incorrecto",
                 showConfirmButton: false,
                 timer: 1500,
             });

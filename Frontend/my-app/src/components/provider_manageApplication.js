@@ -44,15 +44,6 @@ const ManageApplication = ({ socket }) => {
     const applicationNodeOngoing = useSelector((state) => state.applicationNodeOngoing);
     const applicationOngoing = useSelector((state) => state.applicationOngoing);
 
-
-    // const [isCurrentAppInvited, setIsCurrentAppInvited] = useState(false);
-    // const [currentAppInvitedLobbyCode, setCurrentAppInvitedLobbyCode] = useState([]);
-
-
-    // console.log("SOCKET: ", socket.id);
-    // console.log("????", actualLobbyCode);
-
-    console.log("QUE ES? ", applicationOngoingInfo);
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
@@ -77,7 +68,6 @@ const ManageApplication = ({ socket }) => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
-                    console.log("APPLICATION INFO: ", data);
                     setApplicationInfo(data)
 
                 } catch (error) {
@@ -97,10 +87,6 @@ const ManageApplication = ({ socket }) => {
      * USE EFFECT DE LOS SOCKETS
      */
     useEffect(() => {
-        console.log("HASTA AQUI LLEGA NOOOOO?");
-
-        // setLoading(true);
-        // socket.on("connect", () => {
         console.log("Conectado al servidor");
 
         /**
@@ -117,42 +103,23 @@ const ManageApplication = ({ socket }) => {
             workerId: workerId
         }
         socket.emit("fetchMultipleAssigned", fetchMultipleAssignedData);
-        // });
 
-
-        // const handleReturnFetchMultipleAssigned = (data) => {
-        //     // console.log("Solicitudes de NODE: ", data);
-        //     // setApplicationsNode(data.applications);
-        // };
-        // Configurar el listener
         socket.on("returnFetchMultipleAssigned", (data) => {
-            console.log("Solicitudes de NODE: ", data);
             setApplicationsNode(data.applications);
         });
 
 
-        // Limpiar el listener anterior al desmontar el componente o al actualizar el efecto
-        return () => {
-            // socket
-            // socket.off("returnFetchMultipleAssigned");
-        };
     }, [receivedInvitations]);
 
 
     socket.on("lobbiesUnido", (data) => {
-        console.log("LAS LOBIS MAJAS: ", data);
+        console.log("LAS LOBIS: ", data);
     })
 
     /**
     * SOCKET PARA CONTROLAR CUANDO TE INVITAN
     */
     socket.on("invitationReceived", (data) => {
-        // Aquí puedes actualizar el estado para mostrar la invitación en la UI
-        console.log("DATA??: ", data.message);
-        console.log("ESTADO??: ", data.invitation);
-        console.log("ID SOLICITUD??: ", data.applicationId);
-        console.log("CODIGO DEL LOBBY??: ", data.lobbyCode);
-
         try {
             setReceivedInvitations(prev => new Map(prev).set(data.applicationId, { lobbyCode: data.lobbyCode, invited: true }));
 
@@ -191,7 +158,6 @@ const ManageApplication = ({ socket }) => {
      * SOCKET PARA MANEJAR CADA VEZ QUE UN USUARIO SE UNE A UNA LOBBY
      */
     socket.on("newUserInLobby", (data) => {
-        console.log("USERS LIST: ", data);
         setUsersList(data.users);
         setCanStartApplication(data.startApplication)
     })
@@ -200,9 +166,8 @@ const ManageApplication = ({ socket }) => {
      * SOCKET PARA QUE, CUANDO EL ANFITRION DE LA SALA LE DA A ACEPTAR, SE ACTIVE LA SOLICITUD PARA TODOS LOS EMPLEADOS DE LA SALA
      */
     socket.on("returnAppOngoing", (data) => {
-        console.log("EL RETURN: ", data);
 
-        dispatch(actions.applicationNodeOngoing(data.actualApplication)) //Guardamos en Redux la solicitud que hemos aceptado
+        dispatch(actions.applicationNodeOngoing(data.actualApplication))
 
         // Mostramos un mensaje de éxito
         Swal.fire({
@@ -248,14 +213,8 @@ const ManageApplication = ({ socket }) => {
         }
     });
 
-    // const handleApplicationModal = (application) => {
-    //     setShowModal(true);
-    //     console.log(application);
-    // };
     const maxUsers = (e) => {
         setCountMaxUsers(e.workers.length);
-        console.log("Número máximo de usuarios: ", e.workers.length);
-
     }
 
     const codeGenerator = () => {
@@ -264,7 +223,6 @@ const ManageApplication = ({ socket }) => {
         );
 
         return randomCode;
-        // setRoom(randomCode);
     };
 
     const cancelInvitation = () => {
@@ -274,16 +232,14 @@ const ManageApplication = ({ socket }) => {
             hostId: workerId
         })
 
-        setInvitationCreated(false); //Ponemos en falso para que no se muestre el modal del lobby
+        setInvitationCreated(false);
 
-        console.log(actualApplication.workers);
     }
     const acceptInvitation = (applicationId, lobbyCode) => {
         if (applicationOngoing) {
             setShowModal(true);
         } else {
             const getInvitation = receivedInvitations.get(applicationId);
-            console.log(`INVITACION PARA SOLICITUD ${applicationId} `, getInvitation);
             if (getInvitation.invited) {
                 setActualLobbyCode(lobbyCode);
                 socket.emit("acceptInvitation", {
@@ -304,17 +260,14 @@ const ManageApplication = ({ socket }) => {
         try {
             if (!applicationNodeOngoing) {
 
-                // setInvitationModal(false)
-
                 const room = codeGenerator();
                 maxUsers(e);
 
-                // Podrías necesitar adaptar este objeto a los detalles exactos que tu backend espera
                 const invitationData = {
                     applicationId: e.id,
                     assignedWorkers: e.workers,
-                    hostId: workerId, // Asegúrate de tener este dato disponible
-                    lobbyCode: room, // Suponiendo que cada solicitud tiene un código de lobby asociado
+                    hostId: workerId,
+                    lobbyCode: room,
                     maxUsers: e.workers.length,
                     completeName: completeName,
                 };
@@ -326,8 +279,6 @@ const ManageApplication = ({ socket }) => {
                 setActualApplication(e);
                 setActualLobbyCode(room);
 
-                console.log("Invitación enviada a los sockets:", invitationData);
-                // Aquí puedes mostrar una confirmación al usuario de que la invitación ha sido enviada
             } else {
                 setInvitationModal(true)
             }
@@ -337,9 +288,7 @@ const ManageApplication = ({ socket }) => {
     }
 
     const handleApplication = async (e) => {
-        // e.preventDefault(e);
 
-        console.log(checkAppOngoing);
         if (checkAppOngoing) {
             // Mostrar el modal
             setShowModal(true);
@@ -362,8 +311,6 @@ const ManageApplication = ({ socket }) => {
 
                 const data = await response.json();
 
-                console.log(data);
-
             } catch (error) {
                 console.error("ESTE ES EL ERROR: ", error);
             } finally {
@@ -377,19 +324,16 @@ const ManageApplication = ({ socket }) => {
     }
 
     const handleNodeApplication = async () => {
-        console.log("ESTA ES LA PEDAZO DE LISTA: ", usersList)
 
         socket.emit("startApplication", {
             usersList: usersList,
             actualApplication: actualApplication,
             token: token,
-            // actualLobbyCode: actualLobbyCode 
         })
     }
 
 
     const updateAppOngoing = async (e) => {
-        // e.preventDefault(e);
         setLoading(true);
         setShowModal(false);
 
@@ -406,7 +350,6 @@ const ManageApplication = ({ socket }) => {
                 body: JSON.stringify({ applicationStatus }),
             });
             const data = await response.json();
-            // console.log("PRIMER STATUS: ", data);
 
         } catch (error) {
             console.error("ERROR EN EL PRIMER FETCH: ", error);
@@ -424,7 +367,6 @@ const ManageApplication = ({ socket }) => {
                 body: JSON.stringify({ applicationStatus }),
             });
             const data2 = await response2.json();
-            // console.log("SEGUNDO STATUS: ", data2);
 
             navigate("/");
             dispatch(actions.applicationOngoing(e))
@@ -438,13 +380,7 @@ const ManageApplication = ({ socket }) => {
         }
     }
 
-    /**
-     * Funcion que identifica las solicitudes a las que han llegado una invitacion
-     * @param {*} e 
-     */
-    const checkApplicationInvitation = async (e) => {
-
-    }
+   
     return (
         <main className="h-screen overflow-auto flex justify-center items-center lg:bg-orange-300">
             {isWorker ? (
@@ -520,10 +456,6 @@ const ManageApplication = ({ socket }) => {
                                                             </p>
 
                                                         </div>
-
-                                                        {/* <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                        {application.applicationStatus}
-                                                    </p> */}
                                                     </div>
                                                     <div className="p-6 pt-3">
                                                         <button
@@ -693,9 +625,6 @@ const ManageApplication = ({ socket }) => {
                                                 </div>
                                             </div>
                                             <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                                {/* <button onClick={() => updateAppOngoing(application)} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                                                                Proceder
-                                                            </button> */}
                                                 <button onClick={() => setInvitationModal(false)} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                                                     Cerrar
                                                 </button>

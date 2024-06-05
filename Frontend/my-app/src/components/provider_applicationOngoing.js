@@ -24,8 +24,6 @@ const ApplicationOngoing = ({ socket }) => {
     console.log(applicationOngoing);
     console.log(applicationNodeOngoing);
 
-    // { console.log("EXPLANATION: ", explanation) }
-
     useEffect(() => {
 
         async function fetchApplication() {
@@ -61,8 +59,6 @@ const ApplicationOngoing = ({ socket }) => {
     useEffect(() => {
         socket.emit("register", workerId);
 
-        // socket.emit('requestCurrentText', workerId);
-
         socket.on('textUpdate', (updatedText) => {
             setExplanation(updatedText);
         });
@@ -70,7 +66,6 @@ const ApplicationOngoing = ({ socket }) => {
     }, [socket]);
 
     socket.on('textUpdate', (updatedText) => {
-        // console.log(updatedText);
         setExplanation(updatedText);
         forceUpdate();
 
@@ -89,20 +84,9 @@ const ApplicationOngoing = ({ socket }) => {
 
 
     const handleSubmit = async (e) => {
-        // e.preventDefault();
         setLoading(true);
-        // const applicationStatus = 'completed';
 
         try {
-            // const response = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/updateApplicationStatus/${applicationOngoing.id}`, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Authorization': `Bearer ${token}`,
-            //     },
-            //     body: JSON.stringify({ applicationStatus }),
-            // });
-
             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/applicationCompleted`, {
                 method: 'POST',
                 headers: {
@@ -112,11 +96,8 @@ const ApplicationOngoing = ({ socket }) => {
                 body: JSON.stringify({ applicationId: applicationFetch.id, workerId, applicationExplanation }),
             });
 
-            // data = await response.json();
-            // console.log("DATATATATATATATA", data);
             const data = await response.json();
 
-            console.log("DATATATATAT: ", data);
             if (!response.ok) {
                 throw new Error(response.statusText);
             } else {
@@ -127,8 +108,7 @@ const ApplicationOngoing = ({ socket }) => {
                 Swal.fire({
                     position: "center",
                     icon: "error",
-                    title: "The application status did not updated correctly. Please try again",
-                    // html: "Remember to fill correctly all the fields",
+                    title: "El estado de la solicitud no se ha podido actualizar. Por favor, vuelve a intentarlo.",
                     showConfirmButton: false,
                     timer: 3500,
                 });
@@ -149,8 +129,6 @@ const ApplicationOngoing = ({ socket }) => {
     }
 
     const handleNodeSubmit = async (e) => {
-        // e.preventDefault();
-        // setLoading(true);
 
         socket.emit("applicationNodeCompleted", {
             token: token,
@@ -171,7 +149,6 @@ const ApplicationOngoing = ({ socket }) => {
     }
 
     socket.on("applicationNodeCompletedConfirmation", (data) => {
-        console.log("COMPLETED? ", data.completed);
 
         if (data.completed) {
             dispatch(actions.applicationNodeOngoingCompleted());
@@ -230,7 +207,6 @@ const ApplicationOngoing = ({ socket }) => {
                                         </div>
 
                                         <div className="px-6 py-2 pb-5 lg:p-0 lg:mt-5 border-b-2 lg:border-0 border-gray-800">
-                                            {/* <h2 className="text-lg font-semibold">Descripción</h2> */}
                                             <p className="text-base font-light break-words">
                                                 {applicationFetch.description}
                                             </p>

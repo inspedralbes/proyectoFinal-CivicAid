@@ -53,7 +53,7 @@ const MakeApplication = () => {
             setLoading(false);
 
             console.log("ESTA ES LA CALLE: ", data);
-            console.log("ñañañañaña ", data.address.province);
+            console.log("Provincia ", data.address.province);
         }
 
         async function getLocationAndMap() {
@@ -158,10 +158,6 @@ const MakeApplication = () => {
         // Actualizar los estados con los valores del subsector y sector seleccionados
         setSubsector(subsectorValue);
         setSector(sectorValue);
-
-        console.log(subsectorValue, sectorValue);
-
-        console.log("ESTA ES LA ID DEL USUARIO: ", applicantId);
     };
 
     const handleSubmit = async (e) => {
@@ -180,7 +176,6 @@ const MakeApplication = () => {
         formData.append('location', finalLocation);
         formData.append('date', date);
 
-        console.log("form: ", formData);
         try {
             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/makeApplication', {
                 method: 'POST',
@@ -208,7 +203,6 @@ const MakeApplication = () => {
             }
             const data = await response.json();
 
-            console.log(data);
             Swal.fire({
                 position: "bottom-end",
                 icon: "success",

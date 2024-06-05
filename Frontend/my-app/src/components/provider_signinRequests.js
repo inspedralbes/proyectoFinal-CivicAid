@@ -36,7 +36,6 @@ const ManageSigninRequest = () => {
                         body: JSON.stringify({ assignedLocation }),
                     });
                     const data = await response.json();
-                    console.log(data);
                     setRequestInfo(data);
 
                 } catch (error) {
@@ -101,10 +100,8 @@ const ManageSigninRequest = () => {
         formData.append('password', password);
         formData.append('assignedApplications', assignedApplications);
         
-        console.log("SWGURO ???", selectedRequest);
         
         const requestStatus = "accepted";
-        console.log("añañañaña: ", e);
         
         try {
             setLoading(true);
@@ -124,13 +121,11 @@ const ManageSigninRequest = () => {
 
             if (!response.ok) {
                 const sisi = await response.json();
-                console.log("ESTA ES EL SISI: ", sisi);
 
                 // throw new Error('Network response was not ok');
             }
 
             if (response.ok) {
-                console.log('Solicitud enviada exitosamente');
                 try {
                     const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/updateRequestStatus/${e.id}`, {
                         method: 'POST',
@@ -142,7 +137,6 @@ const ManageSigninRequest = () => {
 
                     });
                     const data2 = await response2.json();
-                    console.log("ESTA ES LA DATA 2: ", data2);
                 } catch (error) {
                     Swal.fire({
                         position: "bottom-end",
@@ -163,7 +157,7 @@ const ManageSigninRequest = () => {
                     body: JSON.stringify({ assignedLocation }),
                 });
                 const data2 = await response2.json();
-                console.log("EL 2??:", data2);
+
                 setRequestInfo(data2);
             } else {
                 console.error('Error al enviar la solicitud:', response.statusText);
@@ -226,7 +220,6 @@ const ManageSigninRequest = () => {
                                                 <td className="px-4 py-8 whitespace-nowrap">{request.name} {request.surname}</td>
                                                 <td className="px-4 py-8 whitespace-nowrap">{request.requestedLocation}</td>
                                                 <td className="px-4 py-8 whitespace-nowrap">{request.sector}</td>
-                                                {/* <td className="px-4 py-8 whitespace-nowrap">{request.created_at}</td> */}
                                                 <td className="px-4 py-8 whitespace-nowrap uppercase">{request.requestStatus}</td>
                                             </tr>
                                         ))}

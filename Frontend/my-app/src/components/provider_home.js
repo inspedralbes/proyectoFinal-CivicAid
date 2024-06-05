@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { store, actions } from './store';
 import { NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
-// import userImage from "../../public/userButtonImage"
 
 const Home = ({ socket }) => {
     const dispatch = useDispatch();
@@ -17,7 +16,7 @@ const Home = ({ socket }) => {
 
     const [imageVisible, setImageVisible] = useState(true);
 
-    const images = ['tendiendoMano.png', 'haciendoSolicitud.png', 'arreglandoPanelElectrico.png', 'administrador.png']; // Ajusta las rutas de las imágenes según sea necesario
+    const images = ['tendiendoMano.png', 'haciendoSolicitud.png', 'arreglandoPanelElectrico.png', 'administrador.png'];
     const descriptions = [
         'CivicAid es una plataforma dedicada a brindar asistencia a los ciudadanos en diversas situaciones. Desde reportar problemas en la comunidad hasta solicitar ayuda en casos de emergencia, CivicAid facilita la comunicación entre los residentes y las autoridades pertinentes.',
         'Una vez que los usuarios envían una solicitud a través de CivicAid, esta es recibida y revisada por un administrador. El administrador evalúa la situación y determina el curso de acción adecuado para abordar la solicitud de manera eficiente.',
@@ -29,68 +28,16 @@ const Home = ({ socket }) => {
     const [currentDescription, setCurrentDescription] = useState(0);
 
     const checkApplicationOngoing = localStorage.getItem('persist:root');
-    console.log("La de NODE:", applicationNodeOngoing);
-    console.log("La normal:", applicationOngoing);
-
 
 
     useEffect(() => {
-
-        async function estoVa() {
-            try {
-                const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplications', {
-                    method: 'GET',
-                    mode: 'no-cors'
-                    // headers: {
-                    //     'Content-Type': 'application/json',
-                    // },
-                    // body: JSON.stringify({ email, password }),
-                });
-    
-                const data = await response.json();
-                console.log(data);
-
-            } catch (error) {
-                console.log("No se ha podido listar las solicitudes: ", error);
-            }
-
-        }
-
-        async function comprobar() {
-
-            if (isWorker) {
-                // Verificar si hay datos en el Local Storage
-                if (checkApplicationOngoing) {
-                    // Convertir el JSON almacenado a un objeto JavaScript
-                    const parsedData = JSON.parse(checkApplicationOngoing);
-
-                    // Obtener el valor de "applicationOngoingInfo"
-                    const applicationOngoingInfo = parsedData.applicationOngoingInfo;
-                    const applicationOngoing = parsedData.applicationOngoing;
-                    // Ahora puedes utilizar la variable "applicationOngoingInfo" según necesites
-                    console.log("Esta la aplicacion en marcha? ", applicationOngoing);
-                    console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
-
-
-                    // console.log("SEGURO??? ", applicationNodeOngoing);
-
-                } else {
-                    console.log('La variable del Local Storage está vacía');
-                }
-            }
-
-        }
-        comprobar();
-        estoVa();
-
         socket.on("connect", () => {
             console.log("Conectado al servidor");
-            console.log("SOCKET HOME: ", socket.id);
+            // console.log("SOCKET HOME: ", socket.id);
 
         });
 
     }, [checkApplicationOngoing]);
-
 
 
     useEffect(() => {
@@ -113,10 +60,6 @@ const Home = ({ socket }) => {
         });
     }
 
-    // const reiniciarEstados = async (e) => {
-    //     dispatch(actions.applicationOngoingCompleted())
-    // }
-
     const prevImage = () => {
         setCurrentImage(prev => (prev === 0 ? images.length - 1 : prev - 1));
     };
@@ -130,7 +73,6 @@ const Home = ({ socket }) => {
             <div className='z-10 lg:flex lg:h-full lg:w-full'>
                 <div className='w-full lg:w-5/12 lg:h-5/6 lg:m-auto bg-gray-700 lg:shadow-lg lg:rounded-lg'>
                     <div className='lg:mt-5 lg:h-full'>
-                        {/* Logo removido para enfocar en el carrusel */}
                         <img src="logoPrincipal.png" className='h-28 w-full mb-2 lg:h-1/6 lg:w-6/12 lg:m-auto lg:rounded-lg' alt="Logo Principal" />
 
                         <div className="hidden lg:block relative lg:mt-5 lg:h-3/5 lg:mx-auto lg:w-11/12 lg:border-2 rounded-lg overflow-hidden">

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, NavLink } from "react-router-dom";
 import Swal from 'sweetalert2';
-// import logo from "../../public/logoPequeñoCivicAid.png"
 
 function SigninForm() {
     const [name, setName] = useState('');
@@ -47,17 +46,12 @@ function SigninForm() {
         try {
             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signIn', {
                 method: 'POST',
-                // headers: {
-                //     'Content-Type': 'application/json',
-                // },
                 body: formData,
             });
 
             const data = await response.json();
-            console.log(data);
 
             if (!response.ok) {
-                console.log(data);
                 throw new Error(response.statusText);
 
             }
@@ -83,7 +77,6 @@ function SigninForm() {
                 timer: 1500,
             });
 
-            console.log(error);
 
             setError(error);
             setLoading(false);
