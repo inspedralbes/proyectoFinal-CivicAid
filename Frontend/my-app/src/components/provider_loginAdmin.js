@@ -43,7 +43,7 @@ const LoginForm = () => {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "success",
-                    title: "You have successfully loged in",
+                    title: "Has iniciado correctamente",
                     showConfirmButton: false,
                     timer: 3500,
                 });
@@ -51,7 +51,7 @@ const LoginForm = () => {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "error",
-                    title: "Invalid Credentials",
+                    title: "Credenciales inválidas",
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -63,7 +63,7 @@ const LoginForm = () => {
             Swal.fire({
                 position: "bottom-end",
                 icon: "error",
-                title: "An error occurred while loading",
+                title: "Ha ocurrido un error durante la carga",
                 showConfirmButton: false,
                 timer: 1500,
             });

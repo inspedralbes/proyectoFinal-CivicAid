@@ -37,7 +37,6 @@ const UserInfo = () => {
     const handleApplicationModal = (application) => {
         setShowApplicationModal(true);
         setApplicationModalInfo(application)
-        console.log(application);
     };
 
     useEffect(() => {
@@ -54,7 +53,6 @@ const UserInfo = () => {
                         body: JSON.stringify({ userId }),
                     });
                     const data = await response.json();
-                    console.log(data);
                     setOwnApplications(data)
                 } catch (error) {
                     console.error("ESTE ES EL ERROR: ", error);
@@ -79,7 +77,6 @@ const UserInfo = () => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
-                    console.log(data);
                     setApplicationsAssigned(data);
 
                     // Segundo fetch para obtener las solicitudes compartidas
@@ -92,11 +89,7 @@ const UserInfo = () => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data2 = await response2.json();
-                    console.log("LA 2", data2.applications);
 
-                    data2.applications.map((application, id) => (
-                        console.log(application)
-                    ))
                     setSharedApplicationsAssigned(data2.applications);
 
                 } catch (error) {
@@ -120,7 +113,7 @@ const UserInfo = () => {
         Swal.fire({
             position: "bottom-end",
             icon: "info",
-            title: "You have successfully loged out",
+            title: "Has cerrado sesión correctamente",
             showConfirmButton: false,
             timer: 1500,
         });

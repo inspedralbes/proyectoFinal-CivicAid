@@ -97,7 +97,7 @@ En `/etc/nginx/sites-available/` debes tener el archivo de tu dominio que has cr
         listen 80;
         listen [::]:80;
 
-        server_name civic.civicaid.daw.inspedralbes.cat www.civic.civicaid.daw.inspedralbes.cat;
+        server_name nombre_de_tu_dominio www.nombre_de_tu_dominio;
 
         root /var/www/html/;
 
@@ -106,7 +106,7 @@ En `/etc/nginx/sites-available/` debes tener el archivo de tu dominio que has cr
         # Configuración para React
         location / {
             try_files $uri $uri/ /index.php?$query_string;
-                        
+
         }
 
         # Configuración para Laravel

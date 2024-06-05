@@ -35,9 +35,6 @@ function SigninForm() {
 
                 const locationsArray = Object.values(data);
 
-                locationsArray.map(location => {
-                    console.log(location.name);
-                });
                 setLocations(locationsArray)
 
             } catch (error) {
@@ -58,10 +55,6 @@ function SigninForm() {
 
                 const sectorsArray = Object.values(data);
 
-                sectorsArray.map(sector => {
-                    // Hacer algo con cada ubicación
-                    console.log(sector.sector);
-                });
                 setSectors(sectorsArray)
 
             } catch (error) {

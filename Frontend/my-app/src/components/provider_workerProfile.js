@@ -37,7 +37,6 @@ const UserInfo = () => {
     const handleApplicationModal = (application) => {
         setShowApplicationModal(true);
         setApplicationModalInfo(application)
-        console.log(application);
     };
 
     useEffect(() => {
@@ -55,7 +54,6 @@ const UserInfo = () => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
-                    console.log("La 1", data);
                     setApplicationsAssigned(data);
 
                     // Segundo fetch para obtener las solicitudes compartidas
@@ -68,11 +66,8 @@ const UserInfo = () => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data2 = await response2.json();
-                    console.log("LA 2", data2.applications);
 
-                    data2.applications.map((application, id) => (
-                        console.log(application)
-                    ))
+                    
                     setSharedApplicationsAssigned(data2.applications);
 
                 } catch (error) {

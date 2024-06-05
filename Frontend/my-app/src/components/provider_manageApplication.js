@@ -111,11 +111,6 @@ const ManageApplication = ({ socket }) => {
 
     }, [receivedInvitations]);
 
-
-    socket.on("lobbiesUnido", (data) => {
-        console.log("LAS LOBIS: ", data);
-    })
-
     /**
     * SOCKET PARA CONTROLAR CUANDO TE INVITAN
     */

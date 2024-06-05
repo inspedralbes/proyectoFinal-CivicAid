@@ -19,7 +19,6 @@ const OwnApplication = () => {
 
     useEffect(() => {
         async function fetchApplications() {
-            console.log(userId);
             if (isUser) {
                 try {
                     const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listOwnApplications', {
@@ -31,7 +30,6 @@ const OwnApplication = () => {
                         body: JSON.stringify({ userId }),
                     });
                     const data = await response.json();
-                    console.log(data);
                     setApplicationInfo(data)
                 } catch (error) {
                     console.error("ESTE ES EL ERROR: ", error);

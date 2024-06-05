@@ -21,9 +21,6 @@ const ApplicationOngoing = ({ socket }) => {
     const [explanation, setExplanation] = useState('');
     const [, forceUpdate] = useState();
 
-    console.log(applicationOngoing);
-    console.log(applicationNodeOngoing);
-
     useEffect(() => {
 
         async function fetchApplication() {
@@ -40,7 +37,6 @@ const ApplicationOngoing = ({ socket }) => {
                         body: JSON.stringify({ applicationId: applicationOngoing.id }),
                     });
                     const data = await response.json();
-                    console.log("DATA??: ", data);
                     setApplicationFetch(data[0]);
 
                 } catch (error) {
@@ -72,7 +68,6 @@ const ApplicationOngoing = ({ socket }) => {
     });
 
     const handleTextChange = (event) => {
-        console.log("/////", applicationNodeOngoingInfo);
         const newText = event.target.value;
         setExplanation(newText);
         socket.emit('updateText', {

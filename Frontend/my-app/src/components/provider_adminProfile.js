@@ -40,7 +40,6 @@ const UserInfo = () => {
     const handleApplicationModal = (application) => {
         setShowApplicationModal(true);
         setApplicationModalInfo(application)
-        console.log(application);
     };
 
     useEffect(() => {
@@ -57,7 +56,6 @@ const UserInfo = () => {
                         body: JSON.stringify({ adminId }),
                     });
                     const data = await response.json();
-                    console.log(data);
                     setAcceptedSignInRequests(data)
 
                 } catch (error) {
@@ -81,7 +79,6 @@ const UserInfo = () => {
                         body: JSON.stringify({ adminId }),
                     });
                     const data = await response.json();
-                    console.log(data);
                     setAssignedApplications(data)
 
                 } catch (error) {
@@ -103,7 +100,7 @@ const UserInfo = () => {
         Swal.fire({
             position: "bottom-end",
             icon: "info",
-            title: "You have successfully loged out",
+            title: "Has cerrado sesión correctamente",
             showConfirmButton: false,
             timer: 1500,
         });

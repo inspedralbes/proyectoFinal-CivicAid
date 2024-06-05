@@ -33,7 +33,6 @@ const Home = ({ socket }) => {
     useEffect(() => {
         socket.on("connect", () => {
             console.log("Conectado al servidor");
-            // console.log("SOCKET HOME: ", socket.id);
 
         });
 
@@ -54,7 +53,7 @@ const Home = ({ socket }) => {
         Swal.fire({
             position: "bottom-end",
             icon: "info",
-            title: "You have successfully loged out",
+            title: "Has cerrado sesión correctamente",
             showConfirmButton: false,
             timer: 1500,
         });

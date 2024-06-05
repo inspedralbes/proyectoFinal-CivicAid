@@ -32,18 +32,12 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
     console.log("Nuevo cliente conectado: ", socket.id, employeeSocketMap);
 
-    lobbies.forEach(lobbie => {
-        console.log(lobbie);
-    })
-    // console.log("\n"+lobbies);
     /**
      * Socket para "asociar" el ID del empleado con el ID del socket
      */
     socket.on("register", (employeeId) => {
-        // employeeSocketMap[employeeId] = socket.id;
         employeeSocketMap[employeeId] = { socketId: socket.id };
 
-        // console.log("MAP: ", employeeSocketMap);
     });
 
     /**
@@ -51,7 +45,6 @@ io.on("connection", (socket) => {
      */
     socket.on('fetchMultipleAssigned', async (data) => {
         const { isWorker, token, workerId } = data;
-        // Asegurándonos de obtener el socketId correcto.
         const targetSocket = employeeSocketMap[workerId];
         const targetSocketId = targetSocket ? targetSocket.socketId : null;
 
@@ -67,7 +60,6 @@ io.on("connection", (socket) => {
                 });
                 let fetchData = await response.json();
 
-                // Emitir los datos actualizados al cliente
                 io.to(targetSocketId).emit("returnFetchMultipleAssigned", fetchData);
 
             } catch (error) {
@@ -82,162 +74,140 @@ io.on("connection", (socket) => {
     socket.on("sendInvitation", (data) => {
         // Obtener el objeto del host que contiene el socketId, no solo el socketId
         const hostSocket = employeeSocketMap[data.hostId];
-        console.log("Socket del host: ", hostSocket);
-        console.log("DATA ", data);
 
-        // CREAR LA LOBBY
-        let lobby_exists = false;
-        lobbies.forEach((element) => {
-            if (element.lobbyCode == data.lobbyCode) {
-                lobby_exists = true;
-            }
+        try {
+            // CREAR LA LOBBY
+            let lobby_exists = false;
+            lobbies.forEach((element) => {
+                if (element.lobbyCode == data.lobbyCode) {
+                    lobby_exists = true;
+                }
 
-        });
-
-        if (!lobby_exists) {
-            lobbies.push({
-                lobbyCode: data.lobbyCode,
-                maxUsers: data.maxUsers,
-                lobbyCreator: data.hostId,
-                users: [{
-                    workerId: data.hostId,
-                    completeName: data.completeName
-                }],
             });
 
-            lobbies.forEach((lobbie) => {
-                lobbie.users.forEach((user) => {
-                    console.log("ESTON SON LOS USUARIOS: ", user);
-                })
-            })
-        }
-
-        data.assignedWorkers.forEach(worker => {
-            const workerId = worker.id;
-
-            if (workerId !== data.hostId) {
-                const workerSocket = employeeSocketMap[workerId];
-                console.log("Procesando workerId:", workerId);
-
-                if (workerSocket && workerSocket.socketId) {
-                    console.log(workerSocket.socketId + " EXISTE");
-
-                    io.to(workerSocket.socketId).emit("invitationReceived", {
-                        message: "Estás invitado",
-                        invitation: true,
-                        applicationId: data.applicationId,
-                        lobbyCode: data.lobbyCode
-                    });
-                }
+            if (!lobby_exists) {
+                lobbies.push({
+                    lobbyCode: data.lobbyCode,
+                    maxUsers: data.maxUsers,
+                    lobbyCreator: data.hostId,
+                    users: [{
+                        workerId: data.hostId,
+                        completeName: data.completeName
+                    }],
+                });
             }
-        });
+
+            data.assignedWorkers.forEach(worker => {
+                const workerId = worker.id;
+
+                if (workerId !== data.hostId) {
+                    const workerSocket = employeeSocketMap[workerId];
+                    console.log("Procesando workerId:", workerId);
+
+                    if (workerSocket && workerSocket.socketId) {
+
+                        io.to(workerSocket.socketId).emit("invitationReceived", {
+                            message: "Estás invitado",
+                            invitation: true,
+                            applicationId: data.applicationId,
+                            lobbyCode: data.lobbyCode
+                        });
+                    }
+                }
+            });
+        } catch (error) {
+            console.log("Ha habido un error en sendInvitation", error);
+        }
     });
 
+    /**
+     * SOCKET PARA CANCELAR LA INVITACIÓN ENVIADA
+     */
     socket.on("cancelInvitation", (data) => {
         const usersList = data.usersList;
         const hostId = data.hostId;
         const applicationId = data.applicationId;
-        console.log(data);
 
-        usersList.forEach(user => {
-            const employeeSocketInfo = employeeSocketMap[user.id];
+        try {
+            usersList.forEach(user => {
+                const employeeSocketInfo = employeeSocketMap[user.id];
 
-            if (employeeSocketInfo && employeeSocketInfo.socketId && user.id !== hostId) {
-                // La información del socket existe y tiene un socketId, y el usuario no es el anfitrión
-                console.log(employeeSocketInfo);
-                io.to(employeeSocketInfo.socketId).emit("invitationCanceled", {
-                    message: "Invitación cancelada",
-                    applicationId,
-                });
-            } else {
-                // La información del socket no existe, no tiene socketId, o es el anfitrión
-                console.log(user.id + " No existe en el socketMap, no tiene socketId o es el anfitrión");
-            }
-        });
+                if (employeeSocketInfo && employeeSocketInfo.socketId && user.id !== hostId) {
+                    io.to(employeeSocketInfo.socketId).emit("invitationCanceled", {
+                        message: "Invitación cancelada",
+                        applicationId,
+                    });
+                } else {
+                    console.log(user.id + " No existe en el socketMap, no tiene socketId o es el anfitrión");
+                }
+            });
+
+        } catch (error) {
+            console.log("Ha habido un error en cancelInvitation", error);
+        }
     })
 
+    /**
+     * SOCKET PARA ACEPTAR LA INVITACIÓN
+     */
     socket.on("acceptInvitation", (data) => {
-        console.log("Revisando lobbies para el código:", data.lobbyCode);
+        try {
+            console.log("Revisando lobbies para el código:", data.lobbyCode);
 
-        lobbies.forEach(lobby => {
-            if (lobby.lobbyCode === data.lobbyCode) {
-                console.log("Lobby encontrado, revisando usuarios...");
-                const isUserInLobby = lobby.users.some(user => user.workerId === data.workerId);
+            lobbies.forEach(lobby => {
+                if (lobby.lobbyCode === data.lobbyCode) {
+                    const isUserInLobby = lobby.users.some(user => user.workerId === data.workerId);
 
-                if (!isUserInLobby) {
-                    console.log("Usuario no está en el lobby, verificando capacidad...");
-                    if (lobby.users.length < lobby.maxUsers) {
-                        lobby.users.push({
-                            workerId: data.workerId,
-                            completeName: data.workerName
-                        });
-
-                        console.log("Añadiendo usuario y enviando lista actualizada...");
-                        const socketId = employeeSocketMap[lobby.lobbyCreator].socketId;
-                        const socketIdUser = employeeSocketMap[data.workerId].socketId;
-                        console.log("A quien le tengo que mandar el emit:", socketId);
-                        console.log("A quien le tengo que mandar el emit 22:", socketIdUser);
-                        // let startApplication = false;
-
-                        // if (lobby.maxUsers === lobby.users.length) {
-                        //     startApplication = true;
-                        // }
-
-                        if (socketId) {
-                            // lobby.users.forEach(user => {
-                            //     if (user.workerId != data.workerId) {
-                            //         io.to(employeeSocketMap[user.workerId].socketId).emit("newUserInLobby", {
-                            //             users: Array.from(lobby.users),
-                            //             startApplication: true,
-                            //         })
-                            //     }
-                            // })
-
-                            io.to(socketId).emit("newUserInLobby", {
-                                users: Array.from(lobby.users),
-                                startApplication: true,
+                    if (!isUserInLobby) {
+                        if (lobby.users.length < lobby.maxUsers) {
+                            lobby.users.push({
+                                workerId: data.workerId,
+                                completeName: data.workerName
                             });
 
-                            lobby.users.forEach(user => {
-                                if (user.workerId != lobby.lobbyCreator) {
-                                    io.to(employeeSocketMap[user.workerId].socketId).emit("newUserInLobby", {
-                                        users: Array.from(lobby.users),
-                                        startApplication: false,
-                                    })
-                                }
-                            })
+                            const socketId = employeeSocketMap[lobby.lobbyCreator].socketId;
+                            const socketIdUser = employeeSocketMap[data.workerId].socketId;
 
-                            // io.to(socketIdUser).emit("newUserInLobby", {
-                            //     users: lobby.users,
-                            //     startApplication: false,
-                            // });
+                            if (socketId) {
+                                io.to(socketId).emit("newUserInLobby", {
+                                    users: Array.from(lobby.users),
+                                    startApplication: true,
+                                });
 
-                            console.log("USUARIOS DEL LOBBY: ", lobby.users);
+                                lobby.users.forEach(user => {
+                                    if (user.workerId != lobby.lobbyCreator) {
+                                        io.to(employeeSocketMap[user.workerId].socketId).emit("newUserInLobby", {
+                                            users: Array.from(lobby.users),
+                                            startApplication: false,
+                                        })
+                                    }
+                                })
+
+                            } else {
+                                console.log("No se encontró el socket ID para el creador del lobby.");
+                            }
+
                         } else {
-                            console.log("No se encontró el socket ID para el creador del lobby.");
+                            console.log('El lobby ya está lleno. No se puede agregar más usuarios.');
                         }
-
                     } else {
-                        console.log('El lobby ya está lleno. No se puede agregar más usuarios.');
+                        console.log('El usuario ya está en el lobby.');
                     }
-                } else {
-                    console.log('El usuario ya está en el lobby.');
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.log("Ha habido un error en acceptInvitation", error);
+        }
     });
 
+    /**
+     * SOCKET PARA PONER EN MARCHA LA SOLICITUD
+     */
     socket.on("startApplication", async (data) => {
-        // const workerIds = data.usersList;
-        // console.log("SEGURO??", data);
         const workerId = data.usersList.map(user => user.workerId);
         const actualApplicationId = data.actualApplication.id;
         const actualApplication = data.actualApplication;
-        // const actualLobbyCode = data.actualLobbyCode;
         const token = data.token;
-
-        console.log("DATA DEL START: ", workerId);
-        console.log("DATA DEL START: ", actualApplicationId);
 
         try {
             let applicationStatus = "active";
@@ -253,73 +223,45 @@ io.on("connection", (socket) => {
 
             const data = await response.json();
 
-            console.log("RETURN DEL FETCH: ", data);
-
             workerId.forEach(empleado => {
                 io.to(employeeSocketMap[empleado].socketId).emit("returnAppOngoing", {
                     actualApplication: actualApplication,
                 })
             })
 
-            // lobbies.forEach(lobby => {
-            //     if (lobby.lobbyCode === actualLobbyCode) {
-            //         lobby.remove();
-            //     }else{
-            //         console.log("No se ha podido eliminar la lobby");
-            //     }
-            // })
-
         } catch (error) {
-            console.error("ESTE ES EL ERROR: ", error);
+            console.error("Ha habido un error en startApplication ", error);
         }
     })
 
-
+    /**
+     * SOCKET PARA QUE EL TEXTO DE LA SOLICITUD EN MARCHA SE ACTUALIZE PARA TODOS LOS USUARIOS
+     */
     socket.on('updateText', (data) => {
-        // console.log('Texto recibido:', data.newText);
-        // console.log('Texto recibido:', data.users);
-        console.log('Texto recibido:', data);
-
         try {
-            // requestCurrentText(data);
             data.users.forEach(user => {
                 const id = user.id;
-                console.log(employeeSocketMap);
-                console.log(employeeSocketMap[user.id].socketId);
+
                 if (employeeSocketMap[id].socketId && data.writer != user.id) {
                     socket.to(employeeSocketMap[id].socketId).emit('textUpdate', data.newText);
 
                 } else {
-                    console.log("ESTE NO EXISTE COMPADRE");
+                    console.log("NO EXISTE ESTE USUARIO");
                 }
             })
         } catch (error) {
-            console.log("error en updatetext", error);
+            console.log("Ha habido un error en updateText", error);
         }
-        // Emitir el texto a todos los usuarios excepto al que lo envió
     });
 
-    // socket.on('requestCurrentText', (workerId) => {
-    //     // Suponiendo que guardas el último texto conocido en alguna variable
-    //     socket.to(employeeSocketMap[workerId].socketId).emit('textUpdate', currentText); // Emite el te
-    //     console.log("CURRENT TEXT: ", currentText);
-    // });
-
-    // function requestCurrentText(currentText) {
-    //     // currentText = ...currentText
-    //     return currentText;
-
-    // }
 
     socket.on('applicationNodeCompleted', async (data) => {
-        console.log("PARA COMPLETAR: ", data);
         const users = data.workerId;
         const token = data.token;
         const applicationId = data.applicationId;
         const workerId = data.workerId.map(worker => worker.id);
         const applicationExplanation = data.applicationExplanation;
 
-        console.log("LAS ID: ", workerId);
 
         try {
             const response = await fetch(`${laravelUrl}/api/applicationNodeCompleted`, {
@@ -331,19 +273,13 @@ io.on("connection", (socket) => {
                 body: JSON.stringify({ applicationId: applicationId, workerId: workerId, applicationExplanation: applicationExplanation }),
             });
 
-            // data = await response.json();
-            // console.log("DATATATATATATATA", data);
             const data = await response.json();
-            console.log("FETCH NODE COMPLETED: ", data);
         } catch (error) {
-            console.log("ERROR EN applicationNodeCompleted ", error);
+            console.log("Ha habido un error en applicationNodeCompleted ", error);
         }
 
 
         users.forEach(user => {
-
-            console.log("JAJA", user.id);
-
             if (employeeSocketMap[user.id].socketId) {
                 io.to(employeeSocketMap[user.id].socketId).emit("applicationNodeCompletedConfirmation", {
                     completed: true

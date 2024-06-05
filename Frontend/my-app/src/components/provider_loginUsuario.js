@@ -51,7 +51,7 @@ const LoginForm = () => {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "error",
-                    title: "Credenciales no válidas",
+                    title: "Credenciales inválidas",
                     showConfirmButton: false,
                     timer: 1500,
                 });
