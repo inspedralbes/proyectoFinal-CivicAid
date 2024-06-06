@@ -8,9 +8,20 @@ use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
+// use OpenApi\Attributes as OA;
+// use OpenApi\Attributes as OA;
+use OpenApi\Annotations as OA;
+
 
 class AdminAuthController extends Controller
 {
+/**
+ * @OA\Info(
+ *      version="1.0.0", 
+ *      title="L5 OpenApi documentación de Enterprises",
+ *      description="L5 Swagger OpenApi description para enterprises.",
+ * )
+ */
     public function signinAdmin(Request $request)
     {
         $request->validate([
