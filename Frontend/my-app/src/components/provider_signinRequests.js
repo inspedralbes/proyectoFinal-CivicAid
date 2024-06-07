@@ -57,28 +57,27 @@ const ManageSigninRequest = () => {
 
     function generatePassword(length = 10) {
         // Definir los caracteres que se usarán para generar la contraseña
-        // const charset = {
-        //     lowercase: "abcdefghijklmnopqrstuvwxyz",
-        //     uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        //     numbers: "0123456789",
-        //     symbols: "!@#$%^&*()_+-=[]{}|;':,.<>/?"
-        // };
+        const charset = {
+            lowercase: "abcdefghijklmnopqrstuvwxyz",
+            uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            numbers: "0123456789",
+            symbols: "!@#$%^&*()_+-=[]{}|;':,.<>/?"
+        };
 
-        // // Asegurarse de que la contraseña incluya al menos un carácter de cada tipo
-        // const allTypes = Object.keys(charset).map(type => charset[type]);
-        // let password = allTypes.map(type => type[Math.floor(Math.random() * type.length)]).join('');
+        // Asegurarse de que la contraseña incluya al menos un carácter de cada tipo
+        const allTypes = Object.keys(charset).map(type => charset[type]);
+        let password = allTypes.map(type => type[Math.floor(Math.random() * type.length)]).join('');
 
-        // // Completar la longitud de la contraseña con caracteres aleatorios de todos los tipos
-        // const allChars = allTypes.join('');
-        // for (let i = password.length; i < length; i++) {
-        //     password += allChars[Math.floor(Math.random() * allChars.length)];
-        // }
+        // Completar la longitud de la contraseña con caracteres aleatorios de todos los tipos
+        const allChars = allTypes.join('');
+        for (let i = password.length; i < length; i++) {
+            password += allChars[Math.floor(Math.random() * allChars.length)];
+        }
 
-        // // Mezclar la contraseña para que los caracteres obligatorios no estén al inicio
-        // password = password.split('').sort(() => Math.random() - 0.5).join('');
+        // Mezclar la contraseña para que los caracteres obligatorios no estén al inicio
+        password = password.split('').sort(() => Math.random() - 0.5).join('');
 
-        // console.log("ESTA ES LA PASSWORD: ", password);
-        let password = "Cm12345-";
+        console.log("ESTA ES LA PASSWORD: ", password);
         return password;
     }
 
@@ -86,7 +85,7 @@ const ManageSigninRequest = () => {
         // e.preventDefault(e);
         const assignedApplications = 0;
         const password = generatePassword(12); // Generar contraseña de 12 caracteres
- 
+
         const formData = new FormData();
         formData.append('approvedBy', adminId);
         formData.append('dni', e.dni);
@@ -99,10 +98,10 @@ const ManageSigninRequest = () => {
         formData.append('profileImage', e.profileImage);
         formData.append('password', password);
         formData.append('assignedApplications', assignedApplications);
-        
-        
+
+
         const requestStatus = "accepted";
-        
+
         try {
             setLoading(true);
             setSelectedRequest(null);
@@ -115,7 +114,7 @@ const ManageSigninRequest = () => {
                 body: formData,
             });
 
-            
+
 
             setSelectedRequest(false);
 
@@ -172,7 +171,79 @@ const ManageSigninRequest = () => {
             });
         } catch (error) {
             console.error('Error en la solicitud:', error);
-        }finally{
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
+    const denyRequest = async (e) => {
+        console.log(e);
+        const requestStatus = "denied";
+
+        try {
+            setLoading(true);
+            setSelectedRequest(null);
+
+            const response = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/denyRequest`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ id: e.id, requestStatus }),
+            });
+
+            setSelectedRequest(false);
+
+            if (response.ok) {
+                // try {
+                //     const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/updateRequestStatus/${e.id}`, {
+                //         method: 'POST',
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //             'Authorization': `Bearer ${token}`,
+                //         },
+                //         body: JSON.stringify({ requestStatus }),
+
+                //     });
+                //     const data2 = await response2.json();
+                // } catch (error) {
+                //     Swal.fire({
+                //         position: "bottom-end",
+                //         icon: "error",
+                //         title: "Error al intentar actualizar el estado de la solicitud",
+                //         showConfirmButton: false,
+                //         timer: 1500,
+                //     });
+                // }
+
+                // Volvemos a actualizar el listado de las solicitudes haciendo otra vez el fetch
+                const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listRequests', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ assignedLocation }),
+                });
+                const data2 = await response2.json();
+
+                setRequestInfo(data2);
+            } else {
+                console.error('Error al enviar la solicitud:', response.statusText);
+            }
+
+            Swal.fire({
+                position: "bottom-end",
+                icon: "success",
+                title: "La solicitud se ha denegado correctamente",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+        } finally {
             setLoading(false);
         }
     }
@@ -253,26 +324,27 @@ const ManageSigninRequest = () => {
             {/* Modal */}
             {selectedRequest && (
                 <div className="fixed inset-0 z-50 overflow-y-auto lg:mt-5">
-                    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                    <div className="flex items-start justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                         {/* Overlay */}
                         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setSelectedRequest(null)}></div>
 
                         {/* Modal container */}
-                        <div className="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-                            <div className='flex justify-between items-start p-4 border-b'>
+                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                        <div className="inline-block align-top bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+                            <div className="flex justify-between items-center p-4 border-b">
                                 <h3 className="text-lg leading-6 font-medium text-gray-900">Detalles de la solicitud</h3>
-                                <div className='cursor-pointer p-2 rounded-md text-gray-400 hover:text-gray-600' onClick={() => setSelectedRequest(null)}>
+                                <button className="text-gray-400 hover:text-gray-600" onClick={() => setSelectedRequest(null)}>
                                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
-                                </div>
+                                </button>
                             </div>
 
                             <div className="bg-white p-6">
                                 <div className="flex items-center space-x-4 mb-4">
-                                    <img className="h-24 w-24 bg-orange-500 p-2 rounded-full" src={selectedRequest.profileImage} alt="" />
+                                    <img className="h-24 w-24 bg-orange-500 p-2 rounded-full" src={selectedRequest.profileImage} alt="Profile" />
                                     <div className="space-y-1 font-medium">
-                                        <div>{selectedRequest.name} {selectedRequest.surname} {selectedRequest.secondSurname}</div>
+                                        <div className="text-xl font-semibold">{selectedRequest.name} {selectedRequest.surname} {selectedRequest.secondSurname}</div>
                                         <p className="text-sm text-gray-500">{selectedRequest.email}</p>
                                     </div>
                                 </div>
@@ -283,17 +355,19 @@ const ManageSigninRequest = () => {
                                 </ul>
                             </div>
 
-                            <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                            <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t">
                                 <button onClick={() => acceptRequest(selectedRequest)} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
                                     Aceptar
                                 </button>
-                                <button onClick={() => setSelectedRequest(null)} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
+                                <button onClick={() => denyRequest(selectedRequest)} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
                                     Denegar
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
+        
+
             )}
 
         </main>

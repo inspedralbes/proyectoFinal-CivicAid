@@ -26,9 +26,9 @@ class registrationRequestEmail extends Mailable
     {
 
         return $this->markdown('emails.registration.request')
-            ->subject('Your Registration Request is Being Processed')
+            ->subject('Solicitud de registro en proceso')
             ->with([
-                'name' => $this->user,
+                'name' => $this->user->name,
             ]);
     }
 
@@ -38,7 +38,7 @@ class registrationRequestEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Registration Request Email',
+            subject: 'Solicitud de Registro',
         );
     }
 

@@ -14,32 +14,29 @@ class registrationRequestAccepted extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
+    public $password;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public function __construct($user, $password)
     {
         $this->user = $user;
+        $this->password = $password;
+
     }
 
     public function build()
     {
         return $this->markdown('emails.registration.requestAccepted')
-            ->subject('Your Registration Request has been accepted')
+            ->subject('Tu solicitud de registro ha sido aceptada')
             ->with([
                 'name' => $this->user->name,
+                'dni' => $this->user->dni,
                 'email' => $this->user->email,
                 'password' => $this->user->password,
             ]);
 
-            // $this->withSymfonyMessage(function (Email $message) {
-            //     $signer = new DkimSigner(config('mail.dkim_private_key'), config('mail.dkim_domain'),
-            //     config('mail.dkim_selector'));
-            //     $signer->sign($message);
-            // });
-
-            // return $this;
     }
 
     /**
@@ -48,7 +45,7 @@ class registrationRequestAccepted extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Registration Request Accepted',
+            subject: 'Solicitud de Registro Aceptada',
         );
     }
 

@@ -375,7 +375,7 @@ const ManageApplication = ({ socket }) => {
         }
     }
 
-   
+
     return (
         <main className="h-screen overflow-auto flex justify-center items-center lg:bg-orange-300">
             {isWorker ? (
@@ -470,87 +470,98 @@ const ManageApplication = ({ socket }) => {
 
                             {activeTab === "tab2" && (
                                 <div className="p-5 lg:flex lg:flex-wrap lg:p-8 lg:justify-center lg:gap-20 lg:overflow-auto">
-                                    {applicationsNode.map((application, id) => {
-                                        const isCurrentAppInvited = receivedInvitations.get(application.id)?.invited ?? false;
-                                        const currentAppInvitedLobbyCode = receivedInvitations.get(application.id)?.lobbyCode;
-                                        if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed' || application.applicationStatus === 'active') {
-                                            return null;
-                                        }
-                                        return (
-                                            <div key={id} className="relative w-full lg:w-3/4 xl:w-2/3 mx-auto flex flex-col rounded-xl bg-white shadow-lg mb-8 overflow-hidden">
-                                                <div className="lg:flex lg:flex-row">
 
-                                                    <div className="lg:w-1/2 p-5 flex flex-col justify-between">
-                                                        <div>
-                                                            <div className="uppercase items-center justify-between mb-5">
-                                                                <h5 className="text-2xl text-center font-semibold text-blue-gray-900">{application.title}</h5>
+                                    {applicationsNode.length === 0 ? (
+                                        <div className='flex items-center justify-center'>
+                                            <h1 className='text-white text-center text-3xl font-bold'>
+                                                No hay solicitudes compartidas asignadas en este momento
+                                            </h1>
+                                        </div>
+                                    ) : (
+                                        
+                                            applicationsNode.map((application, id) => {
+                                                const isCurrentAppInvited = receivedInvitations.get(application.id)?.invited ?? false;
+                                                const currentAppInvitedLobbyCode = receivedInvitations.get(application.id)?.lobbyCode;
+                                                if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed' || application.applicationStatus === 'active') {
+                                                    return null;
+                                                }
+                                                
+                                                return (
+                                                    <div key={id} className="relative w-full lg:w-3/4 xl:w-2/3 mx-auto flex flex-col rounded-xl bg-white shadow-lg mb-8 overflow-hidden">
+                                                        <div className="lg:flex lg:flex-row">
+
+                                                            <div className="lg:w-1/2 p-5 flex flex-col justify-between">
+                                                                <div>
+                                                                    <div className="uppercase items-center justify-between mb-5">
+                                                                        <h5 className="text-2xl text-center font-semibold text-blue-gray-900">{application.title}</h5>
+                                                                    </div>
+                                                                    <div className="relative overflow-hidden shadow-lg rounded-xl">
+                                                                        <img
+                                                                            src={application.image}
+                                                                            alt={application.image ? "Imagen solicitud" : "Imagen no disponible"}
+                                                                            className="w-full lg:h-64 object-cover rounded-xl"
+                                                                        />
+                                                                        <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="mt-5">
+                                                                    <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words mb-3">
+                                                                        {application.description}
+                                                                    </div>
+                                                                    <div className="mt-5">
+                                                                        <h3 className="font-semibold text-gray-800">Localización</h3>
+                                                                        <p className="text-base font-light leading-relaxed text-gray-700">
+                                                                            {application.location}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div className="relative overflow-hidden shadow-lg rounded-xl">
-                                                                <img
-                                                                    src={application.image}
-                                                                    alt={application.image ? "Imagen solicitud" : "Imagen no disponible"}
-                                                                    className="w-full lg:h-64 object-cover rounded-xl"
-                                                                />
-                                                                <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="mt-5">
-                                                            <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words mb-3">
-                                                                {application.description}
-                                                            </div>
-                                                            <div className="mt-5">
-                                                                <h3 className="font-semibold text-gray-800">Localización</h3>
-                                                                <p className="text-base font-light leading-relaxed text-gray-700">
-                                                                    {application.location}
-                                                                </p>
+
+                                                            <div className="lg:w-1/2 p-5 bg-gray-300 flex flex-col justify-between rounded-r-xl">
+                                                                <div>
+                                                                    <h2 className="mb-5 text-xl font-semibold text-gray-800">Compañeros Asignados</h2>
+                                                                    <div className="overflow-y-auto max-h-48 grid grid-cols-2 gap-4">
+                                                                        {application.workers.map((worker, id) => {
+                                                                            if (worker.id === workerId) {
+                                                                                return null;
+                                                                            }
+                                                                            return (
+                                                                                <div key={id} className="bg-white text-center shadow-lg p-2 rounded-lg">
+                                                                                    <p className="text-base font-light text-gray-700">
+                                                                                        {worker.name} {worker.surname}
+                                                                                    </p>
+                                                                                </div>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="mt-5">
+                                                                    {isCurrentAppInvited ? (
+                                                                        <button
+                                                                            onClick={() => acceptInvitation(application.id, currentAppInvitedLobbyCode)}
+                                                                            className="w-full animate-pulse rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg"
+                                                                        >
+                                                                            Aceptar Invitación
+                                                                        </button>
+                                                                    ) : (
+                                                                        <button
+                                                                            onClick={() => createInvitation(application)}
+                                                                            id={`invitationButton${application.id}`}
+                                                                            className="w-full rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
+                                                                            type="submit"
+                                                                        >
+                                                                            Invitar
+                                                                        </button>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div className="lg:w-1/2 p-5 bg-gray-300 flex flex-col justify-between rounded-r-xl">
-                                                        <div>
-                                                            <h2 className="mb-5 text-xl font-semibold text-gray-800">Compañeros Asignados</h2>
-                                                            <div className="overflow-y-auto max-h-48 grid grid-cols-2 gap-4">
-                                                                {application.workers.map((worker, id) => {
-                                                                    if (worker.id === workerId) {
-                                                                        return null;
-                                                                    }
-                                                                    return (
-                                                                        <div key={id} className="bg-white text-center shadow-lg p-2 rounded-lg">
-                                                                            <p className="text-base font-light text-gray-700">
-                                                                                {worker.name} {worker.surname}
-                                                                            </p>
-                                                                        </div>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                        </div>
-                                                        <div className="mt-5">
-                                                            {isCurrentAppInvited ? (
-                                                                <button
-                                                                    onClick={() => acceptInvitation(application.id, currentAppInvitedLobbyCode)}
-                                                                    className="w-full animate-pulse rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg"
-                                                                >
-                                                                    Aceptar Invitación
-                                                                </button>
-                                                            ) : (
-                                                                <button
-                                                                    onClick={() => createInvitation(application)}
-                                                                    id={`invitationButton${application.id}`}
-                                                                    className="w-full rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
-                                                                    type="submit"
-                                                                >
-                                                                    Invitar
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-
-                                        );
-                                    })}
+                                                );
+                                            })
+                                        )}
                                 </div>
 
                             )}

@@ -90,20 +90,20 @@ class WorkerSigninRequest extends Controller
             //     // });
             // } catch (\Throwable $th) {
             //     // Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage()  . ' Stack trace: ' . $th->getTraceAsString());
-            //     Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage() . ' Stack trace: ' . $th->getTraceAsString());
+            //     Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $th->getMessage() . 'Fitxer' . $th->getFile() .' Stack trace: ' . $th->getTraceAsString());
 
             //     return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
             // }
 
 
-            // try {
-            //     Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
-            // } catch (\Exception $exception) {
-            //     // Registrar el error
-            //     Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $exception->getMessage());
+            try {
+                Mail::to($request->email)->send(new registrationRequestEmail($workerRequest));
+            } catch (\Exception $exception) {
+                // Registrar el error
+                Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $exception->getMessage());
 
-            //     return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
-            // }
+                return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
+            }
 
             DB::commit();
 

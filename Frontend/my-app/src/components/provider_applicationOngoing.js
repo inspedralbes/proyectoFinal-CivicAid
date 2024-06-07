@@ -132,15 +132,15 @@ const ApplicationOngoing = ({ socket }) => {
             applicationExplanation: explanation
         });
 
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "La solicitud se ha completado correctamente",
-            showConfirmButton: false,
-            timer: 3500,
-        });
+        // Swal.fire({
+        //     position: "center",
+        //     icon: "success",
+        //     title: "La solicitud se ha completado correctamente",
+        //     showConfirmButton: false,
+        //     timer: 3500,
+        // });
         
-        navigate("/");
+        // navigate("/");
     }
 
     socket.on("applicationNodeCompletedConfirmation", (data) => {
