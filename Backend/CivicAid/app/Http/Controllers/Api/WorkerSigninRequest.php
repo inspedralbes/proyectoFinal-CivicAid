@@ -77,6 +77,7 @@ class WorkerSigninRequest extends Controller
             $workerRequest->save();
 
             // Enviar el correo electrónico
+            Log::error('Construyendo URL: ' . $baseUrl);
 
             Log::error('Intentando enviar email a: ' . $request->email);
 

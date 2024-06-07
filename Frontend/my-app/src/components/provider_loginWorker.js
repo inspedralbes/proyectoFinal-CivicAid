@@ -100,7 +100,7 @@ const LoginForm = () => {
                             <div className="text-center">
                                 <img
                                         className="m-auto w-4/5 lg:w-6/12"
-                                        src="LogoPrincipal.png"
+                                        src="logoPrincipal.png"
                                     alt="logo" />
                             </div>
                         </NavLink>
