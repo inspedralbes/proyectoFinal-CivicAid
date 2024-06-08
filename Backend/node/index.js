@@ -274,18 +274,21 @@ io.on("connection", (socket) => {
             });
 
             const data = await response.json();
+            
+            users.forEach(user => {
+                if (employeeSocketMap[user.id].socketId) {
+                    io.to(employeeSocketMap[user.id].socketId).emit("applicationNodeCompletedConfirmation", {
+                        completed: true
+                    })
+                }
+            })
+
+            
         } catch (error) {
             console.log("Ha habido un error en applicationNodeCompleted ", error);
         }
 
 
-        users.forEach(user => {
-            if (employeeSocketMap[user.id].socketId) {
-                io.to(employeeSocketMap[user.id].socketId).emit("applicationNodeCompletedConfirmation", {
-                    completed: true
-                })
-            }
-        })
     })
 
     // Manejador de eventos para desconexión de clientes

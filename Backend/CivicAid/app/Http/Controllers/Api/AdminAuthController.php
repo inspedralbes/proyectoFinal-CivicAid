@@ -12,14 +12,49 @@ use Illuminate\Database\QueryException;
 // use OpenApi\Attributes as OA;
 use OpenApi\Annotations as OA;
 
-
+/**
+* @OA\Info(title="API CivicAid", version="1.0")
+*
+* @OA\Server(url="https://civic.civicaid.daw.inspedralbes.cat/laravel")
+*/
 class AdminAuthController extends Controller
 {
+
 /**
- * @OA\Info(
- *      version="1.0.0", 
- *      title="L5 OpenApi documentación de Enterprises",
- *      description="L5 Swagger OpenApi description para enterprises.",
+ * Register a new admin.
+ *
+ * @OA\Post(
+ *     path="/api/signinAdmin",
+ *     summary="Register a new admin",
+ *     tags={"AdminAuthController"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"name","surname","secondSurname","assignedLocation","email","password"},
+ *             @OA\Property(property="name", type="string", example="John"),
+ *             @OA\Property(property="surname", type="string", example="Doe"),
+ *             @OA\Property(property="secondSurname", type="string", example="Smith"),
+ *             @OA\Property(property="assignedLocation", type="string", example="Location"),
+ *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
+ *             @OA\Property(property="password", type="string", example="password123"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Registered correctly",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Registered correctly."),
+ *             @OA\Property(property="isRegistered", type="boolean", example=true),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Couldn't register",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Couldn't register."),
+ *             @OA\Property(property="isRegistered", type="boolean", example=false),
+ *         )
+ *     )
  * )
  */
     public function signinAdmin(Request $request)
@@ -52,6 +87,40 @@ class AdminAuthController extends Controller
         }
     }
 
+    
+/**
+ * Log in as admin.
+ *
+ * @OA\Post(
+ *     path="/api/loginAdmin",
+ *     summary="Log in as admin",
+ *     tags={"AdminAuthController"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"email","password"},
+ *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
+ *             @OA\Property(property="password", type="string", example="password123"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Logged in correctly",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Logged in correctly."),
+ *             @OA\Property(property="isRegistered", type="boolean", example=true),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Couldn't log in",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Couldn't log in."),
+ *             @OA\Property(property="isRegistered", type="boolean", example=false),
+ *         )
+ *     )
+ * )
+ */
     public function loginAdmin(Request $request)
     {
         $credentials = $request->validate([

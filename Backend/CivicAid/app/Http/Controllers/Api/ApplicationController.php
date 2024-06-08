@@ -10,6 +10,55 @@ use Illuminate\Support\Facades\Storage;
 class ApplicationController extends Controller
 {
 
+    /**
+     * Create a new application.
+     *
+     * @OA\Post(
+     *     path="/api/makeApplication",
+     *     summary="Submit a new application",
+     *     tags={"ApplicationController"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Data needed to create the application",
+     *         @OA\JsonContent(
+     *             required={"applicantId", "title", "description", "image", "sector", "subsector", "province", "location", "date"},
+     *             @OA\Property(property="applicantId", type="integer", example=123),
+     *             @OA\Property(property="title", type="string", example="New Community Center"),
+     *             @OA\Property(property="description", type="string", example="Proposal for constructing a new community center."),
+     *             @OA\Property(property="image", type="string", format="binary"),
+     *             @OA\Property(property="sector", type="string", example="Public"),
+     *             @OA\Property(property="subsector", type="string", example="Infrastructure"),
+     *             @OA\Property(property="province", type="string", example="Madrid"),
+     *             @OA\Property(property="location", type="string", example="Central Madrid"),
+     *             @OA\Property(property="date", type="string", format="date", example="2024-07-10"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="The application was created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="applicantId", type="integer", example=123),
+     *             @OA\Property(property="title", type="string", example="New Community Center"),
+     *             @OA\Property(property="description", type="string", example="Proposal for constructing a new community center."),
+     *             @OA\Property(property="image", type="string", example="http://example.com/storage/images/1.jpg"),
+     *             @OA\Property(property="sector", type="string", example="Public"),
+     *             @OA\Property(property="subsector", type="string", example="Infrastructure"),
+     *             @OA\Property(property="province", type="string", example="Madrid"),
+     *             @OA\Property(property="location", type="string", example="Central Madrid"),
+     *             @OA\Property(property="date", type="string", format="date", example="2024-07-10"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="An unexpected error occurred."),
+     *             @OA\Property(property="error", type="string", example="Error message detailing what went wrong")
+     *         )
+     *     )
+     * )
+     */
     public function makeApplication(Request $request)
     {
         $request->validate([
@@ -65,21 +114,141 @@ class ApplicationController extends Controller
             return response($th, 500);
         }
     }
+
+
+    /**
+     * Retrieves a list of all applications from the database.
+     *
+     * This endpoint returns an array of all applications stored in the database, detailing each application's 
+     * unique identifier, applicant ID, title, description, image URL, sector, subsector, province, location, 
+     * and date of application.
+     *
+     * @OA\Get(
+     *     path="/api/listApplications",
+     *     operationId="listAllApplications",
+     *     tags={"ApplicationController"},
+     *     summary="List all applications",
+     *     description="Returns a list of all applications stored in the database, each including detailed information such as ID, applicant ID, title, description, image URL, sector, subsector, province, location, and date.",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="applicantId", type="integer", example=123),
+     *                 @OA\Property(property="title", type="string", example="New Community Center"),
+     *                 @OA\Property(property="description", type="string", example="Proposal for constructing a new community center."),
+     *                 @OA\Property(property="image", type="string", example="http://example.com/storage/images/1.jpg"),
+     *                 @OA\Property(property="sector", type="string", example="Public"),
+     *                 @OA\Property(property="subsector", type="string", example="Infrastructure"),
+     *               @OA\Property(property="applicationStatus", type="string", enum={"pending", "approved", "rejected"}, example="pending"),
+     *                 @OA\Property(property="province", type="string", example="Madrid"),
+     *                 @OA\Property(property="location", type="string", example="Central Madrid"),
+     *                 @OA\Property(property="date", type="string", format="date", example="2024-07-10")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     )
+     * )
+     */
     public function listApplications()
     {
         $application = Application::all();
         return $application;
     }
 
-    public function listApplicationsSector(Request $request)
-    {
-        $sector = $request->sector;
+    /**
+     * Retrieve applications based on sector.
+     *
+     * This endpoint filters and returns applications from the database that belong to a specified sector, providing details such as ID, applicant ID, title, description, image URL, sector, subsector, province, location, and date of application.
+     *
+     * @OA\Get(
+     *     path="/api/listApplicationsSector",
+     *     operationId="listApplicationsBySector",
+     *     tags={"ApplicationController"},
+     *     summary="List applications by sector",
+     *     description="Returns a list of applications belonging to a specific sector, each including detailed information such as ID, applicant ID, title, description, image URL, sector, subsector, province, location, and date.",
+     *     @OA\Parameter(
+     *         name="sector",
+     *         in="query",
+     *         required=true,
+     *         description="Sector of the applications to retrieve",
+     *         @OA\Schema(
+     *             type="string",
+     *             example="Public"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="applicantId", type="integer", example=123),
+     *                 @OA\Property(property="title", type="string", example="New Community Center"),
+     *                 @OA\Property(property="description", type="string", example="Proposal for constructing a new community center."),
+     *                 @OA\Property(property="image", type="string", example="http://example.com/storage/images/1.jpg"),
+     *                 @OA\Property(property="sector", type="string", example="Public"),
+     *                 @OA\Property(property="subsector", type="string", example="Infrastructure"),
+     *                 @OA\Property(property="province", type="string", example="Madrid"),
+     *                 @OA\Property(property="location", type="string", example="Central Madrid"),
+     *                 @OA\Property(property="date", type="string", format="date", example="2024-07-10")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No applications found for the specified sector"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     )
+     * )
+     */
 
-        $applications = Application::where('sector', $sector)->get();
-
-        return response()->json($applications, 200);
-    }
-
+    /**
+     * Retrieve applications submitted by the authenticated user.
+     *
+     * This endpoint retrieves and returns applications submitted by the authenticated user. Each application includes details such as ID, title, description, image URL, sector, subsector, province, location, and date of application.
+     *
+     * @OA\Get(
+     *     path="/api/listOwnApplications",
+     *     operationId="listUserApplications",
+     *     tags={"ApplicationController"},
+     *     summary="List user's applications",
+     *     description="Retrieves applications submitted by the authenticated user, providing details such as ID, title, description, image URL, sector, subsector, province, location, and date of application.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="applicantId", type="integer", example=123),
+     *                 @OA\Property(property="title", type="string", example="New Community Center"),
+     *                 @OA\Property(property="description", type="string", example="Proposal for constructing a new community center."),
+     *                 @OA\Property(property="image", type="string", example="http://example.com/storage/images/1.jpg"),
+     *                 @OA\Property(property="sector", type="string", example="Public"),
+     *                 @OA\Property(property="subsector", type="string", example="Infrastructure"),
+     *                 @OA\Property(property="province", type="string", example="Madrid"),
+     *                 @OA\Property(property="location", type="string", example="Central Madrid"),
+     *                 @OA\Property(property="date", type="string", format="date", example="2024-07-10")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     )
+     * )
+     */
     public function listOwnApplications(Request $request)
     {
         $id = $request->userId;
@@ -89,7 +258,50 @@ class ApplicationController extends Controller
         return response()->json($applications, 200);
     }
 
-
+    /**
+     * Update an existing application's details.
+     *
+     * @OA\Put(
+     *     path="/api/updateApplication/{id}",
+     *     tags={"ApplicationController"},
+     *     summary="Update an existing application",
+     *     description="Updates the specified fields of an existing application identified by its ID.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="The ID of the application to update",
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Data required to update the application",
+     *         @OA\JsonContent(
+     *             required={"title", "description", "date"},
+     *             @OA\Property(property="title", type="string", description="The new title of the application"),
+     *             @OA\Property(property="description", type="string", description="The new description of the application"),
+     *             @OA\Property(property="date", type="string", format="date", description="The new date of the event")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Application updated successfully",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Application not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Solicitud no encontrada")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Error interno del servidor")
+     *         )
+     *     )
+     * )
+     */
     public function updateApplication(Request $request, $id)
     {
         try {

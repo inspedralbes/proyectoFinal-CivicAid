@@ -164,10 +164,10 @@ const Home = ({ socket }) => {
                             </div>
 
                             :
-                            <div className='w-screen lg:w-full lg:h-full bg-black'>
+                            <div className='w-screen h-screen lg:w-full lg:h-full'>
 
-                                <div className=' h-[340px] lg:h-full bg-violet-700'>
-                                    <div className='h-full w-full lg:h-3/6 overflow-hidden aspect-video bg-violet-500 cursor-pointer relative group border-b-4 '>
+                                <div className='h-full lg:h-full'>
+                                    <div className='h-2/5 w-full lg:h-3/6 overflow-hidden aspect-video bg-violet-500 cursor-pointer relative group border-b-4 '>
                                         <NavLink to="/manageApplications">
                                             <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
                                                 <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
@@ -183,7 +183,7 @@ const Home = ({ socket }) => {
                                         <img src="manageApplicationsButtonImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
                                     </div>
 
-                                    <div className='h-full w-full lg:h-3/6 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group '>
+                                    <div className='h-2/5 w-full lg:h-3/6 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group '>
                                         <NavLink to="/workerProfile">
                                             <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
                                                 <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>

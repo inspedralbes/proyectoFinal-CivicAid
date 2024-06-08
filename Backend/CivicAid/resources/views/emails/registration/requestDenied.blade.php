@@ -1,12 +1,11 @@
 <x-mail::message>
-# Introduction
+# Solicitud Denegada
 
-The body of your message.
+Hola {{ $name }},
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+Lamentamos informarte que tu solicitud de registro ha sido denegada. 
 
-Thanks,<br>
-{{ config('app.name') }}
+Gracias por tu comprensión.
+
+Saludos, {{ config('app.name') }}
 </x-mail::message>
