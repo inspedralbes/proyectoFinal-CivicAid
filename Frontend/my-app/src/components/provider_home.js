@@ -103,6 +103,10 @@ const Home = ({ socket }) => {
                                 <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
+                        <div className="text-white text-center p-4">
+                            Aprende más sobre CivicAid y cómo utilizar la plataforma para enviar solicitudes y ayudar a la comunidad aquí: <NavLink to="/userManual" className="text-blue-500 hover:underline ml-1">Manual de usuario</NavLink>
+                        </div>
+
                     </div>
                 </div>
 
