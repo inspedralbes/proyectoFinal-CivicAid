@@ -4,6 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
 
+
+/**
+ * Component that renders the admin profile view
+ *
+ * @returns {*}
+ */
 const UserInfo = () => {
     const isLoggedIn = useSelector(state => state.isLoggedIn);
     const token = localStorage.getItem('access_token');
@@ -33,16 +39,28 @@ const UserInfo = () => {
 
     const [activeTab, setActiveTab] = useState("tab1");
 
+    /**
+     * Function that switches the tab between Private Applications and Shared Applications
+     * @param {*Parameter that indicates in wich tab you are} tab 
+     */
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
 
+    /**
+     * Function that shows a modal with more detailed info about the application that has been clicked and allows to assign workers to it 
+     * @param {*Info of the application that has been clicked} application 
+     */
     const handleApplicationModal = (application) => {
         setShowApplicationModal(true);
         setApplicationModalInfo(application)
     };
 
+    
     useEffect(() => {
+        /**
+         * Function that fetches the accepted requests
+         */
         async function acceptedRequests() {
             if (isAdmin) {
                 setLoading(true)
@@ -66,6 +84,9 @@ const UserInfo = () => {
             }
         }
 
+        /**
+         * Function that fetches the assigned applications
+         */
         async function assignedApplications() {
             if (isAdmin) {
                 setLoading(true)
@@ -93,7 +114,9 @@ const UserInfo = () => {
         assignedApplications();
     }, [])
 
-
+    /**
+     * Function that allows to the admin log out
+     */
     function logout() {
         dispatch(actions.logout());
         localStorage.setItem('access_token', "0");

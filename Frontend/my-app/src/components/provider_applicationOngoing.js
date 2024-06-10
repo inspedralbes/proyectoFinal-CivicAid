@@ -4,6 +4,13 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { store, actions } from './store';
 import Swal from "sweetalert2";
 
+/**
+ * Component that renders the application accepted by the worker
+ *
+ * @param {{ socket: any; }} param0
+ * @param {*} param0.socket
+ * @returns {*}
+ */
 const ApplicationOngoing = ({ socket }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -23,6 +30,9 @@ const ApplicationOngoing = ({ socket }) => {
 
     useEffect(() => {
 
+        /**
+         * Function that fetches the application accepted, if theres any accepted
+         */
         async function fetchApplication() {
             if (isWorker && appOngoing) {
                 try {
@@ -52,7 +62,7 @@ const ApplicationOngoing = ({ socket }) => {
 
 
 
-    useEffect(() => {
+    useEffect(() => {        
         socket.emit("register", workerId);
 
         socket.on('textUpdate', (updatedText) => {
@@ -67,6 +77,10 @@ const ApplicationOngoing = ({ socket }) => {
 
     });
 
+    /**
+     * Function that emits a socket every time the explanation text is updated
+     * @param {*} event 
+     */
     const handleTextChange = (event) => {
         const newText = event.target.value;
         setExplanation(newText);
@@ -78,6 +92,10 @@ const ApplicationOngoing = ({ socket }) => {
     };
 
 
+    /**
+     * Function that updates the status of the application marking it as completed     
+     * @param {*Application ongoing} e 
+     */
     const handleSubmit = async (e) => {
         setLoading(true);
 
@@ -123,6 +141,10 @@ const ApplicationOngoing = ({ socket }) => {
         }
     }
 
+    /**
+     * Function that emits a socket to the server when a shared application button "Completed" is clicked 
+     * @param {*Application ongoing} e 
+     */
     const handleNodeSubmit = async (e) => {
 
         socket.emit("applicationNodeCompleted", {
