@@ -5,6 +5,10 @@ import { store, actions } from './store';
 
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza la página de gestión de solicitudes de registro
+ * @returns 
+ */
 const ManageSigninRequest = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -22,6 +26,9 @@ const ManageSigninRequest = () => {
 
 
     useEffect(() => {
+        /**
+         * Función que se encarga de obtener las solicitudes de registro
+         */
         async function fetchSigninRequests() {
             if (isAdmin) {
                 setLoading(true);
@@ -55,32 +62,28 @@ const ManageSigninRequest = () => {
         fetchSigninRequests();
     }, []);
 
-    function generatePassword(length = 10) {
+    /**
+     * Función que se encarga de generar una contraseña aleatoria
+     * @param {*} length 
+     * @returns 
+     */
+    function generatePassword(length = 8) {
         // Definir los caracteres que se usarán para generar la contraseña
-        const charset = {
-            lowercase: "abcdefghijklmnopqrstuvwxyz",
-            uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            numbers: "0123456789",
-            symbols: "!@#$%^&*()_+-=[]{}|;':,.<>/?"
-        };
+        const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let password = '';
 
-        // Asegurarse de que la contraseña incluya al menos un carácter de cada tipo
-        const allTypes = Object.keys(charset).map(type => charset[type]);
-        let password = allTypes.map(type => type[Math.floor(Math.random() * type.length)]).join('');
-
-        // Completar la longitud de la contraseña con caracteres aleatorios de todos los tipos
-        const allChars = allTypes.join('');
-        for (let i = password.length; i < length; i++) {
-            password += allChars[Math.floor(Math.random() * allChars.length)];
+        for (let i = 0, n = charset.length; i < length; ++i) {
+          password += charset.charAt(Math.floor(Math.random() * n));
         }
 
-        // Mezclar la contraseña para que los caracteres obligatorios no estén al inicio
-        password = password.split('').sort(() => Math.random() - 0.5).join('');
-
-        console.log("ESTA ES LA PASSWORD: ", password);
         return password;
     }
+    
 
+    /**
+     * Función que se encarga de aceptar una solicitud de registro
+     * @param {*} e 
+     */
     const acceptRequest = async (e) => {
         // e.preventDefault(e);
         const assignedApplications = 0;
@@ -177,6 +180,10 @@ const ManageSigninRequest = () => {
     }
 
 
+    /**
+     * Función que se encarga de denegar una solicitud de registro
+     * @param {*} e 
+     */
     const denyRequest = async (e) => {
         console.log(e);
         const requestStatus = "denied";

@@ -5,6 +5,11 @@ import { store, actions } from './store';
 
 import Swal from "sweetalert2"
 
+/**
+ * Componente que renderiza la vista de la gestión de solicitudes
+ * @param {*} param0 
+ * @returns 
+ */
 const ManageApplication = ({ socket }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -53,7 +58,7 @@ const ManageApplication = ({ socket }) => {
      */
     useEffect(() => {
         /**
-        * Funcion para pedir la solicitudes sin compartir
+        * Función que se encarga de obtener las solicitudes asignadas al empleado
         */
         async function fetchApplications() {
             if (isWorker) {
@@ -208,10 +213,18 @@ const ManageApplication = ({ socket }) => {
         }
     });
 
+    /**
+     * Función que se encarga de obtener el número máximo de usuarios que pueden estar en una sala
+     * @param {*} e 
+     */
     const maxUsers = (e) => {
         setCountMaxUsers(e.workers.length);
     }
 
+    /**
+     * Función que se encarga de generar un código aleatorio para la sala de espera
+     * @returns 
+     */
     const codeGenerator = () => {
         const randomCode = Math.floor(
             Math.random() * (100000 - 999999 + 1) + 999999
@@ -220,6 +233,9 @@ const ManageApplication = ({ socket }) => {
         return randomCode;
     };
 
+    /**
+     * Función que se encarga de cancelar la invitación
+     */
     const cancelInvitation = () => {
         socket.emit("cancelInvitation", {
             applicationId: actualApplication.id,
@@ -230,6 +246,12 @@ const ManageApplication = ({ socket }) => {
         setInvitationCreated(false);
 
     }
+
+    /**
+     * Función que se encarga de aceptar la invitación y unirse a la sala de espera
+     * @param {*} applicationId 
+     * @param {*} lobbyCode 
+     */
     const acceptInvitation = (applicationId, lobbyCode) => {
         if (applicationOngoing) {
             setShowModal(true);
@@ -251,6 +273,10 @@ const ManageApplication = ({ socket }) => {
         }
     };
 
+    /**
+     * Función que se encarga de crear la invitación y enviarla a los empleados asignados
+     * @param {*} e 
+     */
     const createInvitation = async (e) => {
         try {
             if (!applicationNodeOngoing) {
@@ -318,6 +344,9 @@ const ManageApplication = ({ socket }) => {
 
     }
 
+    /**
+     * Función que se encarga de emitir el socket para que se inicie la solicitud
+     */
     const handleNodeApplication = async () => {
 
         socket.emit("startApplication", {
@@ -328,6 +357,10 @@ const ManageApplication = ({ socket }) => {
     }
 
 
+    /**
+     * Función que se encarga de actualizar la solicitud en curso
+     * @param {*} e 
+     */
     const updateAppOngoing = async (e) => {
         setLoading(true);
         setShowModal(false);

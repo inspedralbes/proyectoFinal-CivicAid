@@ -7,76 +7,15 @@ import { useLocation } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza el manual de usuario
+ * @returns 
+ */
 const UserManual = () => {
-    // const [email, setEmail] = useState('');
-    // const [password, setPassword] = useState('');
-    // const [isLoading, setLoading] = useState(false);
-    // const isLoggedIn = useSelector((state) => state.isLoggedIn);
-    // const navigate = useNavigate();
-    // const dispatch = useDispatch();
-    // const location = useLocation();
-
-    // const token = localStorage.getItem('access_token');
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     setLoading(true);
-
-    //     try {
-    //         const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/loginAdmin', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ email, password }),
-    //         });
-
-    //         const data = await response.json();
-
-    //         if (data.isLoggedIn) {
-    //             dispatch(actions.login());
-    //             dispatch(actions.admin());
-    //             store.dispatch(actions.saveData(data[1]));
-    //             localStorage.setItem('access_token', data[0]);
-    //             navigate("/")
-
-    //             Swal.fire({
-    //                 position: "bottom-end",
-    //                 icon: "success",
-    //                 title: "Has iniciado correctamente",
-    //                 showConfirmButton: false,
-    //                 timer: 3500,
-    //             });
-    //         } else {
-    //             Swal.fire({
-    //                 position: "bottom-end",
-    //                 icon: "error",
-    //                 title: "Credenciales inválidas",
-    //                 showConfirmButton: false,
-    //                 timer: 1500,
-    //             });
-    //         }
-    //         setLoading(false)
-    //     } catch (error) {
-    //         console.error(error);
-    //         setLoading(false)
-    //         Swal.fire({
-    //             position: "bottom-end",
-    //             icon: "error",
-    //             title: "Ha ocurrido un error durante la carga",
-    //             showConfirmButton: false,
-    //             timer: 1500,
-    //         });
-    //     }
 
     return (
         <main className="h-screen overflow-auto flex justify-center items-center lg:bg-orange-300">
             <div className="container overflow-auto h-full w-full lg:w-9/12 lg:rounded-lg bg-gray-800 shadow-lg dark:bg-neutral-800">
-                {/* <NavLink to="/">
-                    <div className="text-center py-4">
-                        <img className="m-auto w-4/5 lg:w-3/12" src="logoPrincipal.png" alt="logo" />
-                    </div>
-                </NavLink> */}
 
                 <div className="m-3 bg-gray-700 p-6 rounded-lg">
                     <h1 className="text-2xl text-center text-white font-bold">Manual de Usuario</h1>

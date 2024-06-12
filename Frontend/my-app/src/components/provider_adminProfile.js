@@ -4,6 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
 
+/**
+ * 
+ * @returns Componente que renderiza la vista de la información del administrador
+ */
 const UserInfo = () => {
     const isLoggedIn = useSelector(state => state.isLoggedIn);
     const token = localStorage.getItem('access_token');
@@ -33,16 +37,27 @@ const UserInfo = () => {
 
     const [activeTab, setActiveTab] = useState("tab1");
 
+    /**
+     * Función encargada de cambiar el tab activo
+     * @param {*} tab 
+     */
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
 
+    /**
+     * Función encargada de mostrar el modal de la solicitud
+     * @param {*} application 
+     */
     const handleApplicationModal = (application) => {
         setShowApplicationModal(true);
         setApplicationModalInfo(application)
     };
 
     useEffect(() => {
+        /**
+         * Función encargada de obtener las solicitudes de registro aceptadas
+         */
         async function acceptedRequests() {
             if (isAdmin) {
                 setLoading(true)
@@ -66,6 +81,9 @@ const UserInfo = () => {
             }
         }
 
+        /**
+         * Función encargada de obtener las solicitudes asignadas por el administrador
+         */
         async function assignedApplications() {
             if (isAdmin) {
                 setLoading(true)
@@ -94,6 +112,9 @@ const UserInfo = () => {
     }, [])
 
 
+    /**
+     * Función encargada de cerrar sesión
+     */
     function logout() {
         dispatch(actions.logout());
         localStorage.setItem('access_token', "0");

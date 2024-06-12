@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ProvincesSeeder::class,
             SectorsSeeder::class,
-            WorkersSeeder::class,
-            UsersSeeder::class,
+            // WorkersSeeder::class,
+            // UsersSeeder::class,
             // ApplicationsSeeder::class,
             // Agrega aquí cualquier otro seeder que quieras ejecutar
         ]);

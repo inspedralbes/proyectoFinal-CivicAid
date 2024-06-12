@@ -5,6 +5,11 @@ import { store, actions } from './store';
 import { NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza la página principal de la aplicación y muestra las opciones disponibles para los usuarios según su rol (ciudadano, empleado o administrador).
+ * @param {*} param0 
+ * @returns 
+ */
 const Home = ({ socket }) => {
     const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
@@ -39,6 +44,7 @@ const Home = ({ socket }) => {
     }, [checkApplicationOngoing]);
 
 
+    // Cambiar la imagen y la descripción cada 10 segundos
     useEffect(() => {
         const interval = setInterval(() => {
             nextImage();
@@ -47,7 +53,6 @@ const Home = ({ socket }) => {
     }, [currentImage]);
 
     function logout() {
-
         dispatch(actions.logout());
         localStorage.setItem('access_token', "0");
         Swal.fire({
@@ -59,10 +64,16 @@ const Home = ({ socket }) => {
         });
     }
 
+    /**
+     * Función para mostrar la imagen anterior del carrusel
+     */
     const prevImage = () => {
         setCurrentImage(prev => (prev === 0 ? images.length - 1 : prev - 1));
     };
 
+    /**
+     * Función para mostrar la siguiente imagen del carrusel
+     */
     const nextImage = () => {
         setCurrentImage(prev => (prev === images.length - 1 ? 0 : prev + 1));
     };
@@ -103,7 +114,7 @@ const Home = ({ socket }) => {
                                 <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
-                        <div className="text-white text-center p-4">
+                        <div className="hidden lg:block text-white text-center p-4">
                             Aprende más sobre CivicAid y cómo utilizar la plataforma para enviar solicitudes y ayudar a la comunidad aquí: <NavLink to="/userManual" className="text-blue-500 hover:underline ml-1">Manual de usuario</NavLink>
                         </div>
 

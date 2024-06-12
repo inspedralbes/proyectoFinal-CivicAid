@@ -3,6 +3,10 @@ import { useSelector } from 'react-redux';
 import { useNavigate, NavLink } from "react-router-dom";
 import Swal from 'sweetalert2';
 
+/**
+ * Componente que renderiza el formulario de registro del usuario
+ * @returns 
+ */
 function SigninForm() {
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -31,6 +35,10 @@ function SigninForm() {
     };
 
 
+    /**
+     * Función que se encarga de enviar los datos del formulario al servidor
+     * @param {*} event 
+     */
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);

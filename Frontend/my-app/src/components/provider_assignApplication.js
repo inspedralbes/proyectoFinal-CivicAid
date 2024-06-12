@@ -21,15 +21,11 @@ const ManageApplication = () => {
     const [workersList, setWorkersList] = useState(null);
     const [selectedWorkers, setSelectedWorkers] = useState([]);
 
-    const [zoomedImages, setZoomedImages] = useState(Array(applicationInfo.length).fill(false));
-
-    const toggleZoom = (index) => {
-        const newZoomedImages = [...zoomedImages];
-        newZoomedImages[index] = !newZoomedImages[index];
-        setZoomedImages(newZoomedImages);
-    };
 
     useEffect(() => {
+        /**
+         * Función para obtener las solicitudes de la localización asignada
+         */
         async function fetchApplications() {
             if (isAdmin) {
                 setLoading(true);
@@ -54,6 +50,9 @@ const ManageApplication = () => {
             }
         }
 
+        /**
+         * Función para obtener los trabajadores de la localización asignada
+         */
         async function fetchWorkers() {
             if (isAdmin) {
                 setLoading(true);
@@ -83,6 +82,10 @@ const ManageApplication = () => {
     }, []);
 
 
+    /**
+     * Función para seleccionar o deseleccionar un trabajador
+     * @param {*} workerId 
+     */
     const toggleSelectedWorker = (workerId) => {
         const isSelected = selectedWorkers.includes(workerId);
         if (isSelected) {
@@ -92,6 +95,10 @@ const ManageApplication = () => {
         }
     };
 
+    /**
+     * Función para aceptar la solicitud y asignarla a los trabajadores seleccionados
+     * @returns 
+     */
     const acceptRequest = async () => {
         if (!selectedApplication || selectedWorkers.length === 0) {
             Swal.fire({
@@ -149,6 +156,9 @@ const ManageApplication = () => {
         }
     };
 
+    /**
+     * Función para cerrar el modal y vaciar los empleados seleccionados
+     */
     const closeModal = async () => {
         setSelectedWorkers([]);
         setSelectedApplication(null);

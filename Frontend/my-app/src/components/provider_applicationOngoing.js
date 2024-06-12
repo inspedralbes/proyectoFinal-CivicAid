@@ -4,6 +4,11 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { store, actions } from './store';
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza la vista de la solicitud en curso
+ * @param {*} param0 
+ * @returns 
+ */
 const ApplicationOngoing = ({ socket }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -23,6 +28,9 @@ const ApplicationOngoing = ({ socket }) => {
 
     useEffect(() => {
 
+        /**
+         * Función que obtiene la solicitud en curso
+         */
         async function fetchApplication() {
             if (isWorker && appOngoing) {
                 try {
@@ -51,7 +59,7 @@ const ApplicationOngoing = ({ socket }) => {
     }, [applicationOngoing]);
 
 
-
+    // Use effect para que cada vez que se actualice el texto de la solicitud en curso, se lo envíe a los demas empleados
     useEffect(() => {
         socket.emit("register", workerId);
 
@@ -67,6 +75,10 @@ const ApplicationOngoing = ({ socket }) => {
 
     });
 
+    /**
+     * Función que actualiza el texto de la solicitud en curso y lo envía a los demás empleados
+     * @param {*} event 
+     */
     const handleTextChange = (event) => {
         const newText = event.target.value;
         setExplanation(newText);
@@ -78,6 +90,10 @@ const ApplicationOngoing = ({ socket }) => {
     };
 
 
+    /**
+     * Función que actualiza el estado de la solicitud en curso
+     * @param {*} e 
+     */
     const handleSubmit = async (e) => {
         setLoading(true);
 
@@ -123,6 +139,11 @@ const ApplicationOngoing = ({ socket }) => {
         }
     }
 
+
+    /**
+     * Función que actualiza el estado de la solicitud compartida en curso
+     * @param {*} e 
+     */
     const handleNodeSubmit = async (e) => {
 
         socket.emit("applicationNodeCompleted", {
@@ -143,6 +164,7 @@ const ApplicationOngoing = ({ socket }) => {
         // navigate("/");
     }
 
+    // Socket que recibe la confirmación de que la solicitud compartida se ha completado
     socket.on("applicationNodeCompletedConfirmation", (data) => {
 
         if (data.completed) {

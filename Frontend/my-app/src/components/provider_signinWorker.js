@@ -3,6 +3,10 @@ import { useSelector } from 'react-redux';
 import { useNavigate, NavLink } from "react-router-dom";
 import Swal from 'sweetalert2';
 
+/**
+ * Componente que renderiza el formulario de registro de trabajador
+ * @returns 
+ */
 function SigninForm() {
     const [dni, setDni] = useState('');
     const [name, setName] = useState('');
@@ -22,8 +26,10 @@ function SigninForm() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        /**
+         * Función que se encarga de obtener las provincias
+         */
         async function fetchProvinces() {
-
             try {
                 const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listProvinces', {
                     method: 'GET',
@@ -43,6 +49,9 @@ function SigninForm() {
 
         }
 
+        /**
+         * Función que se encarga de obtener los sectores
+         */
         async function fetchSectors() {
             try {
                 const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listSectors', {
@@ -67,6 +76,10 @@ function SigninForm() {
         fetchSectors()
     }, []);
 
+    /**
+     * Función que se encarga de manejar el cambio de la imagen de perfil del trabajador y mostrarla en la vista previa
+     * @param {*} e 
+     */
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -79,6 +92,11 @@ function SigninForm() {
         }
     };
 
+    /**
+     * Función que se encarga de validar el DNI
+     * @param {*} dni 
+     * @returns 
+     */
     function validarDNI(dni) {
         const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
         const numero = dni.substring(0, dni.length - 1);
@@ -94,6 +112,11 @@ function SigninForm() {
         return letraCalculada === letra;
     }
 
+
+    /**
+     * Función que se encarga de enviar los datos del formulario al servidor
+     * @param {*} event 
+     */
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);

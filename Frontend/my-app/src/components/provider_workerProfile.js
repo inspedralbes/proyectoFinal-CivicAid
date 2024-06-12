@@ -4,6 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza la información del empleado
+ * @returns 
+ */
 const UserInfo = () => {
     const isLoggedIn = useSelector(state => state.isLoggedIn);
     const token = localStorage.getItem('access_token');
@@ -40,6 +44,9 @@ const UserInfo = () => {
     };
 
     useEffect(() => {
+        /**
+         * Función que se encarga de obtener las solicitudes asignadas al empleado
+         */
         async function fetchApplicationsAssigned() {
             if (isWorker) {
                 setLoading(true)
@@ -83,6 +90,9 @@ const UserInfo = () => {
     }, [])
 
 
+    /**
+     * Función que se encarga de cerrar la sesión del usuario
+     */
     function logout() {
 
         dispatch(actions.logout());
@@ -96,7 +106,6 @@ const UserInfo = () => {
         });
 
         navigate("/")
-
 
     }
 

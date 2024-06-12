@@ -7,6 +7,10 @@ import { useLocation } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza el formulario de login del trabajador
+ * @returns 
+ */
 const LoginForm = () => {
     const [dni, setDni] = useState('');
     const [email, setEmail] = useState('');
@@ -21,6 +25,10 @@ const LoginForm = () => {
     const checkApplicationOngoing = localStorage.getItem('persist:root');
 
 
+    /**
+     * Función que se encarga de enviar los datos del formulario al servidor
+     * @param {*} e 
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);

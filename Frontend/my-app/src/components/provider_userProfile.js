@@ -4,6 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza la información del usuario
+ * @returns 
+ */
 const UserInfo = () => {
     const isLoggedIn = useSelector(state => state.isLoggedIn);
     const token = localStorage.getItem('access_token');
@@ -18,7 +22,7 @@ const UserInfo = () => {
     const [ownApplications, setOwnApplications] = useState([]);
 
     const isWorker = useSelector((state) => state.isWorker);
-    const workerId = useSelector((state) => state.data.id);
+    // const workerId = useSelector((state) => state.data.id);
     const [applicationsAssigned, setApplicationsAssigned] = useState([]);
     const [sharedApplicationsAssigned, setSharedApplicationsAssigned] = useState([]);
 
@@ -29,17 +33,23 @@ const UserInfo = () => {
 
 
     const [activeTab, setActiveTab] = useState("tab1");
-
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
 
+    /**
+     * Función que se encarga de manejar el modal de la solicitud
+     * @param {*} application 
+     */
     const handleApplicationModal = (application) => {
         setShowApplicationModal(true);
         setApplicationModalInfo(application)
     };
 
     useEffect(() => {
+        /**
+         * Función que se encarga de obtener las solicitudes del usuario
+         */
         async function fetchOwnApplications() {
             if (isUser) {
                 setLoading(true)
@@ -63,53 +73,18 @@ const UserInfo = () => {
             }
         }
 
-        async function fetchApplicationsAssigned() {
-            if (isWorker) {
-                setLoading(true)
-                try {
-                    // Primer fetch para obtener las solicitudes sin compartir
-                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listAssignedApplications', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({ workerId }),
-                    });
-                    const data = await response.json();
-                    setApplicationsAssigned(data);
-
-                    // Segundo fetch para obtener las solicitudes compartidas
-                    const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listWorkersExactApplication', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({ workerId }),
-                    });
-                    const data2 = await response2.json();
-
-                    setSharedApplicationsAssigned(data2.applications);
-
-                } catch (error) {
-                    console.error("ESTE ES EL ERROR: ", error);
-                } finally {
-                    setLoading(false)
-
-                }
-            }
-        }
-
         fetchOwnApplications();
-        fetchApplicationsAssigned();
     }, [])
 
 
+    /**
+     * Función que se encarga de cerrar sesión
+     */
     function logout() {
-
         dispatch(actions.logout());
+
         localStorage.setItem('access_token', "0");
+
         Swal.fire({
             position: "bottom-end",
             icon: "info",
@@ -119,8 +94,6 @@ const UserInfo = () => {
         });
 
         navigate("/")
-
-
     }
 
 

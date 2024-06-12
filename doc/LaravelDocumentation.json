@@ -1,0 +1,2972 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API CivicAid",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://civic.civicaid.daw.inspedralbes.cat/laravel"
+        }
+    ],
+    "paths": {
+        "/api/signinAdmin": {
+            "post": {
+                "tags": [
+                    "AdminAuthController"
+                ],
+                "summary": "Register a new admin",
+                "description": "Register a new admin.",
+                "operationId": "62675d028602e17407842eca0cfbd22c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname",
+                                    "secondSurname",
+                                    "assignedLocation",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "secondSurname": {
+                                        "type": "string",
+                                        "example": "Smith"
+                                    },
+                                    "assignedLocation": {
+                                        "type": "string",
+                                        "example": "Location"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registered correctly",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registered correctly."
+                                        },
+                                        "isRegistered": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Couldn't register",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Couldn't register."
+                                        },
+                                        "isRegistered": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/loginAdmin": {
+            "post": {
+                "tags": [
+                    "AdminAuthController"
+                ],
+                "summary": "Log in as admin",
+                "description": "Log in as admin.",
+                "operationId": "566b20deb8a3655f8c5b92cfb628322a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Logged in correctly",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged in correctly."
+                                        },
+                                        "isRegistered": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Couldn't log in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Couldn't log in."
+                                        },
+                                        "isRegistered": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/listRequests": {
+            "get": {
+                "tags": [
+                    "AdminController"
+                ],
+                "summary": "List pending sign-in requests",
+                "description": "List pending sign-in requests for a specific location.",
+                "operationId": "9c9fcdb02886726077bce28df648da65",
+                "parameters": [
+                    {
+                        "name": "assignedLocation",
+                        "in": "query",
+                        "description": "The location assigned to the admin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of pending sign-in requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "requestedLocation": {
+                                                "type": "string",
+                                                "example": "Location"
+                                            },
+                                            "requestStatus": {
+                                                "type": "string",
+                                                "example": "pending"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2023-06-01T12:34:56Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2023-06-01T12:34:56Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid location parameter"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/listAcceptedSignInRequests": {
+            "get": {
+                "tags": [
+                    "AdminController"
+                ],
+                "summary": "List accepted sign in requests",
+                "description": "List accepted sign in requests.",
+                "operationId": "8c3615fcd3b547cb8ea8714cb477ba38",
+                "parameters": [
+                    {
+                        "name": "assignedLocation",
+                        "in": "query",
+                        "description": "The location assigned to the admin",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of pending sign-in requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "dni": {
+                                                "type": "string",
+                                                "example": "12345678S"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "John"
+                                            },
+                                            "surname": {
+                                                "type": "string",
+                                                "example": "Doe"
+                                            },
+                                            "secondSurname": {
+                                                "type": "string",
+                                                "example": "Doe"
+                                            },
+                                            "profileImage": {
+                                                "type": "blob",
+                                                "example": "profileImage.jpg"
+                                            },
+                                            "sector": {
+                                                "type": "string",
+                                                "example": "Bomberos"
+                                            },
+                                            "requestedLocation": {
+                                                "type": "string",
+                                                "example": "Barcelona"
+                                            },
+                                            "requestStatus": {
+                                                "type": "string",
+                                                "example": "pending"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2023-06-01T12:34:56Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2023-06-01T12:34:56Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid location parameter"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/listAssignedApplicationsWorkers": {
+            "post": {
+                "tags": [
+                    "AdminController"
+                ],
+                "summary": "List assigned applications and their workers",
+                "description": "List assigned applications and their workers for a specific admin.",
+                "operationId": "f3a914aa368a59d5c28e14cebd3120f2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "adminId"
+                                ],
+                                "properties": {
+                                    "adminId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "List of assigned applications and their workers",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "applicantId": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "Application Title"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Application Description"
+                                            },
+                                            "profileImage": {
+                                                "type": "blob",
+                                                "example": "profileImage.jpg"
+                                            },
+                                            "sector": {
+                                                "type": "string",
+                                                "example": "Bomberos"
+                                            },
+                                            "subsector": {
+                                                "type": "string",
+                                                "example": "Extinción de Incendios"
+                                            },
+                                            "applicationStatus": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "pending",
+                                                    "approved",
+                                                    "rejected"
+                                                ],
+                                                "example": "pending"
+                                            },
+                                            "province": {
+                                                "type": "string",
+                                                "example": "Barcelona"
+                                            },
+                                            "location": {
+                                                "type": "string",
+                                                "example": "Avinguda Esplugues"
+                                            },
+                                            "workers": {
+                                                "type": "array",
+                                                "items": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Worker Name"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "worker@example.com"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Falta el parámetro adminId"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Error en la solicitud"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/updateRequestStatus/{id}": {
+            "put": {
+                "tags": [
+                    "AdminController"
+                ],
+                "summary": "Update the status of a sign-in request",
+                "description": "Update the status of a sign-in request.",
+                "operationId": "b374a7cbcd0707f2320468767d1670eb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the sign-in request",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "requestStatus"
+                                ],
+                                "properties": {
+                                    "requestStatus": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pending",
+                                            "accepeted",
+                                            "denied"
+                                        ],
+                                        "example": "pending"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request status updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "requestedLocation": {
+                                            "type": "string",
+                                            "example": "Location"
+                                        },
+                                        "requestStatus": {
+                                            "type": "string",
+                                            "example": "approved"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-06-01T12:34:56Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-06-01T12:34:56Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Request not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Request not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid request status"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/acceptRequest": {
+            "post": {
+                "tags": [
+                    "AdminController"
+                ],
+                "summary": "Accept a sign-in request and register a new worker",
+                "description": "Accept a sign-in request and register a new worker.",
+                "operationId": "01e99508d6a39e4bbcee6fc7b29890ee",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "dni",
+                                    "approvedBy",
+                                    "name",
+                                    "surname",
+                                    "secondSurname",
+                                    "profileImage",
+                                    "sector",
+                                    "assignedLocation",
+                                    "assignedApplications",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "dni": {
+                                        "type": "string",
+                                        "example": "12345678A"
+                                    },
+                                    "approvedBy": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "secondSurname": {
+                                        "type": "string",
+                                        "example": "Smith"
+                                    },
+                                    "profileImage": {
+                                        "type": "string",
+                                        "example": "image_url"
+                                    },
+                                    "sector": {
+                                        "type": "string",
+                                        "example": "IT"
+                                    },
+                                    "assignedLocation": {
+                                        "type": "string",
+                                        "example": "Main Office"
+                                    },
+                                    "assignedApplications": {
+                                        "type": "string",
+                                        "example": "App1,App2"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registered correctly",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registered correctly."
+                                        },
+                                        "isRegistered": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Server error"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/denyRequest": {
+            "post": {
+                "tags": [
+                    "AdminController"
+                ],
+                "summary": "Deny a sign-in request",
+                "description": "Deny a sign-in request and send a notification email.",
+                "operationId": "834115162a4814daf1036e59ba4dea38",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id",
+                                    "requestStatus"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "requestStatus": {
+                                        "type": "string",
+                                        "enum": [
+                                            "denied"
+                                        ],
+                                        "example": "denied"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request denied successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "requestStatus": {
+                                            "type": "string",
+                                            "example": "denied"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "format": "email",
+                                            "example": "user@example.com"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-06-01T12:34:56Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-06-01T12:34:56Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Server error"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/assignApplication": {
+            "post": {
+                "tags": [
+                    "AdminController"
+                ],
+                "summary": "Assign an application to workers",
+                "description": "Assign an application to workers.",
+                "operationId": "5f91ce2523a3aa675298d92db1471be1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "adminId",
+                                    "applicationId",
+                                    "workerIds",
+                                    "applicationStatus"
+                                ],
+                                "properties": {
+                                    "adminId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "applicationId": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "workerIds": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 5
+                                        }
+                                    },
+                                    "applicationStatus": {
+                                        "type": "string",
+                                        "example": "assigned"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Assignments completed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Asignaciones realizadas correctamente"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error while making assignments",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al realizar las asignaciones"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/listApplicationsLocation": {
+            "post": {
+                "tags": [
+                    "AdminController"
+                ],
+                "summary": "List pending applications for a specific location",
+                "description": "List pending applications for a specific location.",
+                "operationId": "fed641963cf943a574eee88a9e0a5dce",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "assignedLocation"
+                                ],
+                                "properties": {
+                                    "assignedLocation": {
+                                        "type": "string",
+                                        "example": "Barcelona"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "List of pending applications",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Example Application"
+                                            },
+                                            "province": {
+                                                "type": "string",
+                                                "example": "Barcelona"
+                                            },
+                                            "applicationStatus": {
+                                                "type": "string",
+                                                "example": "pending"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2023-06-01T12:34:56Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2023-06-01T12:34:56Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Server error"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Error message"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/listWorkers": {
+            "get": {
+                "tags": [
+                    "AdminController"
+                ],
+                "summary": "List all workers assigned to a specified location",
+                "description": "List workers assigned to a specific location.",
+                "operationId": "059deb239df45bd59bd45a5d598d372f",
+                "parameters": [
+                    {
+                        "name": "assignedLocation",
+                        "in": "query",
+                        "description": "Location to filter workers by",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of workers",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "John Doe"
+                                            },
+                                            "assignedLocation": {
+                                                "type": "string",
+                                                "example": "Madrid"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "johndoe@example.com"
+                                            },
+                                            "position": {
+                                                "type": "string",
+                                                "example": "Engineer"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2023-06-01T12:34:56Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2023-06-01T12:34:56Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No workers found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No workers found for the specified location."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Error message detailing what went wrong"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/makeApplication": {
+            "post": {
+                "tags": [
+                    "ApplicationController"
+                ],
+                "summary": "Submit a new application",
+                "description": "Create a new application.",
+                "operationId": "7b50a879833e8f7c380b2f1954d80a93",
+                "requestBody": {
+                    "description": "Data needed to create the application",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "applicantId",
+                                    "title",
+                                    "description",
+                                    "image",
+                                    "sector",
+                                    "subsector",
+                                    "province",
+                                    "location",
+                                    "date"
+                                ],
+                                "properties": {
+                                    "applicantId": {
+                                        "type": "integer",
+                                        "example": 123
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "New Community Center"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Proposal for constructing a new community center."
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "sector": {
+                                        "type": "string",
+                                        "example": "Public"
+                                    },
+                                    "subsector": {
+                                        "type": "string",
+                                        "example": "Infrastructure"
+                                    },
+                                    "province": {
+                                        "type": "string",
+                                        "example": "Madrid"
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "Central Madrid"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-07-10"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The application was created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "applicantId": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "New Community Center"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Proposal for constructing a new community center."
+                                        },
+                                        "image": {
+                                            "type": "string",
+                                            "example": "http://example.com/storage/images/1.jpg"
+                                        },
+                                        "sector": {
+                                            "type": "string",
+                                            "example": "Public"
+                                        },
+                                        "subsector": {
+                                            "type": "string",
+                                            "example": "Infrastructure"
+                                        },
+                                        "province": {
+                                            "type": "string",
+                                            "example": "Madrid"
+                                        },
+                                        "location": {
+                                            "type": "string",
+                                            "example": "Central Madrid"
+                                        },
+                                        "date": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2024-07-10"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Error message detailing what went wrong"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/listApplications": {
+            "get": {
+                "tags": [
+                    "ApplicationController"
+                ],
+                "summary": "List all applications",
+                "description": "Returns a list of all applications stored in the database, each including detailed information such as ID, applicant ID, title, description, image URL, sector, subsector, province, location, and date.",
+                "operationId": "listAllApplications",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "applicantId": {
+                                                "type": "integer",
+                                                "example": 123
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "New Community Center"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Proposal for constructing a new community center."
+                                            },
+                                            "image": {
+                                                "type": "string",
+                                                "example": "http://example.com/storage/images/1.jpg"
+                                            },
+                                            "sector": {
+                                                "type": "string",
+                                                "example": "Public"
+                                            },
+                                            "subsector": {
+                                                "type": "string",
+                                                "example": "Infrastructure"
+                                            },
+                                            "applicationStatus": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "pending",
+                                                    "approved",
+                                                    "rejected"
+                                                ],
+                                                "example": "pending"
+                                            },
+                                            "province": {
+                                                "type": "string",
+                                                "example": "Madrid"
+                                            },
+                                            "location": {
+                                                "type": "string",
+                                                "example": "Central Madrid"
+                                            },
+                                            "date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2024-07-10"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/listOwnApplications": {
+            "get": {
+                "tags": [
+                    "ApplicationController"
+                ],
+                "summary": "List user's applications",
+                "description": "Retrieves applications submitted by the authenticated user, providing details such as ID, title, description, image URL, sector, subsector, province, location, and date of application.",
+                "operationId": "listUserApplications",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "applicantId": {
+                                                "type": "integer",
+                                                "example": 123
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "New Community Center"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Proposal for constructing a new community center."
+                                            },
+                                            "image": {
+                                                "type": "string",
+                                                "example": "http://example.com/storage/images/1.jpg"
+                                            },
+                                            "sector": {
+                                                "type": "string",
+                                                "example": "Public"
+                                            },
+                                            "subsector": {
+                                                "type": "string",
+                                                "example": "Infrastructure"
+                                            },
+                                            "province": {
+                                                "type": "string",
+                                                "example": "Madrid"
+                                            },
+                                            "location": {
+                                                "type": "string",
+                                                "example": "Central Madrid"
+                                            },
+                                            "date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2024-07-10"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/updateApplication/{id}": {
+            "put": {
+                "tags": [
+                    "ApplicationController"
+                ],
+                "summary": "Update an existing application",
+                "description": "Updates the specified fields of an existing application identified by its ID.",
+                "operationId": "38af7b7cbf51056488dca06aad8d576f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the application to update",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "description": "Data required to update the application",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "date"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "description": "The new title of the application",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "The new description of the application",
+                                        "type": "string"
+                                    },
+                                    "date": {
+                                        "description": "The new date of the event",
+                                        "type": "string",
+                                        "format": "date"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Application updated successfully"
+                    },
+                    "404": {
+                        "description": "Application not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Solicitud no encontrada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Error interno del servidor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/signIn": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "Register a new user",
+                "description": "Registers a new user in the system with the provided information.",
+                "operationId": "81aeb4bb1cde64e32ac14190cff48df7",
+                "requestBody": {
+                    "description": "Data required to register a new user",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname",
+                                    "secondSurname",
+                                    "profileImage",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "The user's first name",
+                                        "type": "string"
+                                    },
+                                    "surname": {
+                                        "description": "The user's last name",
+                                        "type": "string"
+                                    },
+                                    "secondSurname": {
+                                        "description": "The user's second last name",
+                                        "type": "string"
+                                    },
+                                    "profileImage": {
+                                        "description": "The user's profile image",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "email": {
+                                        "description": "The user's email address",
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "description": "The user's password",
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User signed in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Signed in correctly."
+                                        },
+                                        "isRegistered": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Couldn't sign in."
+                                        },
+                                        "isRegistered": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "Authenticate user",
+                "description": "Authenticates a user and provides a token for subsequent requests.",
+                "operationId": "222b2625838e3c57e017987f73598fda",
+                "requestBody": {
+                    "description": "Credentials needed for login",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "User's email address",
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "description": "User's password",
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "description": "Bearer token for authenticating future requests",
+                                            "type": "string"
+                                        },
+                                        "isLoggedIn": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unsuccessful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "isLoggedIn": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/listApplicationsSector": {
+            "get": {
+                "tags": [
+                    "UserController"
+                ],
+                "summary": "Get user details by ID",
+                "description": "Retrieves user details based on the provided user ID, returning user ID, name, surname, second surname, profile image URL, email, and created date.",
+                "operationId": "getUserById",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "ID of the user to retrieve details for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "John"
+                                            },
+                                            "surname": {
+                                                "type": "string",
+                                                "example": "Doe"
+                                            },
+                                            "secondSurname": {
+                                                "type": "string",
+                                                "example": "Smith"
+                                            },
+                                            "profileImage": {
+                                                "type": "string",
+                                                "example": "http://example.com/storage/images/profile.jpg"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "john.doe@example.com"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-07-10T14:00:00Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-07-10T14:00:00Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error retrieving user details"
+                    }
+                }
+            }
+        },
+        "/api/listAssignedApplications": {
+            "get": {
+                "tags": [
+                    "WorkerApplicationController"
+                ],
+                "summary": "List assigned applications by worker ID",
+                "description": "Retrieves a list of applications assigned to a specific worker based on the provided worker ID.",
+                "operationId": "listAssignedApplications",
+                "parameters": [
+                    {
+                        "name": "workerId",
+                        "in": "query",
+                        "description": "ID of the worker to retrieve assigned applications for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "applicantId": {
+                                                "type": "integer",
+                                                "example": 123
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "New Community Center"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Proposal for constructing a new community center."
+                                            },
+                                            "image": {
+                                                "type": "string",
+                                                "example": "http://example.com/storage/images/1.jpg"
+                                            },
+                                            "sector": {
+                                                "type": "string",
+                                                "example": "Public"
+                                            },
+                                            "subsector": {
+                                                "type": "string",
+                                                "example": "Infrastructure"
+                                            },
+                                            "applicationStatus": {
+                                                "type": "string",
+                                                "example": "pending"
+                                            },
+                                            "province": {
+                                                "type": "string",
+                                                "example": "Madrid"
+                                            },
+                                            "location": {
+                                                "type": "string",
+                                                "example": "Central Madrid"
+                                            },
+                                            "date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2024-07-10"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-07-10T14:00:00Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-07-10T14:00:00Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error in the request"
+                    }
+                }
+            }
+        },
+        "/api/listApplicationMultipleWorkers": {
+            "get": {
+                "tags": [
+                    "AssignmentController"
+                ],
+                "summary": "List applications assigned to multiple workers",
+                "description": "Retrieves a list of applications that are assigned to multiple workers based on the provided worker ID.",
+                "operationId": "listApplicationMultipleWorkers",
+                "parameters": [
+                    {
+                        "name": "workerId",
+                        "in": "query",
+                        "description": "ID of the worker to check for multiple worker assignments",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "applications": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "applicantId": {
+                                                        "type": "integer",
+                                                        "example": 123
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "New Community Center"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Proposal for constructing a new community center."
+                                                    },
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "http://example.com/storage/images/1.jpg"
+                                                    },
+                                                    "sector": {
+                                                        "type": "string",
+                                                        "example": "Public"
+                                                    },
+                                                    "subsector": {
+                                                        "type": "string",
+                                                        "example": "Infrastructure"
+                                                    },
+                                                    "applicationStatus": {
+                                                        "type": "string",
+                                                        "example": "pending"
+                                                    },
+                                                    "province": {
+                                                        "type": "string",
+                                                        "example": "Madrid"
+                                                    },
+                                                    "location": {
+                                                        "type": "string",
+                                                        "example": "Central Madrid"
+                                                    },
+                                                    "date": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2024-07-10"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-07-10T14:00:00Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-07-10T14:00:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "workers": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "John"
+                                                    },
+                                                    "surname": {
+                                                        "type": "string",
+                                                        "example": "Doe"
+                                                    },
+                                                    "secondSurname": {
+                                                        "type": "string",
+                                                        "example": "Smith"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "john.doe@example.com"
+                                                    },
+                                                    "profileImage": {
+                                                        "type": "string",
+                                                        "example": "http://example.com/storage/images/profile.jpg"
+                                                    },
+                                                    "assignedLocation": {
+                                                        "type": "string",
+                                                        "example": "Madrid"
+                                                    },
+                                                    "assignedApplications": {
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error in the request"
+                    }
+                }
+            }
+        },
+        "/api/listWorkersExactApplication": {
+            "get": {
+                "tags": [
+                    "AssignmentController"
+                ],
+                "summary": "List inactive applications assigned to multiple workers and their workers",
+                "description": "Retrieves a list of inactive applications assigned to multiple workers and their associated workers and applications.",
+                "operationId": "listWorkersExactApplication",
+                "parameters": [
+                    {
+                        "name": "workerId",
+                        "in": "query",
+                        "description": "ID of the worker to check for multiple worker assignments",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "applications": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "applicantId": {
+                                                        "type": "integer",
+                                                        "example": 123
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "New Community Center"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Proposal for constructing a new community center."
+                                                    },
+                                                    "image": {
+                                                        "type": "string",
+                                                        "example": "http://example.com/storage/images/1.jpg"
+                                                    },
+                                                    "sector": {
+                                                        "type": "string",
+                                                        "example": "Public"
+                                                    },
+                                                    "subsector": {
+                                                        "type": "string",
+                                                        "example": "Infrastructure"
+                                                    },
+                                                    "applicationStatus": {
+                                                        "type": "string",
+                                                        "example": "inactive"
+                                                    },
+                                                    "province": {
+                                                        "type": "string",
+                                                        "example": "Madrid"
+                                                    },
+                                                    "location": {
+                                                        "type": "string",
+                                                        "example": "Central Madrid"
+                                                    },
+                                                    "date": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2024-07-10"
+                                                    },
+                                                    "workers": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "John"
+                                                                },
+                                                                "surname": {
+                                                                    "type": "string",
+                                                                    "example": "Doe"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "workers": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "John"
+                                                    },
+                                                    "surname": {
+                                                        "type": "string",
+                                                        "example": "Doe"
+                                                    },
+                                                    "applications": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "title": {
+                                                                    "type": "string",
+                                                                    "example": "New Community Center"
+                                                                },
+                                                                "applicationStatus": {
+                                                                    "type": "string",
+                                                                    "example": "inactive"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error in the request"
+                    }
+                }
+            }
+        },
+        "/api/checkOngoingApp": {
+            "get": {
+                "tags": [
+                    "WorkerApplicationController"
+                ],
+                "summary": "Check ongoing application",
+                "description": "Retrieves an application by its ID, excluding those with a 'completed' status.",
+                "operationId": "checkOngoingApp",
+                "parameters": [
+                    {
+                        "name": "applicationId",
+                        "in": "query",
+                        "description": "ID of the application to check",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "applicantId": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "New Community Center"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Proposal for constructing a new community center."
+                                        },
+                                        "image": {
+                                            "type": "string",
+                                            "example": "http://example.com/storage/images/1.jpg"
+                                        },
+                                        "sector": {
+                                            "type": "string",
+                                            "example": "Public"
+                                        },
+                                        "subsector": {
+                                            "type": "string",
+                                            "example": "Infrastructure"
+                                        },
+                                        "applicationStatus": {
+                                            "type": "string",
+                                            "example": "pending"
+                                        },
+                                        "province": {
+                                            "type": "string",
+                                            "example": "Madrid"
+                                        },
+                                        "location": {
+                                            "type": "string",
+                                            "example": "Central Madrid"
+                                        },
+                                        "date": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2024-07-10"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Application not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/updateApplicationStatus/{id}": {
+            "put": {
+                "tags": [
+                    "WorkerApplicationController"
+                ],
+                "summary": "Update application status",
+                "description": "Updates the status of a specific application and the status of associated worker(s).",
+                "operationId": "updateApplicationStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the application to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "applicationStatus": {
+                                        "type": "string",
+                                        "example": "completed"
+                                    },
+                                    "workerId": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "applicantId": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "New Community Center"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Proposal for constructing a new community center."
+                                        },
+                                        "image": {
+                                            "type": "string",
+                                            "example": "http://example.com/storage/images/1.jpg"
+                                        },
+                                        "sector": {
+                                            "type": "string",
+                                            "example": "Public"
+                                        },
+                                        "subsector": {
+                                            "type": "string",
+                                            "example": "Infrastructure"
+                                        },
+                                        "applicationStatus": {
+                                            "type": "string",
+                                            "example": "completed"
+                                        },
+                                        "province": {
+                                            "type": "string",
+                                            "example": "Madrid"
+                                        },
+                                        "location": {
+                                            "type": "string",
+                                            "example": "Central Madrid"
+                                        },
+                                        "date": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2024-07-10"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-06-01T12:34:56Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-06-02T12:34:56Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Application not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/applicationCompleted": {
+            "post": {
+                "tags": [
+                    "WorkerApplicationController"
+                ],
+                "summary": "Mark application as completed",
+                "description": "Marks an application as completed, records the explanation, and updates the worker's status to available.",
+                "operationId": "applicationCompleted",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "applicationId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "workerId": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "applicationExplanation": {
+                                        "type": "string",
+                                        "example": "The project was successfully completed."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Application marked as completed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "applicationId": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "workerId": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "applicationExplanation": {
+                                            "type": "string",
+                                            "example": "The project was successfully completed."
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-06-10T12:34:56Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-06-10T12:34:56Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/applicationNodeCompleted": {
+            "post": {
+                "tags": [
+                    "WorkerApplicationController"
+                ],
+                "summary": "Mark application as completed and update workers",
+                "description": "Marks an application as completed, records the explanation, and updates the status of multiple workers to available.",
+                "operationId": "applicationNodeCompleted",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "applicationId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "workerId": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            2,
+                                            3
+                                        ]
+                                    },
+                                    "applicationExplanation": {
+                                        "type": "string",
+                                        "example": "The project was successfully completed."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Application and workers updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "applicationId": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "workerId": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "applicationExplanation": {
+                                            "type": "string",
+                                            "example": "The project was successfully completed."
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-06-10T12:34:56Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-06-10T12:34:56Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/signinWorker": {
+            "post": {
+                "tags": [
+                    "WorkerAuthController"
+                ],
+                "summary": "Register a new worker",
+                "description": "Registers a new worker and saves their profile information.",
+                "operationId": "signinWorker",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "approvedBy": {
+                                        "type": "string",
+                                        "example": "Manager"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "secondSurname": {
+                                        "type": "string",
+                                        "example": "Smith"
+                                    },
+                                    "profileImage": {
+                                        "description": "Profile image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "sector": {
+                                        "type": "string",
+                                        "example": "Construction"
+                                    },
+                                    "assignedLocation": {
+                                        "type": "string",
+                                        "example": "New York"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Registered correctly",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registered correctly."
+                                        },
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "isRegistered": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "500": {
+                        "description": "Couldn't register",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Couldn't register."
+                                        },
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "isRegistered": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/loginWorker": {
+            "post": {
+                "tags": [
+                    "WorkerAuthController"
+                ],
+                "summary": "Login a worker",
+                "description": "Authenticates a worker using their email, DNI, and password, and issues a token if successful.",
+                "operationId": "loginWorker",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "dni": {
+                                        "type": "string",
+                                        "example": "12345678X"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "example@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "2|I9fG2AsdF6ar1t1dmIp2zGdbYMRDq8Y4txCMZAnP"
+                                        },
+                                        "isLoggedIn": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "isLoggedIn": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/listProvinces": {
+            "get": {
+                "tags": [
+                    "WorkerSigninRequest"
+                ],
+                "summary": "List all provinces",
+                "description": "Returns a list of all provinces stored in the database.",
+                "operationId": "00adfa2b61dbda94817cf02bcf5adbd4",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "province": {
+                                            "type": "string",
+                                            "example": "Barcelona"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/listSectors": {
+            "get": {
+                "tags": [
+                    "WorkerSigninRequest"
+                ],
+                "summary": "List all sectors",
+                "description": "Returns a list of all sectors stored in the database.",
+                "operationId": "727fe5c04f4601bf959edc99dc708863",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sector": {
+                                            "type": "string",
+                                            "example": "Bomberos"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/signinRequest": {
+            "post": {
+                "tags": [
+                    "WorkerSigninRequest"
+                ],
+                "summary": "Sign up a worker request",
+                "description": "Registers a new worker request and sends a notification email.",
+                "operationId": "ad7fd4889e7c66c0ffe901c7f5f26421",
+                "requestBody": {
+                    "description": "Worker request details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "dni",
+                                    "name",
+                                    "surname",
+                                    "secondSurname",
+                                    "profileImage",
+                                    "sector",
+                                    "requestedLocation",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "dni": {
+                                        "description": "The DNI of the worker",
+                                        "type": "string",
+                                        "example": "12345678A"
+                                    },
+                                    "name": {
+                                        "description": "The name of the worker",
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "surname": {
+                                        "description": "The surname of the worker",
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "secondSurname": {
+                                        "description": "The second surname of the worker",
+                                        "type": "string",
+                                        "example": "Smith"
+                                    },
+                                    "profileImage": {
+                                        "description": "The URL of the worker's profile image",
+                                        "type": "string",
+                                        "example": "http://example.com/profile.jpg"
+                                    },
+                                    "sector": {
+                                        "description": "The sector of the worker",
+                                        "type": "string",
+                                        "example": "Engineering"
+                                    },
+                                    "requestedLocation": {
+                                        "description": "The requested location of the worker",
+                                        "type": "string",
+                                        "example": "City"
+                                    },
+                                    "email": {
+                                        "description": "The email of the worker",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "Request registered correctly."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "Error al procesar la solicitud de registro."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

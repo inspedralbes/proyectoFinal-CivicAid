@@ -147,6 +147,8 @@ En `/etc/nginx/sites-available/` debes tener el archivo de tu dominio que has cr
     }
 ```
 
+## Estilos de Tailwind
+Practicamente todas las animaciones con Tailwind avanzado están sacadas de aqui: https://tw-elements.com/
 
 
 
