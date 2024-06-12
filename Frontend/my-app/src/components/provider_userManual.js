@@ -24,9 +24,9 @@ const UserManual = () => {
                     <nav className="mb-8">
                         <h2 className="text-xl text-white font-semibold">Índice</h2>
                         <ul className="list-disc list-inside text-white ml-4 space-y-2">
-                            <li><a href="#ciudadano" className="text-orange-300">Rol de ciudadano</a></li>
-                            <li><a href="#empleado" className="text-orange-300">Rol de empleado</a></li>
-                            <li><a href="#administrador" className="text-orange-300">Rol de administrador</a></li>
+                            <li>Rol de ciudadano</li>
+                            <li>Rol de empleado</li>
+                            <li>Rol de administrador</li>
                         </ul>
                     </nav>
 
@@ -40,13 +40,13 @@ const UserManual = () => {
 
                         <div className="mb-6">
                             <h4 className="text-lg text-white font-medium">Crear solicitudes</h4>
-                            <p className="text-white mb-2">Para crear una solicitud, ve a la página principal de la aplicación y haz clic en el primer botón que pone "HACER SOLICITUD". Una vez dentro, te preguntará si quieres que acceda a tu ubicación. Permítelo, si estás de acuerdo, y rellena el formulario con la información necesaria y haz clic en "Enviar".</p>
+                            <p className="text-white mb-2">Para crear una solicitud, ve a la página principal de la aplicación y haz clic en <NavLink to="/makeApplication" className="text-orange-300">HACER SOLICITUD</NavLink>. Una vez dentro, te preguntará si quieres que acceda a tu ubicación. Permítelo, si estás de acuerdo, y rellena el formulario con la información necesaria y haz clic en "Enviar".</p>
                             <img src="permitirUbicacion.png" alt="manual1" className="lg:w-1/4 mb-4 mx-auto" />
                         </div>
 
                         <div className="mb-6">
                             <h4 className="text-lg text-white font-medium">Seguimiento de Solicitud</h4>
-                            <p className="text-white mb-2">Para hacer un seguimiento de la solicitud enviada, ve a la página principal de la aplicación y haz clic en el botón de abajo que pone "PERFIL". Una vez dentro, haz clic en "Historial de solicitudes" y podrás ver el estado de la(s) solicitud(es).</p>
+                            <p className="text-white mb-2">Para hacer un seguimiento de la solicitud enviada, ve a <NavLink to="/profile" className="text-orange-300">PERFIL</NavLink>. Una vez dentro, haz clic en "Historial de solicitudes" y podrás ver el estado de la(s) solicitud(es).</p>
                             <img src="historialSolicitudes.png" alt="manual1" className="lg:w-3/5 mb-4 mx-auto" />
                         </div>
                     </section>
@@ -63,7 +63,7 @@ const UserManual = () => {
                             <h4 className="text-lg text-white font-medium">Iniciar sesión</h4>
                             <p className="text-white mb-2">Para poder iniciar sesión como empleado debes:</p>
                             <ul className="list-disc list-inside text-white ml-4 mb-2 space-y-2">
-                                <li>Mandar una Solicitud de Registro. Es simplemente un formulario para mandar tus datos de empleado al administrador.</li>
+                                <li>Mandar una <NavLink to="/signinWorker" className="text-orange-300">SOLICITUD DE REGISTRO</NavLink>. Es simplemente un formulario para mandar tus datos de empleado al administrador.</li>
                                 <li>Una vez mandada la Solicitud de Registro, un administrador comprobará si la información que has puesto es correcta y verídica.</li>
                                 <li>Si el administrador acepta tu Solicitud de Registro, te llegará un email con tu contraseña a la dirección de correo electrónico que pusiste en la Solicitud de Registro.</li>
                                 <li>Con tu DNI, correo y contraseña podrás iniciar sesión.</li>
@@ -82,7 +82,7 @@ const UserManual = () => {
 
                         <div className="mb-6">
                             <h4 className="text-lg text-white font-medium">Solicitudes asignadas</h4>
-                            <p className="text-white mb-2">En el apartado de <NavLink to="/manageApplications" className="text-orange-300">PERFIL</NavLink> puedes ver todas las solicitudes que se te han asignado y el estado en el que se encuentran.</p>
+                            <p className="text-white mb-2">En el apartado de <NavLink to="/manageApplications" className="text-orange-300">SOLICITUDES ASIGNADAS</NavLink> puedes ver todas las solicitudes que se te han asignado y el estado en el que se encuentran.</p>
                         </div>
                     </section>
 
@@ -96,7 +96,7 @@ const UserManual = () => {
 
                         <div className="mb-6">
                             <h4 className="text-lg text-white font-medium">Gestionar Solicitudes de Registro</h4>
-                            <p className="text-white mb-2">Para gestionar las solicitudes de registro de empleados, ve a <NavLink to="/signinRequests" className="text-orange-300">PERFIL</NavLink>. Una vez dentro, haz clic en "Gestionar Solicitudes de Registro" y podrás ver todas las solicitudes de registro de empleados.</p>
+                            <p className="text-white mb-2">Para gestionar las solicitudes de registro de empleados, ve a <NavLink to="/manageSigninRequests" className="text-orange-300">SOLICITUDES DE REGISTRO</NavLink>. Una vez dentro, haz clic en "Gestionar Solicitudes de Registro" y podrás ver todas las solicitudes de registro de empleados.</p>
                             <ul className="list-disc list-inside text-white ml-4 mb-2 space-y-2">
                                 <li>Si le das a "Aceptar" la solicitud de registro, el empleado recibirá un email con su contraseña y podrá iniciar sesión.</li>
                                 <li>Si le das a "Rechazar" la solicitud de registro, el empleado recibirá un email informándole de que su solicitud ha sido rechazada.</li>
