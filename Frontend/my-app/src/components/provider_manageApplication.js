@@ -5,6 +5,11 @@ import { store, actions } from './store';
 
 import Swal from "sweetalert2"
 
+/**
+ * Componente que renderiza la vista de la gestión de solicitudes
+ * @param {*} param0 
+ * @returns 
+ */
 const ManageApplication = ({ socket }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -44,15 +49,6 @@ const ManageApplication = ({ socket }) => {
     const applicationNodeOngoing = useSelector((state) => state.applicationNodeOngoing);
     const applicationOngoing = useSelector((state) => state.applicationOngoing);
 
-
-    // const [isCurrentAppInvited, setIsCurrentAppInvited] = useState(false);
-    // const [currentAppInvitedLobbyCode, setCurrentAppInvitedLobbyCode] = useState([]);
-
-
-    // console.log("SOCKET: ", socket.id);
-    // console.log("????", actualLobbyCode);
-
-    console.log("QUE ES? ", applicationOngoingInfo);
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
@@ -62,7 +58,7 @@ const ManageApplication = ({ socket }) => {
      */
     useEffect(() => {
         /**
-        * Funcion para pedir la solicitudes sin compartir
+        * Función que se encarga de obtener las solicitudes asignadas al empleado
         */
         async function fetchApplications() {
             if (isWorker) {
@@ -77,7 +73,6 @@ const ManageApplication = ({ socket }) => {
                         body: JSON.stringify({ workerId }),
                     });
                     const data = await response.json();
-                    console.log("APPLICATION INFO: ", data);
                     setApplicationInfo(data)
 
                 } catch (error) {
@@ -97,10 +92,6 @@ const ManageApplication = ({ socket }) => {
      * USE EFFECT DE LOS SOCKETS
      */
     useEffect(() => {
-        console.log("HASTA AQUI LLEGA NOOOOO?");
-
-        // setLoading(true);
-        // socket.on("connect", () => {
         console.log("Conectado al servidor");
 
         /**
@@ -117,42 +108,18 @@ const ManageApplication = ({ socket }) => {
             workerId: workerId
         }
         socket.emit("fetchMultipleAssigned", fetchMultipleAssignedData);
-        // });
 
-
-        // const handleReturnFetchMultipleAssigned = (data) => {
-        //     // console.log("Solicitudes de NODE: ", data);
-        //     // setApplicationsNode(data.applications);
-        // };
-        // Configurar el listener
         socket.on("returnFetchMultipleAssigned", (data) => {
-            console.log("Solicitudes de NODE: ", data);
             setApplicationsNode(data.applications);
         });
 
 
-        // Limpiar el listener anterior al desmontar el componente o al actualizar el efecto
-        return () => {
-            // socket
-            // socket.off("returnFetchMultipleAssigned");
-        };
     }, [receivedInvitations]);
-
-
-    socket.on("lobbiesUnido", (data) => {
-        console.log("LAS LOBIS MAJAS: ", data);
-    })
 
     /**
     * SOCKET PARA CONTROLAR CUANDO TE INVITAN
     */
     socket.on("invitationReceived", (data) => {
-        // Aquí puedes actualizar el estado para mostrar la invitación en la UI
-        console.log("DATA??: ", data.message);
-        console.log("ESTADO??: ", data.invitation);
-        console.log("ID SOLICITUD??: ", data.applicationId);
-        console.log("CODIGO DEL LOBBY??: ", data.lobbyCode);
-
         try {
             setReceivedInvitations(prev => new Map(prev).set(data.applicationId, { lobbyCode: data.lobbyCode, invited: true }));
 
@@ -191,7 +158,6 @@ const ManageApplication = ({ socket }) => {
      * SOCKET PARA MANEJAR CADA VEZ QUE UN USUARIO SE UNE A UNA LOBBY
      */
     socket.on("newUserInLobby", (data) => {
-        console.log("USERS LIST: ", data);
         setUsersList(data.users);
         setCanStartApplication(data.startApplication)
     })
@@ -200,9 +166,8 @@ const ManageApplication = ({ socket }) => {
      * SOCKET PARA QUE, CUANDO EL ANFITRION DE LA SALA LE DA A ACEPTAR, SE ACTIVE LA SOLICITUD PARA TODOS LOS EMPLEADOS DE LA SALA
      */
     socket.on("returnAppOngoing", (data) => {
-        console.log("EL RETURN: ", data);
 
-        dispatch(actions.applicationNodeOngoing(data.actualApplication)) //Guardamos en Redux la solicitud que hemos aceptado
+        dispatch(actions.applicationNodeOngoing(data.actualApplication))
 
         // Mostramos un mensaje de éxito
         Swal.fire({
@@ -248,25 +213,29 @@ const ManageApplication = ({ socket }) => {
         }
     });
 
-    // const handleApplicationModal = (application) => {
-    //     setShowModal(true);
-    //     console.log(application);
-    // };
+    /**
+     * Función que se encarga de obtener el número máximo de usuarios que pueden estar en una sala
+     * @param {*} e 
+     */
     const maxUsers = (e) => {
         setCountMaxUsers(e.workers.length);
-        console.log("Número máximo de usuarios: ", e.workers.length);
-
     }
 
+    /**
+     * Función que se encarga de generar un código aleatorio para la sala de espera
+     * @returns 
+     */
     const codeGenerator = () => {
         const randomCode = Math.floor(
             Math.random() * (100000 - 999999 + 1) + 999999
         );
 
         return randomCode;
-        // setRoom(randomCode);
     };
 
+    /**
+     * Función que se encarga de cancelar la invitación
+     */
     const cancelInvitation = () => {
         socket.emit("cancelInvitation", {
             applicationId: actualApplication.id,
@@ -274,16 +243,20 @@ const ManageApplication = ({ socket }) => {
             hostId: workerId
         })
 
-        setInvitationCreated(false); //Ponemos en falso para que no se muestre el modal del lobby
+        setInvitationCreated(false);
 
-        console.log(actualApplication.workers);
     }
+
+    /**
+     * Función que se encarga de aceptar la invitación y unirse a la sala de espera
+     * @param {*} applicationId 
+     * @param {*} lobbyCode 
+     */
     const acceptInvitation = (applicationId, lobbyCode) => {
         if (applicationOngoing) {
             setShowModal(true);
         } else {
             const getInvitation = receivedInvitations.get(applicationId);
-            console.log(`INVITACION PARA SOLICITUD ${applicationId} `, getInvitation);
             if (getInvitation.invited) {
                 setActualLobbyCode(lobbyCode);
                 socket.emit("acceptInvitation", {
@@ -300,21 +273,22 @@ const ManageApplication = ({ socket }) => {
         }
     };
 
+    /**
+     * Función que se encarga de crear la invitación y enviarla a los empleados asignados
+     * @param {*} e 
+     */
     const createInvitation = async (e) => {
         try {
             if (!applicationNodeOngoing) {
 
-                // setInvitationModal(false)
-
                 const room = codeGenerator();
                 maxUsers(e);
 
-                // Podrías necesitar adaptar este objeto a los detalles exactos que tu backend espera
                 const invitationData = {
                     applicationId: e.id,
                     assignedWorkers: e.workers,
-                    hostId: workerId, // Asegúrate de tener este dato disponible
-                    lobbyCode: room, // Suponiendo que cada solicitud tiene un código de lobby asociado
+                    hostId: workerId,
+                    lobbyCode: room,
                     maxUsers: e.workers.length,
                     completeName: completeName,
                 };
@@ -326,8 +300,6 @@ const ManageApplication = ({ socket }) => {
                 setActualApplication(e);
                 setActualLobbyCode(room);
 
-                console.log("Invitación enviada a los sockets:", invitationData);
-                // Aquí puedes mostrar una confirmación al usuario de que la invitación ha sido enviada
             } else {
                 setInvitationModal(true)
             }
@@ -337,9 +309,7 @@ const ManageApplication = ({ socket }) => {
     }
 
     const handleApplication = async (e) => {
-        // e.preventDefault(e);
 
-        console.log(checkAppOngoing);
         if (checkAppOngoing) {
             // Mostrar el modal
             setShowModal(true);
@@ -362,8 +332,6 @@ const ManageApplication = ({ socket }) => {
 
                 const data = await response.json();
 
-                console.log(data);
-
             } catch (error) {
                 console.error("ESTE ES EL ERROR: ", error);
             } finally {
@@ -376,20 +344,24 @@ const ManageApplication = ({ socket }) => {
 
     }
 
+    /**
+     * Función que se encarga de emitir el socket para que se inicie la solicitud
+     */
     const handleNodeApplication = async () => {
-        console.log("ESTA ES LA PEDAZO DE LISTA: ", usersList)
 
         socket.emit("startApplication", {
             usersList: usersList,
             actualApplication: actualApplication,
             token: token,
-            // actualLobbyCode: actualLobbyCode 
         })
     }
 
 
+    /**
+     * Función que se encarga de actualizar la solicitud en curso
+     * @param {*} e 
+     */
     const updateAppOngoing = async (e) => {
-        // e.preventDefault(e);
         setLoading(true);
         setShowModal(false);
 
@@ -406,7 +378,6 @@ const ManageApplication = ({ socket }) => {
                 body: JSON.stringify({ applicationStatus }),
             });
             const data = await response.json();
-            // console.log("PRIMER STATUS: ", data);
 
         } catch (error) {
             console.error("ERROR EN EL PRIMER FETCH: ", error);
@@ -424,7 +395,6 @@ const ManageApplication = ({ socket }) => {
                 body: JSON.stringify({ applicationStatus }),
             });
             const data2 = await response2.json();
-            // console.log("SEGUNDO STATUS: ", data2);
 
             navigate("/");
             dispatch(actions.applicationOngoing(e))
@@ -438,13 +408,7 @@ const ManageApplication = ({ socket }) => {
         }
     }
 
-    /**
-     * Funcion que identifica las solicitudes a las que han llegado una invitacion
-     * @param {*} e 
-     */
-    const checkApplicationInvitation = async (e) => {
 
-    }
     return (
         <main className="h-screen overflow-auto flex justify-center items-center lg:bg-orange-300">
             {isWorker ? (
@@ -520,10 +484,6 @@ const ManageApplication = ({ socket }) => {
                                                             </p>
 
                                                         </div>
-
-                                                        {/* <p className="block font-sans text-base antialiased font-light leading-relaxed text-gray-700">
-                                                        {application.applicationStatus}
-                                                    </p> */}
                                                     </div>
                                                     <div className="p-6 pt-3">
                                                         <button
@@ -543,87 +503,98 @@ const ManageApplication = ({ socket }) => {
 
                             {activeTab === "tab2" && (
                                 <div className="p-5 lg:flex lg:flex-wrap lg:p-8 lg:justify-center lg:gap-20 lg:overflow-auto">
-                                    {applicationsNode.map((application, id) => {
-                                        const isCurrentAppInvited = receivedInvitations.get(application.id)?.invited ?? false;
-                                        const currentAppInvitedLobbyCode = receivedInvitations.get(application.id)?.lobbyCode;
-                                        if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed' || application.applicationStatus === 'active') {
-                                            return null;
-                                        }
-                                        return (
-                                            <div key={id} className="relative w-full lg:w-3/4 xl:w-2/3 mx-auto flex flex-col rounded-xl bg-white shadow-lg mb-8 overflow-hidden">
-                                                <div className="lg:flex lg:flex-row">
 
-                                                    <div className="lg:w-1/2 p-5 flex flex-col justify-between">
-                                                        <div>
-                                                            <div className="uppercase items-center justify-between mb-5">
-                                                                <h5 className="text-2xl text-center font-semibold text-blue-gray-900">{application.title}</h5>
+                                    {applicationsNode.length === 0 ? (
+                                        <div className='flex items-center justify-center'>
+                                            <h1 className='text-white text-center text-3xl font-bold'>
+                                                No hay solicitudes compartidas asignadas en este momento
+                                            </h1>
+                                        </div>
+                                    ) : (
+                                        
+                                            applicationsNode.map((application, id) => {
+                                                const isCurrentAppInvited = receivedInvitations.get(application.id)?.invited ?? false;
+                                                const currentAppInvitedLobbyCode = receivedInvitations.get(application.id)?.lobbyCode;
+                                                if (applicationOngoingInfo === application.id || application.applicationStatus === 'completed' || application.applicationStatus === 'active') {
+                                                    return null;
+                                                }
+                                                
+                                                return (
+                                                    <div key={id} className="relative w-full lg:w-3/4 xl:w-2/3 mx-auto flex flex-col rounded-xl bg-white shadow-lg mb-8 overflow-hidden">
+                                                        <div className="lg:flex lg:flex-row">
+
+                                                            <div className="lg:w-1/2 p-5 flex flex-col justify-between">
+                                                                <div>
+                                                                    <div className="uppercase items-center justify-between mb-5">
+                                                                        <h5 className="text-2xl text-center font-semibold text-blue-gray-900">{application.title}</h5>
+                                                                    </div>
+                                                                    <div className="relative overflow-hidden shadow-lg rounded-xl">
+                                                                        <img
+                                                                            src={application.image}
+                                                                            alt={application.image ? "Imagen solicitud" : "Imagen no disponible"}
+                                                                            className="w-full lg:h-64 object-cover rounded-xl"
+                                                                        />
+                                                                        <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="mt-5">
+                                                                    <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words mb-3">
+                                                                        {application.description}
+                                                                    </div>
+                                                                    <div className="mt-5">
+                                                                        <h3 className="font-semibold text-gray-800">Localización</h3>
+                                                                        <p className="text-base font-light leading-relaxed text-gray-700">
+                                                                            {application.location}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div className="relative overflow-hidden shadow-lg rounded-xl">
-                                                                <img
-                                                                    src={application.image}
-                                                                    alt={application.image ? "Imagen solicitud" : "Imagen no disponible"}
-                                                                    className="w-full lg:h-64 object-cover rounded-xl"
-                                                                />
-                                                                <div className="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-transparent to-black/60"></div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="mt-5">
-                                                            <div className="text-base font-light text-gray-700 overflow-y-auto max-h-36 break-words mb-3">
-                                                                {application.description}
-                                                            </div>
-                                                            <div className="mt-5">
-                                                                <h3 className="font-semibold text-gray-800">Localización</h3>
-                                                                <p className="text-base font-light leading-relaxed text-gray-700">
-                                                                    {application.location}
-                                                                </p>
+
+                                                            <div className="lg:w-1/2 p-5 bg-gray-300 flex flex-col justify-between rounded-r-xl">
+                                                                <div>
+                                                                    <h2 className="mb-5 text-xl font-semibold text-gray-800">Compañeros Asignados</h2>
+                                                                    <div className="overflow-y-auto max-h-48 grid grid-cols-2 gap-4">
+                                                                        {application.workers.map((worker, id) => {
+                                                                            if (worker.id === workerId) {
+                                                                                return null;
+                                                                            }
+                                                                            return (
+                                                                                <div key={id} className="bg-white text-center shadow-lg p-2 rounded-lg">
+                                                                                    <p className="text-base font-light text-gray-700">
+                                                                                        {worker.name} {worker.surname}
+                                                                                    </p>
+                                                                                </div>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="mt-5">
+                                                                    {isCurrentAppInvited ? (
+                                                                        <button
+                                                                            onClick={() => acceptInvitation(application.id, currentAppInvitedLobbyCode)}
+                                                                            className="w-full animate-pulse rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg"
+                                                                        >
+                                                                            Aceptar Invitación
+                                                                        </button>
+                                                                    ) : (
+                                                                        <button
+                                                                            onClick={() => createInvitation(application)}
+                                                                            id={`invitationButton${application.id}`}
+                                                                            className="w-full rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
+                                                                            type="submit"
+                                                                        >
+                                                                            Invitar
+                                                                        </button>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div className="lg:w-1/2 p-5 bg-gray-300 flex flex-col justify-between rounded-r-xl">
-                                                        <div>
-                                                            <h2 className="mb-5 text-xl font-semibold text-gray-800">Compañeros Asignados</h2>
-                                                            <div className="overflow-y-auto max-h-48 grid grid-cols-2 gap-4">
-                                                                {application.workers.map((worker, id) => {
-                                                                    if (worker.id === workerId) {
-                                                                        return null;
-                                                                    }
-                                                                    return (
-                                                                        <div key={id} className="bg-white text-center shadow-lg p-2 rounded-lg">
-                                                                            <p className="text-base font-light text-gray-700">
-                                                                                {worker.name} {worker.surname}
-                                                                            </p>
-                                                                        </div>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                        </div>
-                                                        <div className="mt-5">
-                                                            {isCurrentAppInvited ? (
-                                                                <button
-                                                                    onClick={() => acceptInvitation(application.id, currentAppInvitedLobbyCode)}
-                                                                    className="w-full animate-pulse rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md transition-all hover:shadow-lg"
-                                                                >
-                                                                    Aceptar Invitación
-                                                                </button>
-                                                            ) : (
-                                                                <button
-                                                                    onClick={() => createInvitation(application)}
-                                                                    id={`invitationButton${application.id}`}
-                                                                    className="w-full rounded-lg bg-gray-900 py-3.5 text-sm font-bold uppercase text-white shadow-md hover:shadow-lg transition-transform transform hover:scale-105"
-                                                                    type="submit"
-                                                                >
-                                                                    Invitar
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-
-                                        );
-                                    })}
+                                                );
+                                            })
+                                        )}
                                 </div>
 
                             )}
@@ -693,9 +664,6 @@ const ManageApplication = ({ socket }) => {
                                                 </div>
                                             </div>
                                             <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                                {/* <button onClick={() => updateAppOngoing(application)} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                                                                Proceder
-                                                            </button> */}
                                                 <button onClick={() => setInvitationModal(false)} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                                                     Cerrar
                                                 </button>

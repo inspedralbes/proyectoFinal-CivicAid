@@ -4,6 +4,11 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import { store, actions } from './store';
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza la vista de la solicitud en curso
+ * @param {*} param0 
+ * @returns 
+ */
 const ApplicationOngoing = ({ socket }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -21,13 +26,11 @@ const ApplicationOngoing = ({ socket }) => {
     const [explanation, setExplanation] = useState('');
     const [, forceUpdate] = useState();
 
-    console.log(applicationOngoing);
-    console.log(applicationNodeOngoing);
-
-    // { console.log("EXPLANATION: ", explanation) }
-
     useEffect(() => {
 
+        /**
+         * Función que obtiene la solicitud en curso
+         */
         async function fetchApplication() {
             if (isWorker && appOngoing) {
                 try {
@@ -42,7 +45,6 @@ const ApplicationOngoing = ({ socket }) => {
                         body: JSON.stringify({ applicationId: applicationOngoing.id }),
                     });
                     const data = await response.json();
-                    console.log("DATA??: ", data);
                     setApplicationFetch(data[0]);
 
                 } catch (error) {
@@ -57,11 +59,9 @@ const ApplicationOngoing = ({ socket }) => {
     }, [applicationOngoing]);
 
 
-
+    // Use effect para que cada vez que se actualice el texto de la solicitud en curso, se lo envíe a los demas empleados
     useEffect(() => {
         socket.emit("register", workerId);
-
-        // socket.emit('requestCurrentText', workerId);
 
         socket.on('textUpdate', (updatedText) => {
             setExplanation(updatedText);
@@ -70,14 +70,16 @@ const ApplicationOngoing = ({ socket }) => {
     }, [socket]);
 
     socket.on('textUpdate', (updatedText) => {
-        // console.log(updatedText);
         setExplanation(updatedText);
         forceUpdate();
 
     });
 
+    /**
+     * Función que actualiza el texto de la solicitud en curso y lo envía a los demás empleados
+     * @param {*} event 
+     */
     const handleTextChange = (event) => {
-        console.log("/////", applicationNodeOngoingInfo);
         const newText = event.target.value;
         setExplanation(newText);
         socket.emit('updateText', {
@@ -88,21 +90,14 @@ const ApplicationOngoing = ({ socket }) => {
     };
 
 
+    /**
+     * Función que actualiza el estado de la solicitud en curso
+     * @param {*} e 
+     */
     const handleSubmit = async (e) => {
-        // e.preventDefault();
         setLoading(true);
-        // const applicationStatus = 'completed';
 
         try {
-            // const response = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/updateApplicationStatus/${applicationOngoing.id}`, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Authorization': `Bearer ${token}`,
-            //     },
-            //     body: JSON.stringify({ applicationStatus }),
-            // });
-
             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + `/api/applicationCompleted`, {
                 method: 'POST',
                 headers: {
@@ -112,11 +107,8 @@ const ApplicationOngoing = ({ socket }) => {
                 body: JSON.stringify({ applicationId: applicationFetch.id, workerId, applicationExplanation }),
             });
 
-            // data = await response.json();
-            // console.log("DATATATATATATATA", data);
             const data = await response.json();
 
-            console.log("DATATATATAT: ", data);
             if (!response.ok) {
                 throw new Error(response.statusText);
             } else {
@@ -127,8 +119,7 @@ const ApplicationOngoing = ({ socket }) => {
                 Swal.fire({
                     position: "center",
                     icon: "error",
-                    title: "The application status did not updated correctly. Please try again",
-                    // html: "Remember to fill correctly all the fields",
+                    title: "El estado de la solicitud no se ha podido actualizar. Por favor, vuelve a intentarlo.",
                     showConfirmButton: false,
                     timer: 3500,
                 });
@@ -148,9 +139,12 @@ const ApplicationOngoing = ({ socket }) => {
         }
     }
 
+
+    /**
+     * Función que actualiza el estado de la solicitud compartida en curso
+     * @param {*} e 
+     */
     const handleNodeSubmit = async (e) => {
-        // e.preventDefault();
-        // setLoading(true);
 
         socket.emit("applicationNodeCompleted", {
             token: token,
@@ -159,19 +153,19 @@ const ApplicationOngoing = ({ socket }) => {
             applicationExplanation: explanation
         });
 
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "La solicitud se ha completado correctamente",
-            showConfirmButton: false,
-            timer: 3500,
-        });
+        // Swal.fire({
+        //     position: "center",
+        //     icon: "success",
+        //     title: "La solicitud se ha completado correctamente",
+        //     showConfirmButton: false,
+        //     timer: 3500,
+        // });
         
-        navigate("/");
+        // navigate("/");
     }
 
+    // Socket que recibe la confirmación de que la solicitud compartida se ha completado
     socket.on("applicationNodeCompletedConfirmation", (data) => {
-        console.log("COMPLETED? ", data.completed);
 
         if (data.completed) {
             dispatch(actions.applicationNodeOngoingCompleted());
@@ -230,7 +224,6 @@ const ApplicationOngoing = ({ socket }) => {
                                         </div>
 
                                         <div className="px-6 py-2 pb-5 lg:p-0 lg:mt-5 border-b-2 lg:border-0 border-gray-800">
-                                            {/* <h2 className="text-lg font-semibold">Descripción</h2> */}
                                             <p className="text-base font-light break-words">
                                                 {applicationFetch.description}
                                             </p>

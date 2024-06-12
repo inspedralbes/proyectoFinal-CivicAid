@@ -26,6 +26,8 @@ import SolicitudPropia from './pages/getOwnApplication';
 import GestionarSolicitudesRegistro from './pages/signinRequests';
 import AsignarSolicitud from './pages/assignApplication';
 
+import UserManual from './pages/userManual';
+
 import './App.css';
 
 let socket = socketIO(process.env.REACT_APP_NODE_URL, {
@@ -66,6 +68,9 @@ root.render(
 
                     <Route path="/manageSigninRequests" element={<GestionarSolicitudesRegistro />} />
                     <Route path="/assignApplications" element={<AsignarSolicitud />} />
+
+                    <Route path="/userManual" element={<UserManual />} />
+
 
                 </Routes>
             </Router>

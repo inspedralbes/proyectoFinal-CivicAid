@@ -37,6 +37,7 @@ Route::post('/signinRequest', [WorkerSigninRequest::class, 'signinRequest']);
 
 Route::post('/listRequests', [AdminController::class, 'listRequests']);
 Route::post('/acceptRequest', [AdminController::class, 'acceptRequest']);
+Route::post('/denyRequest', [AdminController::class, 'denyRequest']);
 Route::post('/updateRequestStatus/{id}', [AdminController::class, 'updateRequestStatus']);
 Route::post('/listApplicationsLocation', [AdminController::class, 'listApplicationsLocation']); 
 Route::post('/listWorkers', [AdminController::class, 'listWorkers']); 

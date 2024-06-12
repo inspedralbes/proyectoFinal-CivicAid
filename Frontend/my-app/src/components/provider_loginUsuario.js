@@ -7,6 +7,10 @@ import { useLocation } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza el formulario de login del usuario
+ * @returns 
+ */
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -18,6 +22,10 @@ const LoginForm = () => {
 
     const token = localStorage.getItem('access_token');
 
+    /**
+     * Función que se encarga de enviar los datos del formulario al servidor
+     * @param {*} e 
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -51,7 +59,7 @@ const LoginForm = () => {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "error",
-                    title: "Credenciales no válidas",
+                    title: "Credenciales inválidas",
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -83,7 +91,7 @@ const LoginForm = () => {
                             <div className="text-center">
                                 <img
                                     className="m-auto w-4/5 lg:w-6/12"
-                                    src="LogoPrincipal.png"
+                                    src="logoPrincipal.png"
                                     alt="logo"
                                 />
                             </div>
@@ -126,12 +134,10 @@ const LoginForm = () => {
                             </div>
 
                             <div className="flex items-center justify-end pt-12">
-                                {/* <div className='flex w-6/12'> */}
                                 <p className="mr-2 text-white">
                                     NO TIENES CUENTA?
                                 </p>
-                                {/* </div> */}
-                                {/* <div className='flex w-6/12'> */}
+
                                 <NavLink to="/signin">
                                     <button className="group relative h-10 w-36 border-2 overflow-hidden rounded-lg bg-transparent uppercase font-bold text-lg shadow" data-te-ripple-init data-te-ripple-color="light">
                                         <div className="absolute inset-0 w-3 bg-orange-400 transition-all duration-[500ms] ease-out group-hover:w-full"></div>
@@ -139,12 +145,10 @@ const LoginForm = () => {
                                     </button>
                                 </NavLink>
 
-                                {/* </div> */}
                             </div>
 
                         </form>
-                        {/* </div> */}
-                        {/* </div> */}
+
                     </div>
                 </div>
             }

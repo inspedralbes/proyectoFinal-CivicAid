@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, NavLink } from "react-router-dom";
 import Swal from 'sweetalert2';
-// import logo from "../../public/logoPequeñoCivicAid.png"
 
+/**
+ * Componente que renderiza el formulario de registro de trabajador
+ * @returns 
+ */
 function SigninForm() {
     const [dni, setDni] = useState('');
     const [name, setName] = useState('');
@@ -23,8 +26,10 @@ function SigninForm() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        /**
+         * Función que se encarga de obtener las provincias
+         */
         async function fetchProvinces() {
-
             try {
                 const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listProvinces', {
                     method: 'GET',
@@ -34,13 +39,8 @@ function SigninForm() {
                 });
                 const data = await response.json();
 
-                // Convertimos el objeto en un arreglo utilizando Object.values()
                 const locationsArray = Object.values(data);
-                // Ahora puedes utilizar el método map en locationsArray
-                locationsArray.map(location => {
-                    // Hacer algo con cada ubicación
-                    console.log(location.name);
-                });
+
                 setLocations(locationsArray)
 
             } catch (error) {
@@ -49,6 +49,9 @@ function SigninForm() {
 
         }
 
+        /**
+         * Función que se encarga de obtener los sectores
+         */
         async function fetchSectors() {
             try {
                 const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listSectors', {
@@ -58,14 +61,9 @@ function SigninForm() {
                     },
                 });
                 const data = await response.json();
-                // Convertimos el objeto en un arreglo utilizando Object.values()
+
                 const sectorsArray = Object.values(data);
-                // console.log(sectorsArray); // Esto imprimirá el arreglo de objetos
-                // Ahora puedes utilizar el método map en locationsArray
-                sectorsArray.map(sector => {
-                    // Hacer algo con cada ubicación
-                    console.log(sector.sector);
-                });
+
                 setSectors(sectorsArray)
 
             } catch (error) {
@@ -78,6 +76,10 @@ function SigninForm() {
         fetchSectors()
     }, []);
 
+    /**
+     * Función que se encarga de manejar el cambio de la imagen de perfil del trabajador y mostrarla en la vista previa
+     * @param {*} e 
+     */
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -90,6 +92,11 @@ function SigninForm() {
         }
     };
 
+    /**
+     * Función que se encarga de validar el DNI
+     * @param {*} dni 
+     * @returns 
+     */
     function validarDNI(dni) {
         const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
         const numero = dni.substring(0, dni.length - 1);
@@ -105,6 +112,11 @@ function SigninForm() {
         return letraCalculada === letra;
     }
 
+
+    /**
+     * Función que se encarga de enviar los datos del formulario al servidor
+     * @param {*} event 
+     */
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
@@ -124,32 +136,27 @@ function SigninForm() {
             try {
                 const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signinRequest', {
                     method: 'POST',
-                    // headers: {
-                    //     'Content-Type': 'application/json',
-                    // },
                     body: formData,
                 });
                 if (!response.ok) {
                     throw new Error(response.statusText);
                 }
                 const data = await response.json();
-                // if (data.isRegistered) {
                 navigate("/")
                 Swal.fire({
                     position: "bottom-end",
                     icon: "success",
-                    title: "Tu solicitud se ha enviado correctamente. Un administrador gestionará tu solicitud lo antes posible",
+                    title: "Tu solicitud se ha enviado correctamente. Un administrador gestionará tu solicitud lo antes posible.",
                     showConfirmButton: false,
                     timer: 6000,
                 });
-                // }
 
                 setLoading(false);
             } catch (error) {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "error",
-                    title: "An error occurred while loading",
+                    title: "Ha ocurrido un error durante la carga",
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -160,7 +167,7 @@ function SigninForm() {
             Swal.fire({
                 position: "bottom-end",
                 icon: "error",
-                title: "DNI mal amego",
+                title: "DNI incorrecto",
                 showConfirmButton: false,
                 timer: 1500,
             });
@@ -181,7 +188,7 @@ function SigninForm() {
                             <div className="text-center">
                                 <img
                                     className="m-auto w-4/5 lg:w-6/12"
-                                    src="LogoPrincipal.png"
+                                    src="logoPrincipal.png"
                                     alt="logo"
                                 />
                             </div>

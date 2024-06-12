@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, NavLink } from "react-router-dom";
 import Swal from 'sweetalert2';
-// import logo from "../../public/logoPequeñoCivicAid.png"
 
+/**
+ * Componente que renderiza el formulario de registro del usuario
+ * @returns 
+ */
 function SigninForm() {
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -32,6 +35,10 @@ function SigninForm() {
     };
 
 
+    /**
+     * Función que se encarga de enviar los datos del formulario al servidor
+     * @param {*} event 
+     */
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
@@ -47,17 +54,12 @@ function SigninForm() {
         try {
             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/signIn', {
                 method: 'POST',
-                // headers: {
-                //     'Content-Type': 'application/json',
-                // },
                 body: formData,
             });
 
             const data = await response.json();
-            console.log(data);
 
             if (!response.ok) {
-                console.log(data);
                 throw new Error(response.statusText);
 
             }
@@ -83,7 +85,6 @@ function SigninForm() {
                 timer: 1500,
             });
 
-            console.log(error);
 
             setError(error);
             setLoading(false);
@@ -102,7 +103,7 @@ function SigninForm() {
                             <div className="text-center">
                                 <img
                                     className="m-auto w-4/5 lg:w-6/12"
-                                    src="LogoPrincipal.png"
+                                    src="logoPrincipal.png"
                                     alt="logo"
                                 />
                             </div>

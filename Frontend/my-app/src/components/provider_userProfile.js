@@ -2,10 +2,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { actions } from './store';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
-// import moment from 'moment';
-// import { useTranslation } from 'react-i18next';
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza la información del usuario
+ * @returns 
+ */
 const UserInfo = () => {
     const isLoggedIn = useSelector(state => state.isLoggedIn);
     const token = localStorage.getItem('access_token');
@@ -20,7 +22,7 @@ const UserInfo = () => {
     const [ownApplications, setOwnApplications] = useState([]);
 
     const isWorker = useSelector((state) => state.isWorker);
-    const workerId = useSelector((state) => state.data.id);
+    // const workerId = useSelector((state) => state.data.id);
     const [applicationsAssigned, setApplicationsAssigned] = useState([]);
     const [sharedApplicationsAssigned, setSharedApplicationsAssigned] = useState([]);
 
@@ -30,19 +32,24 @@ const UserInfo = () => {
     const [loading, setLoading] = useState(false);
 
 
-    const [activeTab, setActiveTab] = useState("tab1"); // initialize active tab to tab1
-
+    const [activeTab, setActiveTab] = useState("tab1");
     const handleTabClick = (tab) => {
-        setActiveTab(tab); // update active tab based on the tab clicked
+        setActiveTab(tab);
     };
 
+    /**
+     * Función que se encarga de manejar el modal de la solicitud
+     * @param {*} application 
+     */
     const handleApplicationModal = (application) => {
         setShowApplicationModal(true);
         setApplicationModalInfo(application)
-        console.log(application);
     };
 
     useEffect(() => {
+        /**
+         * Función que se encarga de obtener las solicitudes del usuario
+         */
         async function fetchOwnApplications() {
             if (isUser) {
                 setLoading(true)
@@ -56,7 +63,6 @@ const UserInfo = () => {
                         body: JSON.stringify({ userId }),
                     });
                     const data = await response.json();
-                    console.log(data);
                     setOwnApplications(data)
                 } catch (error) {
                     console.error("ESTE ES EL ERROR: ", error);
@@ -67,69 +73,27 @@ const UserInfo = () => {
             }
         }
 
-        async function fetchApplicationsAssigned() {
-            if (isWorker) {
-                setLoading(true)
-                try {
-                    // Primer fetch para obtener las solicitudes sin compartir
-                    const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listAssignedApplications', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({ workerId }),
-                    });
-                    const data = await response.json();
-                    console.log(data);
-                    setApplicationsAssigned(data);
-
-                    // Segundo fetch para obtener las solicitudes compartidas
-                    const response2 = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listWorkersExactApplication', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({ workerId }),
-                    });
-                    const data2 = await response2.json();
-                    console.log("LA 2", data2.applications);
-
-                    data2.applications.map((application, id) => (
-                        console.log(application)
-                    ))
-                    setSharedApplicationsAssigned(data2.applications);
-
-                } catch (error) {
-                    console.error("ESTE ES EL ERROR: ", error);
-                } finally {
-                    setLoading(false)
-
-                }
-            }
-        }
-
         fetchOwnApplications();
-        fetchApplicationsAssigned();
     }, [])
 
 
+    /**
+     * Función que se encarga de cerrar sesión
+     */
     function logout() {
-
         dispatch(actions.logout());
+
         localStorage.setItem('access_token', "0");
+
         Swal.fire({
             position: "bottom-end",
             icon: "info",
-            title: "You have successfully loged out",
+            title: "Has cerrado sesión correctamente",
             showConfirmButton: false,
             timer: 1500,
         });
 
         navigate("/")
-
-
     }
 
 
@@ -204,10 +168,6 @@ const UserInfo = () => {
                                                         </div>
                                                         <hr className="mt-6"></hr>
                                                         <div className="flex bg-orange-400">
-                                                            {/* <button className="text-center w-1/2 p-4 hover:bg-orange-300 cursor-pointer">
-                                                                CHANGE PASSWORD
-                                                            </button> */}
-                                                            {/* <div className=""></div> */}
                                                             <button
                                                                 onClick={() => setShowModal(true)}
                                                                 className="text-center m-auto w-full p-4 hover:bg-orange-300 cursor-pointer"
@@ -272,7 +232,6 @@ const UserInfo = () => {
 
                                 <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                        {/* <div className=""> */}
                                         <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12">
                                             {/* Icono de advertencia */}
                                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

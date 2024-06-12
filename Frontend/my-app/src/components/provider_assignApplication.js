@@ -21,20 +21,15 @@ const ManageApplication = () => {
     const [workersList, setWorkersList] = useState(null);
     const [selectedWorkers, setSelectedWorkers] = useState([]);
 
-    const [zoomedImages, setZoomedImages] = useState(Array(applicationInfo.length).fill(false));
-
-    const toggleZoom = (index) => {
-        const newZoomedImages = [...zoomedImages];
-        newZoomedImages[index] = !newZoomedImages[index];
-        setZoomedImages(newZoomedImages);
-    };
 
     useEffect(() => {
+        /**
+         * Función para obtener las solicitudes de la localización asignada
+         */
         async function fetchApplications() {
             if (isAdmin) {
                 setLoading(true);
 
-                console.log(assignedLocation);
                 try {
                     const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplicationsLocation', {
                         method: 'POST',
@@ -45,7 +40,6 @@ const ManageApplication = () => {
                         body: JSON.stringify({ assignedLocation }),
                     });
                     const data = await response.json();
-                    console.log(data);
                     setApplicationInfo(data)
 
                 } catch (error) {
@@ -56,11 +50,13 @@ const ManageApplication = () => {
             }
         }
 
+        /**
+         * Función para obtener los trabajadores de la localización asignada
+         */
         async function fetchWorkers() {
             if (isAdmin) {
                 setLoading(true);
 
-                // console.log(assignedLocation);
                 try {
                     const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listWorkers', {
                         method: 'POST',
@@ -71,7 +67,6 @@ const ManageApplication = () => {
                         body: JSON.stringify({ assignedLocation }),
                     });
                     const data = await response.json();
-                    console.log("LOS WORKERS: ", data);
                     setWorkersList(data)
 
                 } catch (error) {
@@ -87,9 +82,12 @@ const ManageApplication = () => {
     }, []);
 
 
+    /**
+     * Función para seleccionar o deseleccionar un trabajador
+     * @param {*} workerId 
+     */
     const toggleSelectedWorker = (workerId) => {
         const isSelected = selectedWorkers.includes(workerId);
-        console.log("UNDEFINDED???", selectedWorkers);
         if (isSelected) {
             setSelectedWorkers(selectedWorkers.filter(id => id !== workerId));
         } else {
@@ -97,6 +95,10 @@ const ManageApplication = () => {
         }
     };
 
+    /**
+     * Función para aceptar la solicitud y asignarla a los trabajadores seleccionados
+     * @returns 
+     */
     const acceptRequest = async () => {
         if (!selectedApplication || selectedWorkers.length === 0) {
             Swal.fire({
@@ -131,13 +133,7 @@ const ManageApplication = () => {
                 body: JSON.stringify({ assignedLocation }),
             });
             const data2 = await response2.json();
-            console.log(data2);
             setApplicationInfo(data2)
-
-
-            // if (!response.ok) {
-            //     throw new Error('Network response was not ok');
-            // }
 
             Swal.fire({
                 position: "bottom-end",
@@ -146,7 +142,6 @@ const ManageApplication = () => {
                 showConfirmButton: false,
                 timer: 1500,
             });
-            // setSelectedApplication(null);
             setSelectedWorkers([]); // Limpia los trabajadores seleccionados
         } catch (error) {
             console.error('Error en la solicitud:', error);
@@ -161,8 +156,12 @@ const ManageApplication = () => {
         }
     };
 
+    /**
+     * Función para cerrar el modal y vaciar los empleados seleccionados
+     */
     const closeModal = async () => {
-        setSelectedWorkers()
+        setSelectedWorkers([]);
+        setSelectedApplication(null);
     }
 
     return (
@@ -262,13 +261,13 @@ const ManageApplication = () => {
             {/* Modal */}
             {selectedApplication && (
                 <div className="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center">
-                    <div className="fixed inset-0 transition-opacity" onClick={() => setSelectedApplication(null)}>
+                    <div className="fixed inset-0 transition-opacity" onClick={() => closeModal()}>
                         <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                     </div>
                     <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg w-full">
                         <div className='flex justify-between items-start p-4 border-b'>
                             <h3 className="text-lg leading-6 font-medium text-gray-900">Detalles de la solicitud</h3>
-                            <div className='cursor-pointer rounded-md text-gray-400 hover:text-gray-600' onClick={() => setSelectedApplication(null)}>
+                            <div className='cursor-pointer rounded-md text-gray-400 hover:text-gray-600' onClick={() => closeModal()}>
                                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
@@ -284,17 +283,26 @@ const ManageApplication = () => {
                                     workersList.map((worker, id) => {
                                         return worker.sector === selectedApplication.sector ? (
                                             <div key={id} className="bg-gray-200 p-4 mb-4 rounded-lg flex flex-col">
-                                                <label className="inline-flex items-center">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="form-checkbox h-5 w-5 text-gray-600"
-                                                        checked={selectedWorkers.includes(worker.id)}
-                                                        onChange={() => toggleSelectedWorker(worker.id)}
-                                                    />
-                                                    <span className="ml-2 text-gray-700">{worker.name} {worker.surname} | {worker.dni}</span>
-                                                </label>
-                                                <div className="text-sm mt-2 text-gray-500">
-                                                    ESTADO: {worker.workerStatus} <br /> SOLICITUDES ASIGNADAS: {worker.assignedApplications}
+                                                <div>
+                                                    <label className="inline-flex items-center">
+                                                        <input
+                                                            type="checkbox"
+                                                            className="form-checkbox h-5 w-5 text-gray-600"
+                                                            checked={selectedWorkers.includes(worker.id)}
+                                                            onChange={() => toggleSelectedWorker(worker.id)}
+                                                        />
+                                                        <span className="ml-2 text-gray-700">{worker.name} {worker.surname} | {worker.dni}</span>
+                                                    </label>
+                                                    <div className="text-sm mt-2 text-gray-500"> 
+                                                        {worker.workerStatus === "inService" ?
+                                                            <p>ESTADO: Ocupado</p>
+                                                            :
+                                                            <p>ESTADO: Disponible</p>
+                                                        } 
+                                                    </div>
+                                                    <div className='mt-2'>
+                                                        SOLICITUDES ASIGNADAS: {worker.assignedApplications}
+                                                    </div>
                                                 </div>
                                             </div>
                                         ) : null;

@@ -7,6 +7,10 @@ import { useLocation } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
 
+/**
+ * Componente que renderiza el formulario de login del trabajador
+ * @returns 
+ */
 const LoginForm = () => {
     const [dni, setDni] = useState('');
     const [email, setEmail] = useState('');
@@ -21,6 +25,10 @@ const LoginForm = () => {
     const checkApplicationOngoing = localStorage.getItem('persist:root');
 
 
+    /**
+     * Función que se encarga de enviar los datos del formulario al servidor
+     * @param {*} e 
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -36,7 +44,6 @@ const LoginForm = () => {
 
             const data = await response.json();
 
-            console.log("DATA DEL LOGIN: ", data);
             if (data.isLoggedIn) {
 
                 // Verificar si la variable "applicationOngoingInfo" tiene valor o no
@@ -46,10 +53,7 @@ const LoginForm = () => {
                     const applicationOngoingInfo = parsedData.applicationOngoingInfo;
                     const applicationOngoing = parsedData.applicationOngoing;
 
-                    console.log("Esta la aplicacion en marcha? ", applicationOngoing);
-                    console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
                     dispatch(actions.checkAppOngoing());
-                    console.log("Y ahora? ", applicationOngoing);
 
                 } else {
                     console.log('La variable del Local Storage está vacía');
@@ -60,7 +64,6 @@ const LoginForm = () => {
                 localStorage.setItem('access_token', data[0]);
                 navigate("/")
 
-                console.log(data[1].sector);
 
                 Swal.fire({
                     position: "bottom-end",
@@ -73,7 +76,7 @@ const LoginForm = () => {
                 Swal.fire({
                     position: "bottom-end",
                     icon: "error",
-                    title: "Credenciales no válidas",
+                    title: "Credenciales inválidas",
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -101,12 +104,11 @@ const LoginForm = () => {
                 </p> :
                 <div className="g-6 flex h-full flex-wrap items-center justify-center">
                     <div className="w-full h-screen lg:h-3/4 mb-14 lg:rounded-lg p-10 bg-gray-800 shadow-lg dark:bg-neutral-800">
-                        {/* <div className=""> */}
                         <NavLink to="/">
                             <div className="text-center">
                                 <img
                                         className="m-auto w-4/5 lg:w-6/12"
-                                        src="LogoPrincipal.png"
+                                        src="logoPrincipal.png"
                                     alt="logo" />
                             </div>
                         </NavLink>
@@ -165,7 +167,6 @@ const LoginForm = () => {
                             </div>
 
                         </form>
-                        {/* </div> */}
                     </div>
                 </div>
             }

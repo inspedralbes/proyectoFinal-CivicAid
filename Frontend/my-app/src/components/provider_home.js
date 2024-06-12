@@ -4,8 +4,12 @@ import { useDispatch } from 'react-redux';
 import { store, actions } from './store';
 import { NavLink } from 'react-router-dom';
 import Swal from "sweetalert2";
-// import userImage from "../../public/userButtonImage"
 
+/**
+ * Componente que renderiza la página principal de la aplicación y muestra las opciones disponibles para los usuarios según su rol (ciudadano, empleado o administrador).
+ * @param {*} param0 
+ * @returns 
+ */
 const Home = ({ socket }) => {
     const dispatch = useDispatch();
     const isLoggedIn = useSelector((state) => state.isLoggedIn);
@@ -17,7 +21,7 @@ const Home = ({ socket }) => {
 
     const [imageVisible, setImageVisible] = useState(true);
 
-    const images = ['tendiendoMano.png', 'haciendoSolicitud.png', 'arreglandoPanelElectrico.png', 'administrador.png']; // Ajusta las rutas de las imágenes según sea necesario
+    const images = ['tendiendoMano.png', 'haciendoSolicitud.png', 'arreglandoPanelElectrico.png', 'administrador.png'];
     const descriptions = [
         'CivicAid es una plataforma dedicada a brindar asistencia a los ciudadanos en diversas situaciones. Desde reportar problemas en la comunidad hasta solicitar ayuda en casos de emergencia, CivicAid facilita la comunicación entre los residentes y las autoridades pertinentes.',
         'Una vez que los usuarios envían una solicitud a través de CivicAid, esta es recibida y revisada por un administrador. El administrador evalúa la situación y determina el curso de acción adecuado para abordar la solicitud de manera eficiente.',
@@ -29,70 +33,18 @@ const Home = ({ socket }) => {
     const [currentDescription, setCurrentDescription] = useState(0);
 
     const checkApplicationOngoing = localStorage.getItem('persist:root');
-    console.log("La de NODE:", applicationNodeOngoing);
-    console.log("La normal:", applicationOngoing);
-
 
 
     useEffect(() => {
-
-        async function estoVa() {
-            try {
-                const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/listApplications', {
-                    method: 'GET',
-                    mode: 'no-cors'
-                    // headers: {
-                    //     'Content-Type': 'application/json',
-                    // },
-                    // body: JSON.stringify({ email, password }),
-                });
-    
-                const data = await response.json();
-                console.log(data);
-
-            } catch (error) {
-                console.log("No se ha podido listar las solicitudes: ", error);
-            }
-
-        }
-
-        async function comprobar() {
-
-            if (isWorker) {
-                // Verificar si hay datos en el Local Storage
-                if (checkApplicationOngoing) {
-                    // Convertir el JSON almacenado a un objeto JavaScript
-                    const parsedData = JSON.parse(checkApplicationOngoing);
-
-                    // Obtener el valor de "applicationOngoingInfo"
-                    const applicationOngoingInfo = parsedData.applicationOngoingInfo;
-                    const applicationOngoing = parsedData.applicationOngoing;
-                    // Ahora puedes utilizar la variable "applicationOngoingInfo" según necesites
-                    console.log("Esta la aplicacion en marcha? ", applicationOngoing);
-                    console.log("Esta es la aplicacion en marcha: ", applicationOngoingInfo);
-
-
-                    // console.log("SEGURO??? ", applicationNodeOngoing);
-
-                } else {
-                    console.log('La variable del Local Storage está vacía');
-                }
-            }
-
-        }
-        comprobar();
-        estoVa();
-
         socket.on("connect", () => {
             console.log("Conectado al servidor");
-            console.log("SOCKET HOME: ", socket.id);
 
         });
 
     }, [checkApplicationOngoing]);
 
 
-
+    // Cambiar la imagen y la descripción cada 10 segundos
     useEffect(() => {
         const interval = setInterval(() => {
             nextImage();
@@ -101,26 +53,27 @@ const Home = ({ socket }) => {
     }, [currentImage]);
 
     function logout() {
-
         dispatch(actions.logout());
         localStorage.setItem('access_token', "0");
         Swal.fire({
             position: "bottom-end",
             icon: "info",
-            title: "You have successfully loged out",
+            title: "Has cerrado sesión correctamente",
             showConfirmButton: false,
             timer: 1500,
         });
     }
 
-    // const reiniciarEstados = async (e) => {
-    //     dispatch(actions.applicationOngoingCompleted())
-    // }
-
+    /**
+     * Función para mostrar la imagen anterior del carrusel
+     */
     const prevImage = () => {
         setCurrentImage(prev => (prev === 0 ? images.length - 1 : prev - 1));
     };
 
+    /**
+     * Función para mostrar la siguiente imagen del carrusel
+     */
     const nextImage = () => {
         setCurrentImage(prev => (prev === images.length - 1 ? 0 : prev + 1));
     };
@@ -130,7 +83,6 @@ const Home = ({ socket }) => {
             <div className='z-10 lg:flex lg:h-full lg:w-full'>
                 <div className='w-full lg:w-5/12 lg:h-5/6 lg:m-auto bg-gray-700 lg:shadow-lg lg:rounded-lg'>
                     <div className='lg:mt-5 lg:h-full'>
-                        {/* Logo removido para enfocar en el carrusel */}
                         <img src="logoPrincipal.png" className='h-28 w-full mb-2 lg:h-1/6 lg:w-6/12 lg:m-auto lg:rounded-lg' alt="Logo Principal" />
 
                         <div className="hidden lg:block relative lg:mt-5 lg:h-3/5 lg:mx-auto lg:w-11/12 lg:border-2 rounded-lg overflow-hidden">
@@ -162,6 +114,10 @@ const Home = ({ socket }) => {
                                 <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
+                        <div className="hidden lg:block text-white text-center p-4">
+                            Aprende más sobre CivicAid y cómo utilizar la plataforma para enviar solicitudes y ayudar a la comunidad aquí: <NavLink to="/userManual" className="text-blue-500 hover:underline ml-1">Manual de usuario</NavLink>
+                        </div>
+
                     </div>
                 </div>
 
@@ -223,10 +179,10 @@ const Home = ({ socket }) => {
                             </div>
 
                             :
-                            <div className='w-screen lg:w-full lg:h-full bg-black'>
+                            <div className='w-screen h-screen lg:w-full lg:h-full'>
 
-                                <div className=' h-[340px] lg:h-full bg-violet-700'>
-                                    <div className='h-full w-full lg:h-3/6 overflow-hidden aspect-video bg-violet-500 cursor-pointer relative group border-b-4 '>
+                                <div className='h-full lg:h-full'>
+                                    <div className='h-2/5 w-full lg:h-3/6 overflow-hidden aspect-video bg-violet-500 cursor-pointer relative group border-b-4 '>
                                         <NavLink to="/manageApplications">
                                             <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
                                                 <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>
@@ -242,7 +198,7 @@ const Home = ({ socket }) => {
                                         <img src="manageApplicationsButtonImage.jpg" alt="Imagen Ciudadano" className="object-cover w-full h-full aspect-square group-hover:scale-110 transition duration-300 ease-in-out opacity-50" />
                                     </div>
 
-                                    <div className='h-full w-full lg:h-3/6 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group '>
+                                    <div className='h-2/5 w-full lg:h-3/6 overflow-hidden aspect-video bg-orange-400 cursor-pointer relative group '>
                                         <NavLink to="/workerProfile">
                                             <div className="rounded-xl z-50 opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out cursor-pointer absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-center items-center h-full">
                                                 <div className='text-center text-white text-xl transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100'>

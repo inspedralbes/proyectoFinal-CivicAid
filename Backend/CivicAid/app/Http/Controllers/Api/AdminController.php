@@ -38,58 +38,58 @@ class AdminController extends Controller
     }
 
     public function listAssignedApplicationsWorkers(Request $request)
-{
-    // Verifica que adminId está presente en la solicitud
-    if (!$request->has('adminId')) {
-        return response()->json(['error' => 'Falta el parámetro adminId'], 400);
-    }
-
-    $adminId = $request->adminId;
-
-    try {
-        // Obtener los IDs de las aplicaciones asignadas al admin
-        $assignments = Assignment::where('adminId', $adminId)->pluck('applicationId');
-
-        // Si no hay assignments, devuelve un mensaje adecuado
-        if ($assignments->isEmpty()) {
-            return response()->json(['message' => 'No se encontraron aplicaciones asignadas'], 200);
+    {
+        // Verifica que adminId está presente en la solicitud
+        if (!$request->has('adminId')) {
+            return response()->json(['error' => 'Falta el parámetro adminId'], 400);
         }
 
-        // Obtener las aplicaciones cuyos IDs están en la lista de assignments
-        $assignedApplications = Application::whereIn('id', $assignments)->get();
+        $adminId = $request->adminId;
 
-        // Obtener los trabajadores asignados a estas aplicaciones
-        $assignedWorkers = Worker::whereIn('id', function($query) use ($assignments) {
-            $query->select('workerId')
-                  ->from('assignments')
-                  ->whereIn('applicationId', $assignments);
-        })->get();
+        try {
+            // Obtener los IDs de las aplicaciones asignadas al admin
+            $assignments = Assignment::where('adminId', $adminId)->pluck('applicationId');
 
-        // Agrupar los trabajadores por aplicaciónId
-        $workersByApplication = [];
-        foreach ($assignedWorkers as $worker) {
-            $assignment = Assignment::where('workerId', $worker->id)->first();
-            $applicationId = $assignment->applicationId;
-            if (!isset($workersByApplication[$applicationId])) {
-                $workersByApplication[$applicationId] = [];
+            // Si no hay assignments, devuelve un mensaje adecuado
+            if ($assignments->isEmpty()) {
+                return response()->json(['message' => 'No se encontraron aplicaciones asignadas'], 200);
             }
-            $workersByApplication[$applicationId][] = $worker;
+
+            // Obtener las aplicaciones cuyos IDs están en la lista de assignments
+            $assignedApplications = Application::whereIn('id', $assignments)->get();
+
+            // Obtener los trabajadores asignados a estas aplicaciones
+            $assignedWorkers = Worker::whereIn('id', function ($query) use ($assignments) {
+                $query->select('workerId')
+                    ->from('assignments')
+                    ->whereIn('applicationId', $assignments);
+            })->get();
+
+            // Agrupar los trabajadores por aplicaciónId
+            $workersByApplication = [];
+            foreach ($assignedWorkers as $worker) {
+                $assignment = Assignment::where('workerId', $worker->id)->first();
+                $applicationId = $assignment->applicationId;
+                if (!isset($workersByApplication[$applicationId])) {
+                    $workersByApplication[$applicationId] = [];
+                }
+                $workersByApplication[$applicationId][] = $worker;
+            }
+
+            // Añadir los trabajadores a las aplicaciones
+            foreach ($assignedApplications as $application) {
+                $application->workers = $workersByApplication[$application->id] ?? [];
+            }
+
+            return response()->json($assignedApplications, 200);
+        } catch (\Exception $e) {
+            // Registra el error para su depuración
+            Log::error('Error en listAssignedApplications:', ['error' => $e->getMessage()]);
+
+            // Devuelve un mensaje de error controlado
+            return response()->json(['error' => 'Error en la solicitud'], 500);
         }
-
-        // Añadir los trabajadores a las aplicaciones
-        foreach ($assignedApplications as $application) {
-            $application->workers = $workersByApplication[$application->id] ?? [];
-        }
-
-        return response()->json($assignedApplications, 200);
-    } catch (\Exception $e) {
-        // Registra el error para su depuración
-        Log::error('Error en listAssignedApplications:', ['error' => $e->getMessage()]);
-
-        // Devuelve un mensaje de error controlado
-        return response()->json(['error' => 'Error en la solicitud'], 500);
     }
-}
 
 
     public function updateRequestStatus(Request $request, $id)
@@ -136,32 +136,20 @@ class AdminController extends Controller
             $worker->email = $request->email;
             $worker->password = Hash::make($request->password);
 
-            // $profileImagePath = $request->file('profileImage')->store('images', 'public');
+            try {
+                Mail::to($request->email)->send(new registrationRequestAccepted($worker, $request->password));
+            } catch (\Exception $exception) {
+                // Registrar el error
+                Log::error('Error al enviar el correo electrónico de solicitud de registro: ' . $exception->getMessage());
 
-            // Construye la URL del archivo concatenando el path de almacenamiento con el nombre del archivo
-            // $baseUrl = config('app.url');
-            // $port = ':8000'; // Define el puerto aquí
-
-            // $imageUrl = $baseUrl . $port . '/storage/' . $profileImagePath;
-
-            // // Almacena la URL en la base de datos
-            // $worker->profileImage = $imageUrl;
+                return response()->json(['error' => 'Error al enviar el correo electrónico de solicitud de registro.'], 500);
+            }
 
             // Intentar guardar el trabajador
             if ($worker->save()) {
-                // Envío de correo opcional, descomentar si es necesario
-                // Mail::to($request->email)->send(new RegistrationRequestAccepted($worker));
-
-                return response()->json([
-                    'message' => "Registered correctly.",
-                    'isRegistered' => true
-                ], 200);
+                return response()->json(['message' => "Registered correctly.", 'isRegistered' => true], 200);
             } else {
-                // Este bloque posiblemente nunca se ejecute, ya que un fallo en save() generalmente lanza una excepción
-                return response()->json([
-                    'message' => "Couldn't register due to an unknown error.",
-                    'isRegistered' => false
-                ], 500);
+                return response()->json(['message' => "Couldn't register due to an unknown error.", 'isRegistered' => false], 500);
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Captura de errores de validación
@@ -175,6 +163,42 @@ class AdminController extends Controller
                 'message' => 'Server error',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function denyRequest(Request $request)
+    {
+        try {
+              // Validación de la solicitud
+              $validated = $request->validate([
+                'id' => 'required',
+                'requestStatus' => 'required',
+            ]);
+
+            $deniedRequestId = $request->id;
+            $deniedRequest = SigninRequest::findOrFail($deniedRequestId);
+            // $deniedRequest = SigninRequest::where('id', $deniedRequestId)->first();
+            Log::error('Intentando enviar email a: ' . $deniedRequest->email);
+            if ($deniedRequest) {
+
+                // $application = SigninRequest::findOrFail($id);
+
+                $deniedRequest->requestStatus = $request->requestStatus;
+
+                $deniedRequest->save();
+
+                Mail::to($deniedRequest->email)->send(new registrationRequestDenied($deniedRequest));
+                
+                return response()->json([$deniedRequest]);
+
+    
+                // return response()->json(['message' => 'Solicitud denegada correctamente.'], 200);
+            }
+    
+            // return response()->json(['message' => 'Solicitud no encontrada.'], 404);
+
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 

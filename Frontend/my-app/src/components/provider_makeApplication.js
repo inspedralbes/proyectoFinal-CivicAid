@@ -6,6 +6,10 @@ import Swal from "sweetalert2";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+/**
+ * Componente que renderiza el formulario de solicitud de aplicación
+ * @returns 
+ */
 const MakeApplication = () => {
     const navigate = useNavigate();
     const [title, setTitle] = useState('');
@@ -31,6 +35,11 @@ const MakeApplication = () => {
 
     console.log(location);
     useEffect(() => {
+        /**
+         * Función que se encarga de obtener la ubicación actual del usuario
+         * @param {*} lat 
+         * @param {*} lon 
+         */
         async function fetchLocation(lat, lon) {
             setLoading(true);
 
@@ -53,9 +62,12 @@ const MakeApplication = () => {
             setLoading(false);
 
             console.log("ESTA ES LA CALLE: ", data);
-            console.log("ñañañañaña ", data.address.province);
+            console.log("Provincia ", data.address.province);
         }
 
+        /**
+         * Función que se encarga de obtener la ubicación actual del usuario y mostrar un mapa
+         */
         async function getLocationAndMap() {
             setLoading(true);
             try {
@@ -107,6 +119,14 @@ const MakeApplication = () => {
                         }
                     }, (error) => {
                         console.error('Error getting location:', error);
+                        Swal.fire({
+                            position: "bottom-end",
+                            icon: "error",
+                            title: "Error al obtener la ubicación",
+                            html: "Recarga la página y recuerda permitir el acceso la ubicación actual o introduce la ubicación manualmente",
+                            showConfirmButton: false,
+                            timer: 5000,
+                        });
                     });
                 } else {
                     console.error('Geolocation is not supported by this browser.');
@@ -122,6 +142,11 @@ const MakeApplication = () => {
         getLocationAndMap();
     }, []);
 
+    /**
+     * Función que se encarga de comprobar si el mapa ya ha sido inicializado
+     * @param {*} containerId 
+     * @returns 
+     */
     function isMapInitialized(containerId) {
         var container = L.DomUtil.get(containerId);
         if (container != null && container._leaflet_id) {
@@ -130,6 +155,11 @@ const MakeApplication = () => {
         return false;
     }
 
+    /**
+     * Función que se encarga de comprobar si el mapa pequeño ya ha sido inicializado
+     * @param {*} containerId 
+     * @returns 
+     */
     function isTinyMapInitialized(containerId) {
         var container = L.DomUtil.get(containerId);
         if (container != null && container._leaflet_id) {
@@ -138,6 +168,10 @@ const MakeApplication = () => {
         return false;
     }
 
+    /**
+     * Función que se encarga de manejar el cambio de la imagen y mostrar una vista previa
+     * @param {*} e 
+     */
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -150,6 +184,10 @@ const MakeApplication = () => {
         }
     };
 
+    /**
+     * Función que se encarga de manejar el cambio del subsector y sector seleccionados
+     * @param {*} e 
+     */
     const handleSubsectorChange = (e) => {
         const value = e.target.value;
         // Dividir el valor seleccionado en el valor del subsector y el valor del sector
@@ -158,12 +196,13 @@ const MakeApplication = () => {
         // Actualizar los estados con los valores del subsector y sector seleccionados
         setSubsector(subsectorValue);
         setSector(sectorValue);
-
-        console.log(subsectorValue, sectorValue);
-
-        console.log("ESTA ES LA ID DEL USUARIO: ", applicantId);
     };
 
+
+    /**
+     * Función que se encarga de enviar los datos del formulario al servidor
+     * @param {*} e 
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoadingSubmit(true);
@@ -180,7 +219,6 @@ const MakeApplication = () => {
         formData.append('location', finalLocation);
         formData.append('date', date);
 
-        console.log("form: ", formData);
         try {
             const response = await fetch(process.env.REACT_APP_LARAVEL_URL + '/api/makeApplication', {
                 method: 'POST',
@@ -208,7 +246,6 @@ const MakeApplication = () => {
             }
             const data = await response.json();
 
-            console.log(data);
             Swal.fire({
                 position: "bottom-end",
                 icon: "success",

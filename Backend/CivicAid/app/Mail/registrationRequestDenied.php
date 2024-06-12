@@ -24,7 +24,7 @@ class registrationRequestDenied extends Mailable
     public function build()
     {
         return $this->markdown('emails.registration.requestDenied')
-            ->subject('Registration Request Denied')
+            ->subject('Solicitud de Registro Denegada')
             ->with([
                 'name' => $this->user->name,
             ]);
@@ -37,7 +37,7 @@ class registrationRequestDenied extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Registration Request Denied',
+            subject: 'Solicitud de Registro Denegada',
         );
     }
 
